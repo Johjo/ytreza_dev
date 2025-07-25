@@ -1,6 +1,6 @@
 import pytest
 
-from ytreza_dev.features.todolist_query import Task, TodolistReaderPort, TodolistQuery
+from ytreza_dev.features.todolist_query.todolist_query import TodolistReaderPort, Task, TodolistQuery
 
 
 class TodolistReaderForTest(TodolistReaderPort):
