@@ -1,6 +1,6 @@
 import pytest
 
-from ytreza_dev.features.todolist_query.todoist_adapter import TodolistReaderFromTodoist
+from ytreza_dev.features.todolist_query.todolist_reader_from_todoist import TodolistReaderFromTodoist
 from ytreza_dev.features.todolist_query.todolist_query import Task
 
 @pytest.fixture
