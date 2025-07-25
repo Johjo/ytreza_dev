@@ -4,6 +4,7 @@ from dataclasses import dataclass
 @dataclass
 class Task:
     name: str
+    url: str
 
 
 class TodolistReaderPort(metaclass=ABCMeta):

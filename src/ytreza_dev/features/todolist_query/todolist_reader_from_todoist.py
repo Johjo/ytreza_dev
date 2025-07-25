@@ -21,5 +21,5 @@ class TodolistReaderFromTodoist(TodolistReaderPort):
         response = requests.get(f"{self.api_url}/tasks", headers=headers)
         response.raise_for_status()  # Raise an exception for bad status codes
         tasks_data = response.json()
-        return [Task(name=task_data["content"]) for task_data in tasks_data]
+        return [Task(name=task_data["content"], url=task_data["url"]) for task_data in tasks_data]
 

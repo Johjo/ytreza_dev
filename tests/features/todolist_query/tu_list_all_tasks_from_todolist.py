@@ -28,9 +28,9 @@ def test_list_nothing_when_no_task(sut: TodolistQuery) -> None:
 
 
 def test_list_tasks(sut: TodolistQuery, todolist_reader: TodolistReaderForTest) -> None:
-    todolist_reader.feed([Task(name="buy the milk"), Task(name="buy the water")])
+    todolist_reader.feed([Task(name="buy the milk", url="https://url_1.com"), Task(name="buy the water", url="https://url_2.com")])
 
     all_tasks = sut.all_tasks()
 
-    assert all_tasks == [Task(name="buy the milk"), Task(name="buy the water")]
+    assert all_tasks == [Task(name="buy the milk", url="https://url_1.com"), Task(name="buy the water", url="https://url_2.com")]
 

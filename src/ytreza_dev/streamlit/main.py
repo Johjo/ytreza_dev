@@ -23,8 +23,12 @@ def main() -> None:
 
             if tasks:
                 st.write("Here are your tasks:")
-                # Display tasks in a simple table
-                st.table([{"Task Name": task.name} for task in tasks])
+                for task in tasks:
+                    col1, col2 = st.columns([4, 1])
+                    with col1:
+                        st.write(task.name)
+                    with col2:
+                        st.link_button("Go to task", url=task.url)
             else:
                 st.success("No tasks found in your Todoist account.")
 
