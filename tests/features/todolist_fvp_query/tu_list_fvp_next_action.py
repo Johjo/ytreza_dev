@@ -1,94 +1,19 @@
-from dataclasses import dataclass
-
 import pytest
 
-
-@dataclass
-class Task:
-    title: str
-    url: str
+from ytreza_dev.features.todolist_query_fvp.next_action_fvp_query import NextActionFvpQuery, TaskReader
+from ytreza_dev.features.todolist_query_fvp.types import Task, NothingToDo, DoTheTask, ChooseTaskBetween, TaskBase, \
+    TaskNew, TaskNext, TaskLater
 
 
-@dataclass
-class ChooseTaskBetween:
-    tasks: (Task, Task)
-
-
-@dataclass
-class DoTheTask:
-    task: Task
-
-
-@dataclass()
-class TaskBase:
-    title: str
-    url: str
-
-
-@dataclass
-class TaskNew(TaskBase):
-    pass
-
-
-@dataclass
-class TaskNext(TaskBase):
-    pass
-
-@dataclass
-class TaskLater(TaskBase):
-    pass
-
-
-@dataclass
-class NothingToDo:
-    pass
-
-
-class TaskReaderForTest:
+class TaskReaderForTest(TaskReader):
     def __init__(self) -> None:
-        self._tasks: list[TaskNew] = []
+        self._tasks: list[TaskBase] = []
 
-    def feed(self, tasks):
+    def feed(self, tasks: list[TaskBase]) -> None:
         self._tasks = tasks
 
-    def all_active_tasks(self) -> list[TaskNew]:
+    def all_active_tasks(self) -> list[TaskBase]:
         return self._tasks
-
-
-class NextActionFvpQuery:
-    def __init__(self, task_reader: TaskReaderForTest):
-        self._task_reader = task_reader
-
-    def next_action(self) -> NothingToDo:
-        tasks = self._task_reader.all_active_tasks()
-
-        if not tasks:
-            return NothingToDo()
-
-        next_task_index = self._next_task_index(tasks)
-        new_task_index = self._new_task_index(next_task_index, tasks)
-
-        if new_task_index > next_task_index:
-            return ChooseTaskBetween(tasks=(
-                Task(title=tasks[next_task_index].title, url=tasks[next_task_index].url),
-                Task(title=tasks[new_task_index].title, url=tasks[new_task_index].url)
-            ))
-
-        return DoTheTask(task=Task(title=tasks[next_task_index].title, url=tasks[next_task_index].url))
-
-    @staticmethod
-    def _new_task_index(next_task_index, tasks):
-        return next(
-            (index for index in range(next_task_index + 1, len(tasks)) if isinstance(tasks[index], TaskNew)),
-            next_task_index
-        )
-
-    @staticmethod
-    def _next_task_index(tasks):
-        return next(
-                (index for index, task in reversed(list(enumerate(tasks))) if isinstance(task, TaskNext)),
-                0
-        )
 
 
 @pytest.fixture

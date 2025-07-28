@@ -8,7 +8,7 @@ load_dotenv()
 
 
 class TodolistReaderFromTodoist(TodolistReaderPort):
-    def __init__(self):
+    def __init__(self) -> None:
         self.api_token = os.getenv("TODOIST_API_TOKEN")
         if not self.api_token:
             raise ValueError("TODOIST_API_TOKEN environment variable not set.")

@@ -8,7 +8,7 @@ def adapter() -> TodolistReaderFromTodoist:
     return TodolistReaderFromTodoist()
 
 
-def test_todoist_adapter_can_fetch_tasks(adapter: TodolistReaderFromTodoist):
+def test_todoist_adapter_can_fetch_tasks(adapter: TodolistReaderFromTodoist) -> None:
     all_tasks = adapter.all_tasks()
 
     assert isinstance(all_tasks, list)
