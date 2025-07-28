@@ -1,10 +1,7 @@
 import os
 import requests
-from dotenv import load_dotenv
 
 from ytreza_dev.features.todolist_query.todolist_query import TodolistReaderPort, Task
-
-load_dotenv()
 
 
 class TodolistReaderFromTodoist(TodolistReaderPort):
