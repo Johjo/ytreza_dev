@@ -1,43 +1,55 @@
 import streamlit as st
 
-from ytreza_dev.features.todolist_query.todolist_reader_from_todoist import TodolistReaderFromTodoist
-from ytreza_dev.features.todolist_query.todolist_query import TodolistQuery
+from ytreza_dev.features.start_fvp_use_case.todolist_reader_from_todoist import TodolistReaderFromTodoist
+from ytreza_dev.features.start_fvp_use_case.task_repository_from_json import TaskRepositoryFromJson
+from ytreza_dev.features.start_fvp_use_case.use_case import StartFvpUseCase
+from ytreza_dev.features.todolist_query_fvp.next_action_fvp_query import NextActionFvpQuery
+from pathlib import Path
 
+from ytreza_dev.features.todolist_query_fvp.task_reader_from_json import TaskReaderFromJson
+from ytreza_dev.features.todolist_query_fvp.types import NothingToDo, DoTheTask, ChooseTaskBetween
+from dotenv import load_dotenv
+
+load_dotenv(dotenv_path=".env")
 
 def main() -> None:
     st.set_page_config(page_title="Ytreza Dev Project")
 
     st.title("Ytreza Dev Project")
-    st.write("Hello World")
 
-    st.header("Todoist Tasks")
+    st.header("Démarrer une session FVP")
 
-    if st.button("Load tasks from Todoist"):
+    if st.button("Synchroniser les tâches depuis Todoist"):
         try:
-            # It's good practice to instantiate these here so that
-            # they are re-created on each button click, which avoids
-            # potential state issues in a Streamlit app.
-            adapter = TodolistReaderFromTodoist()
-            todolist_query = TodolistQuery(adapter)
-            tasks = todolist_query.all_tasks()
+            # Initialiser les composants nécessaires
+            json_path = Path("data_test/tasks.json")
 
-            if tasks:
-                st.write("Here are your tasks:")
-                for task in tasks:
-                    col1, col2 = st.columns([4, 1])
-                    with col1:
-                        st.write(task.name)
-                    with col2:
-                        st.link_button("Go to task", url=task.url)
-            else:
-                st.success("No tasks found in your Todoist account.")
+            start_fvp_use_case = StartFvpUseCase(TodolistReaderFromTodoist(),
+                                                 TaskRepositoryFromJson(file_path=json_path))
+            start_fvp_use_case.execute()
+
+            next_action_query = NextActionFvpQuery(TaskReaderFromJson(json_path))
+            next_action = next_action_query.next_action()
+
+            # Afficher le résultat
+            st.header("Prochaines actions")
+
+            if isinstance(next_action, NothingToDo):
+                st.success("Rien à faire pour le moment.")
+            elif isinstance(next_action, DoTheTask):
+                st.write("Prochaine tâche à faire :")
+                st.write(f"Titre : {next_action.task.title}")
+                st.link_button("Aller à la tâche", url=next_action.task.url)
+            elif isinstance(next_action, ChooseTaskBetween):
+                st.write("Choisissez entre ces deux tâches :")
+                for task in next_action.tasks:
+                    st.write(f"Titre : {task.title}")
+                    st.link_button(f"Aller à {task.title}", url=task.url)
 
         except ValueError as e:
-            # This will catch the error if the API token is not set
-            st.error(f"An error occurred: {e}")
-        except Exception as e:
-            # Catch other potential errors (e.g., network issues)
-            st.error(f"Failed to fetch tasks from Todoist. Error: {e}")
+            st.error(f"Une erreur s'est produite : {e}")
+        # except Exception as e:
+        #     st.error(f"Échec de la synchronisation des tâches. Erreur : {e}")
 
 
 if __name__ == "__main__":

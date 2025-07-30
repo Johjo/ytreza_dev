@@ -1,3 +1,4 @@
+import json
 from dataclasses import dataclass
 
 import requests
@@ -21,5 +22,6 @@ class TodoistAPI:
         response = requests.get(f"{self._base_url}/tasks", headers=headers)
         response.raise_for_status()
 
-        tasks = response.json()
-        return [Task(name=str(task["content"]).encode("utf-8"), url=task["url"]) for task in tasks]
+        json_content = response.text
+        tasks = json.loads(json_content)
+        return [Task(name=task["content"], url=task["url"]) for task in tasks]

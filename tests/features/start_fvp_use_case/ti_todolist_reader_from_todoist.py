@@ -14,4 +14,4 @@ def test_all_tasks() -> None:
     todoist_api = TodolistReaderFromTodoist()
     tasks = todoist_api.all_tasks()
 
-    verify("\n".join([str(task) for task in tasks]))
+    verify("\n".join([str(task) for task in tasks]), encoding="utf-8")
