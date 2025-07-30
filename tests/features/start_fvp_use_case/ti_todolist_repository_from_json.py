@@ -13,5 +13,5 @@ def test_write_in_json():
         Task(name="buy the milk", url="https://url_1.com"),
         Task(name="buy the water", url="https://url_2.com")])
 
-    verify(Path("tasks.json").read_text(encoding="utf-8"))
+    verify(json_path.read_text(encoding="utf-8"))
 
