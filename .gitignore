@@ -249,3 +249,4 @@ fabric.properties
 .idea
 .env 
 .env.test
+/data_test/tasks.json
