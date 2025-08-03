@@ -7,6 +7,7 @@ from ytreza_dev.features.todolist_query_fvp.next_action_fvp_query import NextAct
 from pathlib import Path
 
 from ytreza_dev.features.todolist_query_fvp.task_reader_from_json import TaskReaderFromJson
+from ytreza_dev.shared.env_reader import EnvReaderFromEnv
 from ytreza_dev.shared.final_version_perfected.types import NothingToDo, DoTheTask, ChooseTaskBetween
 from dotenv import load_dotenv
 
@@ -24,7 +25,7 @@ def main() -> None:
             # Initialiser les composants nécessaires
             json_path = Path("data_test/tasks.json")
 
-            start_fvp_use_case = StartFvpUseCase(TodolistReaderFromTodoist(),
+            start_fvp_use_case = StartFvpUseCase(TodolistReaderFromTodoist(EnvReaderFromEnv()),
                                                  TaskRepositoryFromJson(file_path=json_path))
             start_fvp_use_case.execute()
 

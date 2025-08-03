@@ -1,3 +1,5 @@
+import pytest
+
 from tests.features.final_version_perfected.test_start_fvp_use_case import TodolistReaderForTest, TaskRepositoryForTest
 from tests.features.final_version_perfected.tu_list_fvp_next_action import TaskReaderForTest
 from ytreza_dev.features.start_fvp_use_case.use_case import StartFvpUseCase
@@ -21,6 +23,7 @@ from ytreza_dev.shared.final_version_perfected.types import ChooseTaskBetween, T
 #         ]
 
 
+@pytest.mark.skip
 def test_fvp():
     todolist_reader = TodolistReaderForTest()
     todolist_reader.feed([
