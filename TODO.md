@@ -1,2 +1,0 @@
-- [x] TodolistReader must read ExternalTask
-  - [x] TaskRepository must save (TaskBase)
