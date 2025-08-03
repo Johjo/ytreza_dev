@@ -2,7 +2,7 @@ import json
 from dataclasses import asdict
 from pathlib import Path
 
-from ytreza_dev.features.start_fvp_use_case.use_case import TaskRepository, Task
+from ytreza_dev.features.start_fvp_use_case.use_case import TaskRepository, OldTask
 from ytreza_dev.shared.final_version_perfected.types import TaskBase
 
 

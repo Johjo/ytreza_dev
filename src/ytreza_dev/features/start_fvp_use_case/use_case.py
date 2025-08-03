@@ -5,7 +5,7 @@ from ytreza_dev.shared.final_version_perfected.types import TaskBase, TaskNew
 
 
 @dataclass
-class Task:
+class OldTask:
     name: str
     url: str
 
@@ -15,10 +15,15 @@ class TaskRepository(metaclass=ABCMeta):
     def save(self, tasks: list[TaskBase]) -> None:
         pass
 
+@dataclass
+class ExternalTask:
+    name: str
+    url: str
+
 
 class TodolistReader(metaclass=ABCMeta):
     @abstractmethod
-    def all_tasks(self) -> list[Task]:
+    def all_tasks(self) -> list[ExternalTask]:
         pass
 
 
