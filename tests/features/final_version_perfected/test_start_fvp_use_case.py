@@ -1,16 +1,17 @@
 import pytest
 
 from ytreza_dev.features.start_fvp_use_case.use_case import Task, TaskRepository, TodolistReader, StartFvpUseCase
+from ytreza_dev.shared.final_version_perfected.types import TaskBase, TaskNew
 
 
 class TaskRepositoryForTest(TaskRepository):
     def __init__(self) -> None:
-        self._tasks : list[Task] = []
+        self._tasks : list[TaskBase] = []
 
-    def all_tasks(self) -> list[Task]:
+    def all_tasks(self) -> list[TaskBase]:
         return self._tasks
 
-    def save(self, tasks: list[Task]) -> None:
+    def save(self, tasks: list[TaskBase]) -> None:
         self._tasks = tasks
 
 
@@ -54,5 +55,5 @@ def test_synchronize_task_in_repository(todolist_reader: TodolistReaderForTest, 
     sut.execute()
 
     assert task_repository.all_tasks() == [
-        Task(name="buy the milk", url="https://url_1.com"),
-        Task(name="buy the water", url="https://url_2.com")]
+        TaskNew(title="buy the milk", url="https://url_1.com"),
+        TaskNew(title="buy the water", url="https://url_2.com")]

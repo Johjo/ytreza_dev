@@ -1,6 +1,8 @@
 from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass
 
+from ytreza_dev.shared.final_version_perfected.types import TaskBase, TaskNew
+
 
 @dataclass
 class Task:
@@ -10,7 +12,7 @@ class Task:
 
 class TaskRepository(metaclass=ABCMeta):
     @abstractmethod
-    def save(self, tasks: list[Task]) -> None:
+    def save(self, tasks: list[TaskBase]) -> None:
         pass
 
 
@@ -26,4 +28,4 @@ class StartFvpUseCase:
         self._task_repository = task_repository
 
     def execute(self) -> None:
-        self._task_repository.save(self._todolist_reader.all_tasks())
+        self._task_repository.save([TaskNew(title=task.name, url=task.url) for task in self._todolist_reader.all_tasks()])

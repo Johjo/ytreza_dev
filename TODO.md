@@ -1,3 +1,2 @@
-- [ ] mypy must be clean
-  - [ ] Argument 1 to "TodoistAPI" has incompatible type "str | None"; expected "str"  [arg-type]
-    - [ ] Extract env reader 
+- [ ] TodolistReader must read ExternalTask
+  - [x] TaskRepository must save (TaskBase)
