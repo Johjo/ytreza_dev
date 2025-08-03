@@ -1,7 +1,8 @@
 from pyqure import pyqure, PyqureMemory, Key
 
 from tests.features.final_version_perfected.test_choose_task_use_case import ChooseTaskUseCase
-from tests.features.final_version_perfected.test_start_fvp_use_case import TodolistReaderForTest
+from tests.features.final_version_perfected.test_start_fvp_use_case import TodolistReaderForTest, task_repository
+from ytreza_dev.features.final_version_perfected.close_task_use_case import CloseTaskUseCase
 from ytreza_dev.features.start_fvp_use_case.use_case import StartFvpUseCase, ExternalTask, TaskRepository, \
     TODOLIST_READER_KEY, TASK_REPOSITORY_KEY
 from ytreza_dev.features.todolist_query_fvp.next_action_fvp_query import NextActionFvpQuery, TaskReader, TASK_READER_KEY
@@ -76,7 +77,7 @@ class FvpController:
         ChooseTaskUseCase(task_repository=self._inject(TASK_REPOSITORY_KEY)).execute(url)
 
     def close_task(self, url):
-        pass
+        CloseTaskUseCase(task_repository=self._inject(TASK_REPOSITORY_KEY)).execute(url)
 
 
 def test_fvp():
@@ -167,8 +168,10 @@ def test_fvp():
     controller.choose_task(url="https://url_5.com")
     assert controller.next_action() == DoTheTask(Task(title="Tidy Desk", url="https://url_5.com"))
 
-    # controller.close_task(url="https://url_5.com")
-    # assert controller.next_action() == DoTheTask(Task(title="Tidy Desk", url="https://url_5.com"))
+    controller.close_task(url="https://url_5.com")
+    assert controller.next_action() == ChooseTaskBetween((
+        Task(title="Voicemail", url="https://url_3.com"),
+        Task(title="Call Dissatisfied Customer", url="https://url_6.com")))
 
 
     # ChooseTaskUseCase(task_repository=task_repository).execute(url="https://url_1.com")
