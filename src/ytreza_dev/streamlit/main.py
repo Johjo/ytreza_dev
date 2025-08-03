@@ -7,7 +7,7 @@ from ytreza_dev.features.todolist_query_fvp.next_action_fvp_query import NextAct
 from pathlib import Path
 
 from ytreza_dev.features.todolist_query_fvp.task_reader_from_json import TaskReaderFromJson
-from ytreza_dev.features.todolist_query_fvp.types import NothingToDo, DoTheTask, ChooseTaskBetween
+from ytreza_dev.shared.final_version_perfected.types import NothingToDo, DoTheTask, ChooseTaskBetween
 from dotenv import load_dotenv
 
 load_dotenv(dotenv_path=".env")

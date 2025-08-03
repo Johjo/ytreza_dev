@@ -1,7 +1,7 @@
 import pytest
 
 from ytreza_dev.features.todolist_query_fvp.next_action_fvp_query import NextActionFvpQuery, TaskReader
-from ytreza_dev.features.todolist_query_fvp.types import Task, NothingToDo, DoTheTask, ChooseTaskBetween, TaskBase, \
+from ytreza_dev.shared.final_version_perfected.types import Task, NothingToDo, DoTheTask, ChooseTaskBetween, TaskBase, \
     TaskNew, TaskNext, TaskLater
 
 

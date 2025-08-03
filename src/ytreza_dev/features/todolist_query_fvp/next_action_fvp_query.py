@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
 
-from ytreza_dev.features.todolist_query_fvp.types import Task, NothingToDo, DoTheTask, ChooseTaskBetween, NextAction, \
+from ytreza_dev.shared.final_version_perfected.types import Task, NothingToDo, DoTheTask, ChooseTaskBetween, NextAction, \
     TaskNew, TaskNext, TaskBase
 
 

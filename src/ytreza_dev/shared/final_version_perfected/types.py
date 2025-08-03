@@ -31,6 +31,12 @@ class TaskBase:
     title: str
     url: str
 
+    def to_next(self):
+        return TaskNext(title=self.title, url=self.url)
+
+    def to_later(self):
+        return TaskLater(title=self.title, url=self.url)
+
 
 @dataclass
 class TaskNew(TaskBase):

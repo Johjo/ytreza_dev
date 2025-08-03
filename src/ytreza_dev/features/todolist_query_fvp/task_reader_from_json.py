@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 
 from ytreza_dev.features.todolist_query_fvp.next_action_fvp_query import TaskReader
-from ytreza_dev.features.todolist_query_fvp.types import TaskBase, TaskNew
+from ytreza_dev.shared.final_version_perfected.types import TaskBase, TaskNew
 
 
 class TaskReaderFromJson(TaskReader):
