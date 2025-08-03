@@ -7,6 +7,9 @@ from ytreza_dev.shared.final_version_perfected.types import TaskBase
 
 
 class TaskRepositoryFromJson(TaskRepository):
+    def all_tasks(self) -> list[TaskBase]:
+        raise NotImplementedError()
+
     def __init__(self, file_path: Path) -> None:
         self._file_path = file_path
 

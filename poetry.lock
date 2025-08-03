@@ -970,6 +970,25 @@ files = [
 ]
 
 [[package]]
+name = "pyqure"
+version = "0.1.0"
+description = ""
+optional = false
+python-versions = ">=3.13"
+groups = ["main"]
+files = []
+develop = false
+
+[package.dependencies]
+pytest = ">=8.3.5,<9.0.0"
+
+[package.source]
+type = "git"
+url = "https://github.com/Johjo/pyqure.git"
+reference = "HEAD"
+resolved_reference = "5d2394460b87a763211c936aaa1cbe845fda0b53"
+
+[[package]]
 name = "pytest"
 version = "8.4.1"
 description = "pytest: simple powerful testing with Python"
@@ -1467,4 +1486,4 @@ watchmedo = ["PyYAML (>=3.10)"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13"
-content-hash = "4994e106550f67b3952e2923d0e8c4eff120d5ce6e600747988509c678a436e5"
+content-hash = "6fd5482726f7353cd8425c3eb10b52f1ea5fb213d7479577d5900f8598c3189b"

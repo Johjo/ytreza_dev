@@ -1,6 +1,8 @@
 from abc import ABCMeta, abstractmethod
 from dataclasses import dataclass
 
+from pyqure import Key
+
 from ytreza_dev.shared.final_version_perfected.types import TaskBase, TaskNew
 
 
@@ -15,16 +17,25 @@ class TaskRepository(metaclass=ABCMeta):
     def save(self, tasks: list[TaskBase]) -> None:
         pass
 
+    @abstractmethod
+    def all_tasks(self) -> list[TaskBase]:
+        pass
+
+TASK_REPOSITORY_KEY = Key("task repository", TaskRepository)
+
 @dataclass
 class ExternalTask:
     name: str
     url: str
 
 
+
 class TodolistReader(metaclass=ABCMeta):
     @abstractmethod
     def all_tasks(self) -> list[ExternalTask]:
         pass
+
+TODOLIST_READER_KEY = Key("todolist reader", TodolistReader)
 
 
 class StartFvpUseCase:
