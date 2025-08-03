@@ -32,4 +32,5 @@ python_files = [
     "*_test.py",
     "tu_*.py",
     "ti_*.py",
+    "ta_*.py",
 ]

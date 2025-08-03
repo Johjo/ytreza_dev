@@ -4,8 +4,8 @@ from ytreza_dev.shared.final_version_perfected.types import TaskNew, TaskLater, 
 
 
 class TaskRepositoryForTest:
-    def __init__(self):
-        self._tasks: list[TaskBase] = []
+    def __init__(self) -> None:
+        self._tasks: list[TaskNew | TaskLater | TaskNext] = []
 
     def feed(self, tasks: list[TaskNew | TaskLater | TaskNext]):
         self._tasks = tasks

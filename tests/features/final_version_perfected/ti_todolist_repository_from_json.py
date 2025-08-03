@@ -1,4 +1,4 @@
-from approvaltests import verify
+from approvaltests import verify # type: ignore
 from pathlib import Path
 
 from ytreza_dev.features.start_fvp_use_case.task_repository_from_json import TaskRepositoryFromJson

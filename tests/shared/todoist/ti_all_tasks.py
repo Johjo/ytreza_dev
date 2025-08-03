@@ -1,7 +1,7 @@
 import os
 
 from dotenv import load_dotenv
-from approvaltests import verify
+from approvaltests import verify # type: ignore
 
 from ytreza_dev.shared.todoist.todoist_api import TodoistAPI
 
