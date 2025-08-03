@@ -1,10 +1,12 @@
 from pyqure import pyqure, PyqureMemory, Key
 
+from tests.features.final_version_perfected.test_choose_task_use_case import ChooseTaskUseCase
 from tests.features.final_version_perfected.test_start_fvp_use_case import TodolistReaderForTest
 from ytreza_dev.features.start_fvp_use_case.use_case import StartFvpUseCase, ExternalTask, TaskRepository, \
     TODOLIST_READER_KEY, TASK_REPOSITORY_KEY
 from ytreza_dev.features.todolist_query_fvp.next_action_fvp_query import NextActionFvpQuery, TaskReader, TASK_READER_KEY
-from ytreza_dev.shared.final_version_perfected.types import ChooseTaskBetween, TaskNew, TaskBase, Task
+from ytreza_dev.shared.final_version_perfected.types import ChooseTaskBetween, TaskNew, TaskBase, Task, TaskNext, \
+    TaskLater, DoTheTask
 
 
 # class TodolistReaderForTest(start.TodolistReader):
@@ -39,7 +41,7 @@ TASK_IN_MEMORY_KEY = Key("task_in_memory", TaskInMemory)
 
 class TaskRepositoryForDemo(TaskRepository):
     def all_tasks(self) -> list[TaskBase]:
-        return []
+        return self._memory.all_tasks()
 
     def __init__(self, memory: TaskInMemory):
         self._memory = memory
@@ -69,6 +71,12 @@ class FvpController:
     def next_action(self):
         TASK_READER_KEY = Key("task_reader", TaskReader)
         return NextActionFvpQuery(task_reader=self._inject(TASK_READER_KEY)).next_action()
+
+    def choose_task(self, url: str):
+        ChooseTaskUseCase(task_repository=self._inject(TASK_REPOSITORY_KEY)).execute(url)
+
+    def close_task(self, url):
+        pass
 
 
 def test_fvp():
@@ -110,9 +118,57 @@ def test_fvp():
         TaskNew(title="Back Up  ", url="https://url_10.com"),
     ]
 
-    actual = controller.next_action()
-    assert actual == ChooseTaskBetween((
+    assert controller.next_action() == ChooseTaskBetween((
         Task(title="Email ", url="https://url_1.com"),
         Task(title="In-Tray", url="https://url_2.com")))
+
+    controller.choose_task(url="https://url_1.com")
+
+    assert controller.next_action() == ChooseTaskBetween((
+        Task(title="Email ", url="https://url_1.com"),
+        Task(title="Voicemail", url="https://url_3.com")))
+
+    controller.choose_task(url="https://url_3.com")
+
+    assert controller.next_action() == ChooseTaskBetween((
+        Task(title="Voicemail", url="https://url_3.com"),
+        Task(title="Project X Report", url="https://url_4.com")))
+
+    controller.choose_task(url="https://url_3.com")
+    assert controller.next_action() == ChooseTaskBetween((
+        Task(title="Voicemail", url="https://url_3.com"),
+        Task(title="Tidy Desk", url="https://url_5.com")))
+
+    controller.choose_task(url="https://url_5.com")
+    assert controller.next_action() == ChooseTaskBetween((
+        Task(title="Tidy Desk", url="https://url_5.com"),
+        Task(title="Call Dissatisfied Customer", url="https://url_6.com")))
+
+    controller.choose_task(url="https://url_5.com")
+    assert controller.next_action() == ChooseTaskBetween((
+        Task(title="Tidy Desk", url="https://url_5.com"),
+        Task(title="Make Dental Appointment", url="https://url_7.com")))
+
+    controller.choose_task(url="https://url_5.com")
+    assert controller.next_action() == ChooseTaskBetween((
+        Task(title="Tidy Desk", url="https://url_5.com"),
+        Task(title="File Invoices", url="https://url_8.com")))
+
+    controller.choose_task(url="https://url_5.com")
+    assert controller.next_action() == ChooseTaskBetween((
+        Task(title="Tidy Desk", url="https://url_5.com"),
+        Task(title="Discuss Project Y with Bob", url="https://url_9.com")))
+
+    controller.choose_task(url="https://url_5.com")
+    assert controller.next_action() == ChooseTaskBetween((
+        Task(title="Tidy Desk", url="https://url_5.com"),
+        Task(title="Back Up  ", url="https://url_10.com")))
+
+    controller.choose_task(url="https://url_5.com")
+    assert controller.next_action() == DoTheTask(Task(title="Tidy Desk", url="https://url_5.com"))
+
+    # controller.close_task(url="https://url_5.com")
+    # assert controller.next_action() == DoTheTask(Task(title="Tidy Desk", url="https://url_5.com"))
+
 
     # ChooseTaskUseCase(task_repository=task_repository).execute(url="https://url_1.com")
