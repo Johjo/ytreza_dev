@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 
 from ytreza_dev.features.final_version_perfected.port.task_reader import TaskReader
-from ytreza_dev.features.final_version_perfected.types import TaskBase, TaskNew
+from ytreza_dev.features.final_version_perfected.types import TaskBase, TaskNew, TaskNext, TaskLater
 
 
 class TaskReaderFromJson(TaskReader):
@@ -11,4 +11,14 @@ class TaskReaderFromJson(TaskReader):
 
     def all_active_tasks(self) -> list[TaskBase]:
         tasks = json.loads(self._json_path.read_text(encoding="utf-8"))
-        return [TaskNew(title=task["title"], url=task["url"]) for task in tasks]
+        return [self._to_task(task) for task in tasks]
+
+    @staticmethod
+    def _to_task(task):
+        match task["status"]:
+            case "new":
+                return TaskNew(title=task["title"], url=task["url"])
+            case "next":
+                return TaskNext(title=task["title"], url=task["url"])
+            case "later":
+                return TaskLater(title=task["title"], url=task["url"])

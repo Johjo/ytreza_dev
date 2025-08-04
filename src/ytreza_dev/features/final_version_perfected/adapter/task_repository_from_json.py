@@ -4,12 +4,24 @@ from pathlib import Path
 from typing import Any
 
 from ytreza_dev.features.final_version_perfected.port.task_repository import TaskRepositoryPort
-from ytreza_dev.features.final_version_perfected.types import TaskBase
+from ytreza_dev.features.final_version_perfected.types import TaskBase, TaskNew, TaskNext, TaskLater
 
 
 class TaskRepositoryFromJson(TaskRepositoryPort):
     def all_tasks(self) -> list[TaskBase]:
-        raise NotImplementedError()
+
+        tasks = json.loads(self._file_path.read_text())
+        return [self.to_task_base(task) for task in tasks]
+
+    @staticmethod
+    def to_task_base(task):
+        match task["status"]:
+            case "new":
+                return TaskNew(title=task["title"], url=task["url"])
+            case "next":
+                return TaskNext(title=task["title"], url=task["url"])
+            case "later":
+                return TaskLater(title=task["title"], url=task["url"])
 
     def __init__(self, file_path: Path) -> None:
         self._file_path = file_path
@@ -21,5 +33,12 @@ class TaskRepositoryFromJson(TaskRepositoryPort):
     @staticmethod
     def _to_dict(task: TaskBase) -> dict[str, Any]:
         d = asdict(task)
-        d.update({"status": "new"})
+        match task:
+            case TaskNext():
+                d.update({"status": "next"})
+            case TaskNew():
+                d.update({"status": "new"})
+            case TaskLater():
+                d.update({"status": "later"})
+
         return d

@@ -1,6 +1,8 @@
 import os
 from abc import ABC, abstractmethod
 
+from dotenv import load_dotenv
+
 
 class EnvReaderPort(ABC):
     @abstractmethod
@@ -8,6 +10,9 @@ class EnvReaderPort(ABC):
         pass
 
 class EnvReaderFromEnv(EnvReaderPort):
+    def __init__(self, env_path: str) -> None:
+        load_dotenv(env_path)
+
     def read(self, key: str) -> str:
         value = os.getenv(key)
         if value is None:

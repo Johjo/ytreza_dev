@@ -1,6 +1,6 @@
 from pyqure import PyqureMemory, pyqure # type: ignore
 
-from tests.features.final_version_perfected.test_choose_task_use_case import ChooseTaskUseCase
+from ytreza_dev.features.final_version_perfected.use_case.choose_task import ChooseTaskUseCase
 from ytreza_dev.features.final_version_perfected.injection_keys import TODOLIST_READER_KEY, TASK_REPOSITORY_KEY, \
     TASK_READER_KEY
 from ytreza_dev.features.final_version_perfected.use_case.close_task_use_case import CloseTaskUseCase
