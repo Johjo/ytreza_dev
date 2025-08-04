@@ -1,83 +1,14 @@
-from pyqure import pyqure, PyqureMemory, Key
+from pyqure import pyqure, PyqureMemory
 
-from tests.features.final_version_perfected.test_choose_task_use_case import ChooseTaskUseCase
+from tests.features.final_version_perfected.adapters import TaskInMemory, TASK_IN_MEMORY_KEY, TaskRepositoryForDemo, \
+    TaskReaderForDemo
 from tests.features.final_version_perfected.test_start_fvp_use_case import TodolistReaderForTest
-from ytreza_dev.features.final_version_perfected.close_task_use_case import CloseTaskUseCase
-from ytreza_dev.features.start_fvp_use_case.use_case import StartFvpUseCase, ExternalTask, TaskRepository, \
-    TODOLIST_READER_KEY, TASK_REPOSITORY_KEY
-from ytreza_dev.features.todolist_query_fvp.next_action_fvp_query import NextActionFvpQuery, TaskReader, TASK_READER_KEY
-from ytreza_dev.shared.final_version_perfected.types import ChooseTaskBetween, TaskNew, TaskBase, Task, DoTheTask, \
+from ytreza_dev.features.final_version_perfected.controller import FvpController
+from ytreza_dev.features.start_fvp_use_case.use_case import ExternalTask
+from ytreza_dev.features.final_version_perfected.injection_keys import TASK_READER_KEY, TODOLIST_READER_KEY, \
+    TASK_REPOSITORY_KEY
+from ytreza_dev.shared.final_version_perfected.types import ChooseTaskBetween, TaskNew, Task, DoTheTask, \
     NothingToDo
-
-
-# class TodolistReaderForTest(start.TodolistReader):
-#     def all_tasks(self) -> list[start.Task]:
-#         return [
-#             start.Task(name="Email ", url="https://url_1.com"),
-#             start.Task(name="In-Tray", url="https://url_2.com"),
-#             start.Task(name="Voicemail", url="https://url_3.com"),
-#             start.Task(name="Project X Report", url="https://url_4.com"),
-#             start.Task(name="Tidy Desk", url="https://url_5.com"),
-#             start.Task(name="Call Dissatisfied Customer", url="https://url_6.com"),
-#             start.Task(name="Make Dental Appointment", url="https://url_7.com"),
-#             start.Task(name="File Invoices", url="https://url_8.com"),
-#             start.Task(name="Discuss Project Y with Bob", url="https://url_9.com"),
-#             start.Task(name="Back Up  ", url="https://url_10.com"),
-#         ]
-
-
-class TaskInMemory:
-    def __init__(self) -> None:
-        self._tasks: list[TaskBase] = []
-
-    def all_tasks(self) -> list[TaskBase]:
-        return self._tasks
-
-    def save(self, tasks: list[TaskBase]) -> None:
-        self._tasks = tasks
-
-TASK_IN_MEMORY_KEY = Key("task_in_memory", TaskInMemory)
-
-
-
-class TaskRepositoryForDemo(TaskRepository):
-    def all_tasks(self) -> list[TaskBase]:
-        return self._memory.all_tasks()
-
-    def __init__(self, memory: TaskInMemory):
-        self._memory = memory
-
-    def save(self, tasks: list[TaskBase]) -> None:
-        self._memory.save(tasks)
-
-
-class TaskReaderForDemo(TaskReader):
-    def __init__(self, memory: TaskInMemory):
-        self._memory = memory
-
-    def all_active_tasks(self) -> list[TaskBase]:
-        return self._memory.all_tasks()
-
-
-class FvpController:
-    def __init__(self, dependencies: PyqureMemory):
-        (_, self._inject) = pyqure(dependencies)
-
-    def start_fvp_session(self):
-        todolist_reader = self._inject(TODOLIST_READER_KEY)
-        task_repository = self._inject(TASK_REPOSITORY_KEY)
-
-        StartFvpUseCase(todolist_reader=todolist_reader, task_repository=task_repository).execute()
-
-    def next_action(self):
-        TASK_READER_KEY = Key("task_reader", TaskReader)
-        return NextActionFvpQuery(task_reader=self._inject(TASK_READER_KEY)).next_action()
-
-    def choose_task(self, url: str):
-        ChooseTaskUseCase(task_repository=self._inject(TASK_REPOSITORY_KEY)).execute(url)
-
-    def close_task(self, url):
-        CloseTaskUseCase(task_repository=self._inject(TASK_REPOSITORY_KEY)).execute(url)
 
 
 def test_fvp():
@@ -96,14 +27,7 @@ def test_fvp():
     ]
 )
     task_in_memory = TaskInMemory()
-    dependencies: PyqureMemory = {}
-    (provide, inject) = pyqure(dependencies)
-    provide(TODOLIST_READER_KEY, todolist_reader)
-    provide(TASK_REPOSITORY_KEY, TaskRepositoryForDemo(memory=task_in_memory))
-    provide(TASK_IN_MEMORY_KEY, task_in_memory)
-    provide(TASK_READER_KEY, TaskReaderForDemo(inject(TASK_IN_MEMORY_KEY)))
-
-    controller = FvpController(dependencies=dependencies)
+    controller = FvpController(dependencies=provide_dependencies(task_in_memory, todolist_reader))
     controller.start_fvp_session()
 
     assert task_in_memory.all_tasks() == [
@@ -166,7 +90,8 @@ def test_fvp():
         Task(title="Back Up  ", url="https://url_10.com")))
 
     controller.choose_task(url="https://url_5.com")
-    assert controller.next_action() == DoTheTask(Task(title="Tidy Desk", url="https://url_5.com"))
+    assert controller.next_action() == DoTheTask(
+        Task(title="Tidy Desk", url="https://url_5.com"))
 
     controller.close_task(url="https://url_5.com")
     assert controller.next_action() == ChooseTaskBetween((
@@ -286,3 +211,13 @@ def test_fvp():
 
     controller.close_task(url="https://url_2.com")
     assert controller.next_action() == NothingToDo()
+
+
+def provide_dependencies(task_in_memory, todolist_reader) -> PyqureMemory:
+    dependencies: PyqureMemory = {}
+    (provide, inject) = pyqure(dependencies)
+    provide(TODOLIST_READER_KEY, todolist_reader)
+    provide(TASK_REPOSITORY_KEY, TaskRepositoryForDemo(memory=task_in_memory))
+    provide(TASK_IN_MEMORY_KEY, task_in_memory)
+    provide(TASK_READER_KEY, TaskReaderForDemo(inject(TASK_IN_MEMORY_KEY)))
+    return dependencies

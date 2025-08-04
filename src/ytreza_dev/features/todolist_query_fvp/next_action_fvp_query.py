@@ -1,7 +1,5 @@
 from abc import ABCMeta, abstractmethod
 
-from pyqure import Key
-
 from ytreza_dev.shared.final_version_perfected.types import Task, NothingToDo, DoTheTask, ChooseTaskBetween, NextAction, \
     TaskNew, TaskNext, TaskBase
 
@@ -10,8 +8,6 @@ class TaskReader(metaclass=ABCMeta):
     @abstractmethod
     def all_active_tasks(self) -> list[TaskBase]:
         pass
-
-TASK_READER_KEY = Key("task_reader", TaskReader)
 
 class NextActionFvpQuery:
     def __init__(self, task_reader: TaskReader):
