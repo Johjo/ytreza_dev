@@ -7,7 +7,8 @@ from ytreza_dev.features.final_version_perfected.adapter.task_reader_from_json i
 from ytreza_dev.features.final_version_perfected.adapter.task_repository_from_json import TaskRepositoryFromJson
 from ytreza_dev.features.final_version_perfected.adapter.todolist_reader_from_todoist import TodolistReaderFromTodoist
 from ytreza_dev.features.final_version_perfected.controller import FvpController
-from ytreza_dev.features.final_version_perfected.injection_keys import TASK_READER_KEY, TODOLIST_READER_KEY, TASK_REPOSITORY_KEY
+from ytreza_dev.features.final_version_perfected.injection_keys import TASK_READER_KEY, TODOLIST_READER_KEY, \
+    TASK_REPOSITORY_KEY
 from ytreza_dev.features.final_version_perfected.types import ChooseTaskBetween, DoTheTask, NothingToDo
 from ytreza_dev.shared.env_reader import EnvReaderFromEnv
 
@@ -38,17 +39,23 @@ def todolist_page() -> None:
         st.write("Choose between tasks:")
         for task in next_action.tasks:
             st.title(f"{task.title}")
-            if st.button(f"Choose", key=f"choose {task.url}"):
-                controller.choose_task(task.url)
-                st.rerun()
-            if st.button(f"Close", key=f"close {task.url}"):
-                controller.close_task(task.url)
-                st.rerun()
-            if st.button(f"Open", key=f"open {task.url}"):
-                controller.close_task(task.url)
-                st.rerun()
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                if st.button(f"Choose", key=f"choose {task.url}"):
+                    controller.choose_task(task.url)
+                    st.rerun()
+            with col2:
+                if st.button(f"Close", key=f"close {task.url}"):
+                    controller.close_task(task.url)
+                    st.rerun()
+            with col3:
+                st.link_button(f"Open URL", url=task.url)
     elif isinstance(next_action, DoTheTask):
-        st.write(f"Do this task: {next_action.task.title}")
-        if st.button(f"Close task: {next_action.task.title}"):
-            controller.close_task(next_action.task.url)
-            st.rerun()
+        st.title(f"Do this task: {next_action.task.title}")
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.button(f"Close task: {next_action.task.title}"):
+                controller.close_task(next_action.task.url)
+                st.rerun()
+        with col2:
+            st.link_button(f"Open URL: {next_action.task.title}", url=next_action.task.url)
