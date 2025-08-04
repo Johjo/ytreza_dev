@@ -31,13 +31,13 @@ class TaskBase:
     title: str
     url: str
 
-    def to_next(self):
+    def to_next(self) -> 'TaskNext':
         return TaskNext(title=self.title, url=self.url)
 
-    def to_later(self):
+    def to_later(self) -> 'TaskLater':
         return TaskLater(title=self.title, url=self.url)
 
-    def to_new(self):
+    def to_new(self) -> 'TaskNew':
         return TaskNew(title=self.title, url=self.url)
 
 

@@ -6,15 +6,15 @@ from ytreza_dev.shared.final_version_perfected.types import TaskNew, TaskLater, 
 
 class TaskRepositoryForTest(TaskRepository):
     def __init__(self) -> None:
-        self._tasks: list[TaskNew | TaskLater | TaskNext] = []
+        self._tasks: list[TaskBase] = []
 
-    def feed(self, tasks: list[TaskNew | TaskLater | TaskNext]):
+    def feed(self, tasks: list[TaskBase]) -> None:
         self._tasks = tasks
 
-    def all_tasks(self):
+    def all_tasks(self) -> list[TaskBase]:
         return self._tasks
 
-    def save(self, tasks: list[TaskNew | TaskLater | TaskNext]) -> None:
+    def save(self, tasks: list[TaskBase]) -> None:
         self._tasks = tasks
 
 
@@ -22,9 +22,9 @@ class ChooseTaskUseCase:
     def __init__(self, task_repository: TaskRepository):
         self._task_repository = task_repository
 
-    def execute(self, url: str):
+    def execute(self, url: str) -> None:
         all_tasks_before = self._task_repository.all_tasks()
-        all_tasks_after = []
+        all_tasks_after : list[TaskBase] = []
 
         all_tasks_after.append(all_tasks_before[0].to_next())
 
@@ -43,16 +43,17 @@ class ChooseTaskUseCase:
 
         self._task_repository.save(all_tasks_after)
 
-    def _first_new_index(self, all_tasks_before):
-        i = 1
-
+    @staticmethod
+    def _first_new_index(all_tasks_before: list[TaskBase]) -> int:
         for index, task in enumerate(all_tasks_before):
             if isinstance(task, TaskNew):
                 return index
 
+        raise NotImplementedError()
 
 
-def test_repository():
+
+def test_repository() -> None:
     task_repository = TaskRepositoryForTest()
     task_repository.feed([TaskNew(title="buy the milk", url="https://url_1.com"),
                           TaskNew(title="buy the water", url="https://url_2.com")])
@@ -61,7 +62,7 @@ def test_repository():
                                            TaskNew(title="buy the water", url="https://url_2.com")]
 
 
-@pytest.mark.parametrize("initial_tasks, chosen_url, expected", [
+@pytest.mark.parametrize("before, url, after", [
     [[TaskNew(title="buy the milk", url="https://url_1.com"),
       TaskNew(title="buy the water", url="https://url_2.com")],
      "https://url_1.com",
@@ -127,11 +128,11 @@ def test_repository():
       TaskNext(title="buy the eggs", url="https://url_3.com"),
       TaskNext(title="buy the bread", url="https://url_4.com")]],
 ])
-def test_xxx(initial_tasks, chosen_url, expected):
+def test_xxx(before: list[TaskBase], url: str, after: list[TaskBase]) -> None:
     task_repository = TaskRepositoryForTest()
-    task_repository.feed(initial_tasks)
+    task_repository.feed(before)
     sut = ChooseTaskUseCase(task_repository)
 
-    sut.execute(url=chosen_url)
+    sut.execute(url=url)
 
-    assert task_repository.all_tasks() == expected
+    assert task_repository.all_tasks() == after

@@ -1,17 +1,17 @@
-from pyqure import pyqure, PyqureMemory
+from pyqure import pyqure, PyqureMemory # type: ignore
 
 from tests.features.final_version_perfected.adapters import TaskInMemory, TASK_IN_MEMORY_KEY, TaskRepositoryForDemo, \
     TaskReaderForDemo
 from tests.features.final_version_perfected.test_start_fvp_use_case import TodolistReaderForTest
 from ytreza_dev.features.final_version_perfected.controller import FvpController
-from ytreza_dev.features.start_fvp_use_case.use_case import ExternalTask
 from ytreza_dev.features.final_version_perfected.injection_keys import TASK_READER_KEY, TODOLIST_READER_KEY, \
     TASK_REPOSITORY_KEY
+from ytreza_dev.features.start_fvp_use_case.use_case import ExternalTask, TodolistReader
 from ytreza_dev.shared.final_version_perfected.types import ChooseTaskBetween, TaskNew, Task, DoTheTask, \
     NothingToDo
 
 
-def test_fvp():
+def test_fvp() -> None:
     todolist_reader = TodolistReaderForTest()
     todolist_reader.feed([
         ExternalTask(name="Email ", url="https://url_1.com"),
@@ -213,7 +213,7 @@ def test_fvp():
     assert controller.next_action() == NothingToDo()
 
 
-def provide_dependencies(task_in_memory, todolist_reader) -> PyqureMemory:
+def provide_dependencies(task_in_memory: TaskInMemory, todolist_reader: TodolistReader) -> PyqureMemory:
     dependencies: PyqureMemory = {}
     (provide, inject) = pyqure(dependencies)
     provide(TODOLIST_READER_KEY, todolist_reader)

@@ -7,7 +7,7 @@ from ytreza_dev.features.start_fvp_use_case.use_case import OldTask
 from ytreza_dev.features.todolist_query_fvp.task_reader_from_json import TaskReaderFromJson
 
 
-def test_read_data_from_json_when_created():
+def test_read_data_from_json_when_created() -> None:
     # GIVEN
     json_path = Path("data_test/tasks.json")
     task_repository_from_json = TaskRepositoryFromJson(file_path=json_path)

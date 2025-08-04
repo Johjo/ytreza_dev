@@ -1,12 +1,11 @@
 from ytreza_dev.features.start_fvp_use_case.use_case import TaskRepository
-from ytreza_dev.shared.final_version_perfected.types import TaskNext, TaskLater, TaskNew
 
 
 class CloseTaskUseCase:
-    def __init__(self, task_repository: TaskRepository):
+    def __init__(self, task_repository: TaskRepository) -> None:
         self._task_repository = task_repository
 
-    def execute(self, url: str):
+    def execute(self, url: str) -> None:
         before = self._task_repository.all_tasks()
         after = []
 

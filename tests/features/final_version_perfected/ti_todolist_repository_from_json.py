@@ -5,7 +5,7 @@ from ytreza_dev.features.start_fvp_use_case.task_repository_from_json import Tas
 from ytreza_dev.features.start_fvp_use_case.use_case import OldTask
 
 
-def test_write_in_json():
+def test_write_in_json() -> None:
     json_path = Path("./data_test/tasks.json")
     sut = TaskRepositoryFromJson(json_path)
 

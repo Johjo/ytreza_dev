@@ -2,10 +2,10 @@ import pytest
 
 from tests.features.final_version_perfected.test_choose_task_use_case import TaskRepositoryForTest
 from ytreza_dev.features.final_version_perfected.close_task_use_case import CloseTaskUseCase
-from ytreza_dev.shared.final_version_perfected.types import TaskNext, TaskLater, TaskNew
+from ytreza_dev.shared.final_version_perfected.types import TaskNext, TaskLater, TaskNew, TaskBase
 
 
-@pytest.mark.parametrize("initial, closed_url, expected", [
+@pytest.mark.parametrize("before, url, after", [
     [
         [TaskNext(title="Buy the milk ", url="https://url_1.com")],
         "https://url_1.com",
@@ -18,12 +18,12 @@ from ytreza_dev.shared.final_version_perfected.types import TaskNext, TaskLater,
         [TaskNext(title="Buy the milk ", url="https://url_1.com")]
     ],
 ])
-def test_remove_task_when_closed(initial, closed_url, expected):
+def test_remove_task_when_closed(before: list[TaskBase], url: str, after: list[TaskBase]) -> None:
     task_repository = TaskRepositoryForTest()
-    task_repository.feed(tasks=initial)
+    task_repository.feed(tasks=before)
     sut = CloseTaskUseCase(task_repository)
-    sut.execute(url=closed_url)
-    assert task_repository.all_tasks() == expected
+    sut.execute(url=url)
+    assert task_repository.all_tasks() == after
 
 
 @pytest.mark.parametrize("before, url, after", [
@@ -56,7 +56,7 @@ def test_remove_task_when_closed(initial, closed_url, expected):
         ]
     ],
 ])
-def test_set_following_task_to_new(before, url, after):
+def test_set_following_task_to_new(before: list[TaskBase], url: str, after: list[TaskBase]) -> None:
     task_repository = TaskRepositoryForTest()
     task_repository.feed(tasks=before)
     sut = CloseTaskUseCase(task_repository)
