@@ -4,12 +4,6 @@ from dataclasses import dataclass
 from ytreza_dev.shared.final_version_perfected.types import TaskBase, TaskNew
 
 
-@dataclass
-class OldTask:
-    name: str
-    url: str
-
-
 class TaskRepository(metaclass=ABCMeta):
     @abstractmethod
     def save(self, tasks: list[TaskBase]) -> None:

@@ -1,4 +1,4 @@
-from ytreza_dev.features.start_fvp_use_case.use_case import TodolistReader, OldTask, ExternalTask
+from ytreza_dev.features.start_fvp_use_case.use_case import TodolistReader, ExternalTask
 from ytreza_dev.shared.env_reader import EnvReaderPort, EnvReaderFromEnv
 from ytreza_dev.shared.todoist.todoist_api import TodoistAPI
 

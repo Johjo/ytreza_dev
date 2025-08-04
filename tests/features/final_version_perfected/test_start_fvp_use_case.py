@@ -1,6 +1,6 @@
 import pytest
 
-from ytreza_dev.features.start_fvp_use_case.use_case import OldTask, TaskRepository, TodolistReader, StartFvpUseCase, \
+from ytreza_dev.features.start_fvp_use_case.use_case import TaskRepository, TodolistReader, StartFvpUseCase, \
     ExternalTask
 from ytreza_dev.shared.final_version_perfected.types import TaskBase, TaskNew
 

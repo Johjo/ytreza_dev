@@ -11,4 +11,4 @@ class TaskReaderFromJson(TaskReader):
 
     def all_active_tasks(self) -> list[TaskBase]:
         tasks = json.loads(self._json_path.read_text(encoding="utf-8"))
-        return [TaskNew(title=task["name"], url=task["url"]) for task in tasks]
+        return [TaskNew(title=task["title"], url=task["url"]) for task in tasks]

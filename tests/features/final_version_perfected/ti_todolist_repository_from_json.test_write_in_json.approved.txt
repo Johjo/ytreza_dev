@@ -1,11 +1,11 @@
 [
     {
-        "name": "buy the milk",
+        "title": "buy the milk",
         "url": "https://url_1.com",
         "status": "new"
     },
     {
-        "name": "buy the water",
+        "title": "buy the water",
         "url": "https://url_2.com",
         "status": "new"
     }
