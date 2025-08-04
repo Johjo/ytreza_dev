@@ -1,13 +1,7 @@
-from abc import ABCMeta, abstractmethod
-
-from ytreza_dev.shared.final_version_perfected.types import Task, NothingToDo, DoTheTask, ChooseTaskBetween, NextAction, \
+from ytreza_dev.features.final_version_perfected.port.task_reader import TaskReader
+from ytreza_dev.features.final_version_perfected.types import Task, NothingToDo, DoTheTask, ChooseTaskBetween, NextAction, \
     TaskNew, TaskNext, TaskBase
 
-
-class TaskReader(metaclass=ABCMeta):
-    @abstractmethod
-    def all_active_tasks(self) -> list[TaskBase]:
-        pass
 
 class NextActionFvpQuery:
     def __init__(self, task_reader: TaskReader):

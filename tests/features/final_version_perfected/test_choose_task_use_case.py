@@ -1,10 +1,10 @@
 import pytest
 
-from ytreza_dev.features.start_fvp_use_case.use_case import TaskRepository
-from ytreza_dev.shared.final_version_perfected.types import TaskNew, TaskLater, TaskNext, TaskBase
+from ytreza_dev.features.final_version_perfected.port.task_repository import TaskRepositoryPort
+from ytreza_dev.features.final_version_perfected.types import TaskNew, TaskLater, TaskNext, TaskBase
 
 
-class TaskRepositoryForTest(TaskRepository):
+class TaskRepositoryForTest(TaskRepositoryPort):
     def __init__(self) -> None:
         self._tasks: list[TaskBase] = []
 
@@ -19,7 +19,7 @@ class TaskRepositoryForTest(TaskRepository):
 
 
 class ChooseTaskUseCase:
-    def __init__(self, task_repository: TaskRepository):
+    def __init__(self, task_repository: TaskRepositoryPort):
         self._task_repository = task_repository
 
     def execute(self, url: str) -> None:

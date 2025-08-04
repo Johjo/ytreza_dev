@@ -56,3 +56,7 @@ class TaskLater(TaskBase):
     pass
 
 
+@dataclass
+class ExternalTask:
+    name: str
+    url: str

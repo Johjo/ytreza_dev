@@ -1,14 +1,14 @@
 import streamlit as st
 
-from ytreza_dev.features.start_fvp_use_case.todolist_reader_from_todoist import TodolistReaderFromTodoist
-from ytreza_dev.features.start_fvp_use_case.task_repository_from_json import TaskRepositoryFromJson
+from ytreza_dev.features.final_version_perfected.adapter.todolist_reader_from_todoist import TodolistReaderFromTodoist
+from ytreza_dev.features.final_version_perfected.adapter.task_repository_from_json import TaskRepositoryFromJson
 from ytreza_dev.features.start_fvp_use_case.use_case import StartFvpUseCase
-from ytreza_dev.features.todolist_query_fvp.next_action_fvp_query import NextActionFvpQuery
+from ytreza_dev.features.final_version_perfected.query.next_action_fvp_query import NextActionFvpQuery
 from pathlib import Path
 
-from ytreza_dev.features.todolist_query_fvp.task_reader_from_json import TaskReaderFromJson
+from ytreza_dev.features.final_version_perfected.adapter.task_reader_from_json import TaskReaderFromJson
 from ytreza_dev.shared.env_reader import EnvReaderFromEnv
-from ytreza_dev.shared.final_version_perfected.types import NothingToDo, DoTheTask, ChooseTaskBetween
+from ytreza_dev.features.final_version_perfected.types import NothingToDo, DoTheTask, ChooseTaskBetween
 from dotenv import load_dotenv
 
 load_dotenv(dotenv_path=".env")

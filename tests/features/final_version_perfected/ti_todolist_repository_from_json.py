@@ -1,8 +1,8 @@
 from approvaltests import verify # type: ignore
 from pathlib import Path
 
-from ytreza_dev.features.start_fvp_use_case.task_repository_from_json import TaskRepositoryFromJson
-from ytreza_dev.shared.final_version_perfected.types import TaskNew
+from ytreza_dev.features.final_version_perfected.adapter.task_repository_from_json import TaskRepositoryFromJson
+from ytreza_dev.features.final_version_perfected.types import TaskNew
 
 
 def test_write_in_json() -> None:

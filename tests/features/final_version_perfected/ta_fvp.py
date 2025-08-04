@@ -6,9 +6,9 @@ from tests.features.final_version_perfected.test_start_fvp_use_case import Todol
 from ytreza_dev.features.final_version_perfected.controller import FvpController
 from ytreza_dev.features.final_version_perfected.injection_keys import TASK_READER_KEY, TODOLIST_READER_KEY, \
     TASK_REPOSITORY_KEY
-from ytreza_dev.features.start_fvp_use_case.use_case import ExternalTask, TodolistReader
-from ytreza_dev.shared.final_version_perfected.types import ChooseTaskBetween, TaskNew, Task, DoTheTask, \
-    NothingToDo
+from ytreza_dev.features.final_version_perfected.port.todolist_reader import TodolistReaderPort
+from ytreza_dev.features.final_version_perfected.types import ChooseTaskBetween, TaskNew, Task, DoTheTask, \
+    NothingToDo, ExternalTask
 
 
 def test_fvp() -> None:
@@ -213,7 +213,7 @@ def test_fvp() -> None:
     assert controller.next_action() == NothingToDo()
 
 
-def provide_dependencies(task_in_memory: TaskInMemory, todolist_reader: TodolistReader) -> PyqureMemory:
+def provide_dependencies(task_in_memory: TaskInMemory, todolist_reader: TodolistReaderPort) -> PyqureMemory:
     dependencies: PyqureMemory = {}
     (provide, inject) = pyqure(dependencies)
     provide(TODOLIST_READER_KEY, todolist_reader)

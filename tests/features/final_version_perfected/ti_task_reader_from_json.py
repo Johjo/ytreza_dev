@@ -1,9 +1,9 @@
 from pathlib import Path
 
-from ytreza_dev.shared.final_version_perfected.types import TaskNew
+from ytreza_dev.features.final_version_perfected.types import TaskNew
 
-from ytreza_dev.features.start_fvp_use_case.task_repository_from_json import TaskRepositoryFromJson
-from ytreza_dev.features.todolist_query_fvp.task_reader_from_json import TaskReaderFromJson
+from ytreza_dev.features.final_version_perfected.adapter.task_repository_from_json import TaskRepositoryFromJson
+from ytreza_dev.features.final_version_perfected.adapter.task_reader_from_json import TaskReaderFromJson
 
 
 def test_read_data_from_json_when_created() -> None:

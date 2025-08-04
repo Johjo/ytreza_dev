@@ -1,8 +1,8 @@
 from pyqure import Key # type: ignore
 
-from ytreza_dev.features.start_fvp_use_case.use_case import TaskRepository
-from ytreza_dev.features.todolist_query_fvp.next_action_fvp_query import TaskReader
-from ytreza_dev.shared.final_version_perfected.types import TaskBase
+from ytreza_dev.features.final_version_perfected.port.task_repository import TaskRepositoryPort
+from ytreza_dev.features.final_version_perfected.port.task_reader import TaskReader
+from ytreza_dev.features.final_version_perfected.types import TaskBase
 
 
 class TaskInMemory:
@@ -19,7 +19,7 @@ class TaskInMemory:
 TASK_IN_MEMORY_KEY = Key("task_in_memory", TaskInMemory)
 
 
-class TaskRepositoryForDemo(TaskRepository):
+class TaskRepositoryForDemo(TaskRepositoryPort):
     def all_tasks(self) -> list[TaskBase]:
         return self._memory.all_tasks()
 

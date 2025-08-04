@@ -1,8 +1,9 @@
 from pyqure import Key # type: ignore
 
-from ytreza_dev.features.start_fvp_use_case.use_case import TodolistReader, TaskRepository
-from ytreza_dev.features.todolist_query_fvp.next_action_fvp_query import TaskReader
+from ytreza_dev.features.final_version_perfected.port.todolist_reader import TodolistReaderPort
+from ytreza_dev.features.final_version_perfected.port.task_repository import TaskRepositoryPort
+from ytreza_dev.features.final_version_perfected.port.task_reader import TaskReader
 
 TASK_READER_KEY = Key("task_reader", TaskReader)
-TODOLIST_READER_KEY = Key("todolist reader", TodolistReader)
-TASK_REPOSITORY_KEY = Key("task repository", TaskRepository)
+TODOLIST_READER_KEY = Key("todolist reader", TodolistReaderPort)
+TASK_REPOSITORY_KEY = Key("task repository", TaskRepositoryPort)

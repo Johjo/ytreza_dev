@@ -1,12 +1,12 @@
 from pyqure import PyqureMemory, pyqure # type: ignore
 
 from tests.features.final_version_perfected.test_choose_task_use_case import ChooseTaskUseCase
-from ytreza_dev.features.final_version_perfected.close_task_use_case import CloseTaskUseCase
 from ytreza_dev.features.final_version_perfected.injection_keys import TODOLIST_READER_KEY, TASK_REPOSITORY_KEY, \
     TASK_READER_KEY
-from ytreza_dev.features.start_fvp_use_case.use_case import StartFvpUseCase
-from ytreza_dev.features.todolist_query_fvp.next_action_fvp_query import NextActionFvpQuery
-from ytreza_dev.shared.final_version_perfected.types import NextAction
+from ytreza_dev.features.final_version_perfected.use_case.close_task_use_case import CloseTaskUseCase
+from ytreza_dev.features.final_version_perfected.use_case.start_fvp_use_case import StartFvpUseCase
+from ytreza_dev.features.final_version_perfected.query.next_action_fvp_query import NextActionFvpQuery
+from ytreza_dev.features.final_version_perfected.types import NextAction
 
 
 class FvpController:

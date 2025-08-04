@@ -1,9 +1,10 @@
-from ytreza_dev.features.start_fvp_use_case.use_case import TodolistReader, ExternalTask
-from ytreza_dev.shared.env_reader import EnvReaderPort, EnvReaderFromEnv
+from ytreza_dev.features.final_version_perfected.port.todolist_reader import TodolistReaderPort
+from ytreza_dev.features.final_version_perfected.types import ExternalTask
+from ytreza_dev.shared.env_reader import EnvReaderPort
 from ytreza_dev.shared.todoist.todoist_api import TodoistAPI
 
 
-class TodolistReaderFromTodoist(TodolistReader):
+class TodolistReaderFromTodoist(TodolistReaderPort):
     def __init__(self, env_reader: EnvReaderPort):
         self._env_reader = env_reader
 

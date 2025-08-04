@@ -1,8 +1,8 @@
 import pytest
 
 from tests.features.final_version_perfected.test_choose_task_use_case import TaskRepositoryForTest
-from ytreza_dev.features.final_version_perfected.close_task_use_case import CloseTaskUseCase
-from ytreza_dev.shared.final_version_perfected.types import TaskNext, TaskLater, TaskNew, TaskBase
+from ytreza_dev.features.final_version_perfected.use_case.close_task_use_case import CloseTaskUseCase
+from ytreza_dev.features.final_version_perfected.types import TaskNext, TaskLater, TaskNew, TaskBase
 
 
 @pytest.mark.parametrize("before, url, after", [

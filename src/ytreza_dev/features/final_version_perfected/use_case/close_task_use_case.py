@@ -1,8 +1,8 @@
-from ytreza_dev.features.start_fvp_use_case.use_case import TaskRepository
+from ytreza_dev.features.final_version_perfected.port.task_repository import TaskRepositoryPort
 
 
 class CloseTaskUseCase:
-    def __init__(self, task_repository: TaskRepository) -> None:
+    def __init__(self, task_repository: TaskRepositoryPort) -> None:
         self._task_repository = task_repository
 
     def execute(self, url: str) -> None:
