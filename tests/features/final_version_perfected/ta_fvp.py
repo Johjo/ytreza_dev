@@ -47,7 +47,7 @@ def test_fvp() -> None:
         Task(title="Email ", url="https://url_1.com"),
         Task(title="In-Tray", url="https://url_2.com")))
 
-    controller.choose_task(url="https://url_1.com")
+    controller.do_later(url="https://url_2.com")
 
     assert controller.next_action() == ChooseTaskBetween((
         Task(title="Email ", url="https://url_1.com"),
