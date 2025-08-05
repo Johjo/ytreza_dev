@@ -3,7 +3,7 @@ import pytest
 from ytreza_dev.features.final_version_perfected.query.next_action_fvp_query import NextActionFvpQuery
 from ytreza_dev.features.final_version_perfected.port.task_reader import TaskReader
 from ytreza_dev.features.final_version_perfected.types import Task, NothingToDo, DoTheTask, ChooseTaskBetween, TaskBase, \
-    TaskNew, TaskNext, TaskLater
+    TaskNew, TaskNext, TaskLater, TaskNever
 
 
 class TaskReaderForTest(TaskReader):
@@ -110,7 +110,6 @@ class TestChooseTaskBetween:
                 Task(title="buy the milk", url="https://url_1.com"),
                 Task(title="buy the water", url="https://url_2.com")
             ))
-
     def test_03(self, task_reader: TaskReaderForTest, sut: NextActionFvpQuery) -> None:
         # GIVEN
         task_reader.feed([
@@ -125,3 +124,35 @@ class TestChooseTaskBetween:
                 Task(title="buy the milk", url="https://url_1.com"),
                 Task(title="buy the water", url="https://url_2.com")
             ))
+
+    def test_dont_propose_never_task(self, task_reader: TaskReaderForTest, sut: NextActionFvpQuery) -> None:
+        # GIVEN
+        task_reader.feed([
+            TaskNext(title="buy the milk", url="https://url_1.com"),
+            TaskNever(title="buy the bread", url="https://url_3.com"),
+            TaskNew(title="buy the water", url="https://url_2.com")])
+
+        # WHEN / THEN
+        assert sut.next_action() == ChooseTaskBetween(
+            tasks=(
+                Task(title="buy the milk", url="https://url_1.com"),
+                Task(title="buy the water", url="https://url_2.com")
+            ))
+
+
+    def test_should_ignore_first_never_task(self, task_reader: TaskReaderForTest, sut: NextActionFvpQuery) -> None:
+        # GIVEN
+        task_reader.feed([
+            TaskNever(title="buy the milk", url="https://url_1.com"),
+            TaskNew(title="buy the water", url="https://url_2.com"),
+            TaskNever(title="buy the bread", url="https://url_3.com"),
+            TaskNew(title="buy the butter", url="https://url_4.com")
+        ])
+
+        # WHEN / THEN
+        assert sut.next_action() == ChooseTaskBetween(
+            tasks=(
+                Task(title="buy the water", url="https://url_2.com"),
+                Task(title="buy the butter", url="https://url_4.com")
+            ))
+

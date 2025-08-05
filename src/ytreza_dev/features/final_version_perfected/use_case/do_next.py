@@ -1,5 +1,5 @@
 from ytreza_dev.features.final_version_perfected.port.task_repository import TaskRepositoryPort
-from ytreza_dev.features.final_version_perfected.types import TaskBase
+from ytreza_dev.features.final_version_perfected.types import TaskBase, TaskNever
 
 
 class DoNext:
@@ -9,7 +9,13 @@ class DoNext:
     def execute(self, url: str):
         before: list[TaskBase] = self._task_repository.all_tasks()
 
-        self._task_repository.save([before[0].to_next()] + [self.update_task(task, url) for task in before[1:]])
+        self._task_repository.save([self._update_first_task(before)] + [self.update_task(task, url) for task in before[1:]])
+
+    @staticmethod
+    def _update_first_task(before):
+        if isinstance(before[0], TaskNever):
+            return before[0]
+        return before[0].to_next()
 
     @staticmethod
     def update_task(task: TaskBase, url: str) -> TaskBase:

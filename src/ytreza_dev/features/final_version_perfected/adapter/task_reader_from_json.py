@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 
 from ytreza_dev.features.final_version_perfected.port.task_reader import TaskReader
-from ytreza_dev.features.final_version_perfected.types import TaskBase, TaskNew, TaskNext, TaskLater
+from ytreza_dev.features.final_version_perfected.types import TaskBase, TaskNew, TaskNext, TaskLater, TaskNever
 
 
 class TaskReaderFromJson(TaskReader):
@@ -22,3 +22,5 @@ class TaskReaderFromJson(TaskReader):
                 return TaskNext(title=task["title"], url=task["url"])
             case "later":
                 return TaskLater(title=task["title"], url=task["url"])
+            case "never":
+                return TaskNever(title=task["title"], url=task["url"])

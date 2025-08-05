@@ -40,11 +40,11 @@ def todolist_page() -> None:
         
         # Top task
         st.title(f"{tasks[0].title}")
-        col1, _, _, col4 = st.columns(4)
+        col1, _, _, _, col5 = st.columns(5)
         with col1:
             st.link_button(f"Open URL", url=tasks[0].url)
 
-        with col4:
+        with col5:
             if st.button(f"Close", key=f"close_top_{tasks[0].url}"):
                 controller.close_task(tasks[0].url)
                 st.rerun()
@@ -53,7 +53,7 @@ def todolist_page() -> None:
         
         # Bottom task
         st.title(f"{tasks[1].title}")
-        col1, col2, col3, col4 = st.columns(4)
+        col1, col2, col3, col4, col5 = st.columns(5)
         with col1:
             st.link_button(f"Open URL", url=tasks[1].url)
 
@@ -67,6 +67,10 @@ def todolist_page() -> None:
                 controller.do_later(tasks[1].url)
                 st.rerun()
         with col4:
+            if st.button(f"Never", key=f"never_bottom_{tasks[1].url}"):
+                controller.do_never(tasks[1].url)
+                st.rerun()
+        with col5:
             if st.button(f"Close", key=f"close_bottom_{tasks[1].url}"):
                 controller.close_task(tasks[1].url)
                 st.rerun()

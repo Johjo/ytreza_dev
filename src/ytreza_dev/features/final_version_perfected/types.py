@@ -40,6 +40,9 @@ class TaskBase:
     def to_new(self) -> 'TaskNew':
         return TaskNew(title=self.title, url=self.url)
 
+    def to_never(self) -> 'TaskNever':
+        return TaskNever(title=self.title, url=self.url)
+
 
 @dataclass
 class TaskNew(TaskBase):
@@ -53,6 +56,10 @@ class TaskNext(TaskBase):
 
 @dataclass
 class TaskLater(TaskBase):
+    pass
+
+@dataclass
+class TaskNever(TaskBase):
     pass
 
 

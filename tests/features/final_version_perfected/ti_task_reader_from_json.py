@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from ytreza_dev.features.final_version_perfected.types import TaskNew, TaskNext, TaskLater
+from ytreza_dev.features.final_version_perfected.types import TaskNew, TaskNext, TaskLater, TaskNever
 
 from ytreza_dev.features.final_version_perfected.adapter.task_repository_from_json import TaskRepositoryFromJson
 from ytreza_dev.features.final_version_perfected.adapter.task_reader_from_json import TaskReaderFromJson
@@ -14,6 +14,8 @@ def test_read_data_from_json() -> None:
         TaskNext(title="buy the milk", url="https://url_1.com"),
         TaskLater(title="buy the water", url="https://url_2.com"),
         TaskNew(title="buy the bread", url="https://url_3.com"),
+        TaskNever(title="buy the butter", url="https://url_4.com"),
+
     ])
 
     # WHEN
@@ -25,4 +27,5 @@ def test_read_data_from_json() -> None:
         TaskNext(title="buy the milk", url="https://url_1.com"),
         TaskLater(title="buy the water", url="https://url_2.com"),
         TaskNew(title="buy the bread", url="https://url_3.com"),
+        TaskNever(title="buy the butter", url="https://url_4.com"),
     ]

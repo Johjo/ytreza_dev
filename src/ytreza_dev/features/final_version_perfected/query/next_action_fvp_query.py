@@ -35,5 +35,6 @@ class NextActionFvpQuery:
     def _next_task_index(tasks: list[TaskBase]) -> int:
         return next(
                 (index for index, task in reversed(list(enumerate(tasks))) if isinstance(task, TaskNext)),
-                0
+                next((index for index, task in list(enumerate(tasks)) if isinstance(task, TaskNew)),
+                0)
         )

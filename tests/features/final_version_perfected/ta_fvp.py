@@ -1,4 +1,4 @@
-from pyqure import pyqure, PyqureMemory # type: ignore
+from pyqure import pyqure, PyqureMemory  # type: ignore
 
 from tests.features.final_version_perfected.adapters import TaskInMemory, TASK_IN_MEMORY_KEY, TaskRepositoryForDemo, \
     TaskReaderForDemo
@@ -11,7 +11,7 @@ from ytreza_dev.features.final_version_perfected.types import ChooseTaskBetween,
     NothingToDo, ExternalTask
 
 
-def test_fvp() -> None:
+def test_fvp_later() -> None:
     todolist_reader = TodolistReaderForTest()
     todolist_reader.feed([
         ExternalTask(name="Email ", url="https://url_1.com"),
@@ -211,6 +211,103 @@ def test_fvp() -> None:
         task=Task(title='In-Tray', url='https://url_2.com'))
 
     controller.close_task(url="https://url_2.com")
+    assert controller.next_action() == NothingToDo()
+
+
+def test_fvp_never() -> None:
+    todolist_reader = TodolistReaderForTest()
+    todolist_reader.feed([
+        ExternalTask(name="Email ", url="https://url_1.com"),
+        ExternalTask(name="In-Tray", url="https://url_2.com"),
+        ExternalTask(name="Voicemail", url="https://url_3.com"),
+        ExternalTask(name="Project X Report", url="https://url_4.com"),
+        ExternalTask(name="Tidy Desk", url="https://url_5.com"),
+        ExternalTask(name="Call Dissatisfied Customer", url="https://url_6.com"),
+    ]
+    )
+    task_in_memory = TaskInMemory()
+    controller = FvpController(dependencies=provide_dependencies(task_in_memory, todolist_reader))
+    controller.start_fvp_session()
+
+    assert task_in_memory.all_tasks() == [
+        TaskNew(title="Email ", url="https://url_1.com"),
+        TaskNew(title="In-Tray", url="https://url_2.com"),
+        TaskNew(title="Voicemail", url="https://url_3.com"),
+        TaskNew(title="Project X Report", url="https://url_4.com"),
+        TaskNew(title="Tidy Desk", url="https://url_5.com"),
+        TaskNew(title="Call Dissatisfied Customer", url="https://url_6.com"),
+    ]
+
+    assert controller.next_action() == ChooseTaskBetween((
+        Task(title="Email ", url="https://url_1.com"),
+        Task(title="In-Tray", url="https://url_2.com")))
+
+    controller.do_never(url="https://url_2.com")
+
+    assert controller.next_action() == ChooseTaskBetween((
+        Task(title="Email ", url="https://url_1.com"),
+        Task(title="Voicemail", url="https://url_3.com")))
+
+    controller.do_later(url="https://url_3.com")
+
+    assert controller.next_action() == ChooseTaskBetween((
+        Task(title="Email ", url="https://url_1.com"),
+        Task(title="Project X Report", url="https://url_4.com")))
+
+    controller.do_next(url="https://url_4.com")
+
+    assert controller.next_action() == ChooseTaskBetween((
+        Task(title="Project X Report", url="https://url_4.com"),
+        Task(title="Tidy Desk", url="https://url_5.com")))
+
+    controller.do_never(url="https://url_5.com")
+    assert controller.next_action() == ChooseTaskBetween((
+        Task(title="Project X Report", url="https://url_4.com"),
+        Task(title="Call Dissatisfied Customer", url="https://url_6.com")))
+
+    controller.do_later(url="https://url_6.com")
+    assert controller.next_action() == DoTheTask(
+        Task(title="Project X Report", url="https://url_4.com"))
+
+    controller.close_task(url="https://url_4.com")
+
+    assert controller.next_action() == ChooseTaskBetween((
+        Task(title="Email ", url="https://url_1.com"),
+        Task(title="Call Dissatisfied Customer", url="https://url_6.com")))
+
+    controller.do_later(url="https://url_6.com")
+
+    assert controller.next_action() == DoTheTask(
+        Task(title="Email ", url="https://url_1.com"))
+
+    controller.close_task(url="https://url_1.com")
+
+    assert controller.next_action() == ChooseTaskBetween((
+        Task(title="Voicemail", url="https://url_3.com"),
+        Task(title="Call Dissatisfied Customer", url="https://url_6.com")))
+
+    controller.do_next(url="https://url_6.com")
+    assert controller.next_action() == DoTheTask(
+        Task(title="Call Dissatisfied Customer", url="https://url_6.com"))
+
+    controller.close_task(url="https://url_6.com")
+    assert controller.next_action() == DoTheTask(
+        Task(title="Voicemail", url="https://url_3.com"))
+
+    controller.close_task(url="https://url_3.com")
+    assert controller.next_action() == ChooseTaskBetween((
+        Task(title='In-Tray', url='https://url_2.com'),
+        Task(title='Tidy Desk', url='https://url_5.com')))
+
+    controller.do_later(url="https://url_5.com")
+    assert controller.next_action() == DoTheTask(
+        Task(title='In-Tray', url='https://url_2.com'))
+
+    controller.close_task(url="https://url_2.com")
+    assert controller.next_action() == DoTheTask(
+        Task(title="Tidy Desk", url="https://url_5.com"))
+
+    controller.close_task(url="https://url_5.com")
     assert controller.next_action() == NothingToDo()
 
 

@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Any
 
 from ytreza_dev.features.final_version_perfected.port.task_repository import TaskRepositoryPort
-from ytreza_dev.features.final_version_perfected.types import TaskBase, TaskNew, TaskNext, TaskLater
+from ytreza_dev.features.final_version_perfected.types import TaskBase, TaskNew, TaskNext, TaskLater, TaskNever
 
 
 class TaskRepositoryFromJson(TaskRepositoryPort):
@@ -22,6 +22,8 @@ class TaskRepositoryFromJson(TaskRepositoryPort):
                 return TaskNext(title=task["title"], url=task["url"])
             case "later":
                 return TaskLater(title=task["title"], url=task["url"])
+            case "never":
+                return TaskNever(title=task["title"], url=task["url"])
 
     def __init__(self, file_path: Path) -> None:
         self._file_path = file_path
@@ -40,5 +42,7 @@ class TaskRepositoryFromJson(TaskRepositoryPort):
                 d.update({"status": "new"})
             case TaskLater():
                 d.update({"status": "later"})
+            case TaskNever():
+                d.update({"status": "never"})
 
         return d
