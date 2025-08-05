@@ -59,7 +59,8 @@ def test_fvp() -> None:
         Task(title="Voicemail", url="https://url_3.com"),
         Task(title="Project X Report", url="https://url_4.com")))
 
-    controller.choose_task(url="https://url_3.com")
+    controller.do_later(url="https://url_4.com")
+
     assert controller.next_action() == ChooseTaskBetween((
         Task(title="Voicemail", url="https://url_3.com"),
         Task(title="Tidy Desk", url="https://url_5.com")))
@@ -74,22 +75,22 @@ def test_fvp() -> None:
         Task(title="Tidy Desk", url="https://url_5.com"),
         Task(title="Make Dental Appointment", url="https://url_7.com")))
 
-    controller.choose_task(url="https://url_5.com")
+    controller.do_later(url="https://url_7.com")
     assert controller.next_action() == ChooseTaskBetween((
         Task(title="Tidy Desk", url="https://url_5.com"),
         Task(title="File Invoices", url="https://url_8.com")))
 
-    controller.choose_task(url="https://url_5.com")
+    controller.do_later(url="https://url_8.com")
     assert controller.next_action() == ChooseTaskBetween((
         Task(title="Tidy Desk", url="https://url_5.com"),
         Task(title="Discuss Project Y with Bob", url="https://url_9.com")))
 
-    controller.choose_task(url="https://url_5.com")
+    controller.do_later(url="https://url_9.com")
     assert controller.next_action() == ChooseTaskBetween((
         Task(title="Tidy Desk", url="https://url_5.com"),
         Task(title="Back Up  ", url="https://url_10.com")))
 
-    controller.choose_task(url="https://url_5.com")
+    controller.do_later(url="https://url_10.com")
     assert controller.next_action() == DoTheTask(
         Task(title="Tidy Desk", url="https://url_5.com"))
 
@@ -98,22 +99,22 @@ def test_fvp() -> None:
         Task(title="Voicemail", url="https://url_3.com"),
         Task(title="Call Dissatisfied Customer", url="https://url_6.com")))
 
-    controller.choose_task(url="https://url_5.com")
+    controller.do_later(url="https://url_6.com")
     assert controller.next_action() == ChooseTaskBetween((
         Task(title="Voicemail", url="https://url_3.com"),
         Task(title="Make Dental Appointment", url="https://url_7.com")))
 
-    controller.choose_task(url="https://url_5.com")
+    controller.do_later(url="https://url_7.com")
     assert controller.next_action() == ChooseTaskBetween((
         Task(title="Voicemail", url="https://url_3.com"),
         Task(title="File Invoices", url="https://url_8.com")))
 
-    controller.choose_task(url="https://url_5.com")
+    controller.do_later(url="https://url_8.com")
     assert controller.next_action() == ChooseTaskBetween((
         Task(title="Voicemail", url="https://url_3.com"),
         Task(title="Discuss Project Y with Bob", url="https://url_9.com")))
 
-    controller.choose_task(url="https://url_5.com")
+    controller.do_later(url="https://url_9.com")
     assert controller.next_action() == ChooseTaskBetween((
         Task(title="Voicemail", url="https://url_3.com"),
         Task(title="Back Up  ", url="https://url_10.com")))
@@ -131,12 +132,12 @@ def test_fvp() -> None:
         Task(title="Email ", url="https://url_1.com"),
         Task(title="Project X Report", url="https://url_4.com")))
 
-    controller.choose_task(url="https://url_1.com")
+    controller.do_later(url="https://url_4.com")
     assert controller.next_action() == ChooseTaskBetween((
         Task(title="Email ", url="https://url_1.com"),
         Task(title="Call Dissatisfied Customer", url="https://url_6.com")))
 
-    controller.choose_task(url="https://url_1.com")
+    controller.do_later(url="https://url_6.com")
     assert controller.next_action() == ChooseTaskBetween((
         Task(title="Email ", url="https://url_1.com"),
         Task(title="Make Dental Appointment", url="https://url_7.com")))
@@ -146,7 +147,7 @@ def test_fvp() -> None:
         Task(title="Make Dental Appointment", url="https://url_7.com"),
         Task(title="File Invoices", url="https://url_8.com")))
 
-    controller.choose_task(url="https://url_7.com")
+    controller.do_later(url="https://url_8.com")
     assert controller.next_action() == ChooseTaskBetween((
         Task(title="Make Dental Appointment", url="https://url_7.com"),
         Task(title="Discuss Project Y with Bob", url="https://url_9.com")))
@@ -164,7 +165,7 @@ def test_fvp() -> None:
         tasks=(Task(title='Email ', url='https://url_1.com'),
                Task(title='File Invoices', url='https://url_8.com')))
 
-    controller.choose_task(url="https://url_1.com")
+    controller.do_later(url="https://url_8.com")
     assert controller.next_action() == DoTheTask(
         task=Task(title='Email ', url='https://url_1.com'))
 
@@ -178,7 +179,7 @@ def test_fvp() -> None:
         tasks=(Task(title='Project X Report', url='https://url_4.com'),
                Task(title='Call Dissatisfied Customer', url='https://url_6.com')))
 
-    controller.choose_task(url="https://url_4.com")
+    controller.do_later(url="https://url_6.com")
     assert controller.next_action() == ChooseTaskBetween(
         tasks=(Task(title='Project X Report', url='https://url_4.com'),
                Task(title='File Invoices', url='https://url_8.com')))
