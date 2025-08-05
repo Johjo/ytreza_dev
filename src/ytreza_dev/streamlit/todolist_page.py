@@ -36,26 +36,49 @@ def todolist_page() -> None:
     if isinstance(next_action, NothingToDo):
         st.write("Nothing to do!")
     elif isinstance(next_action, ChooseTaskBetween):
-        st.write("Choose between tasks:")
-        for task in next_action.tasks:
-            st.title(f"{task.title}")
-            col1, col2, col3 = st.columns(3)
-            with col1:
-                if st.button(f"Choose", key=f"choose {task.url}"):
-                    controller.choose_task(task.url)
-                    st.rerun()
-            with col2:
-                if st.button(f"Close", key=f"close {task.url}"):
-                    controller.close_task(task.url)
-                    st.rerun()
-            with col3:
-                st.link_button(f"Open URL", url=task.url)
+        tasks = next_action.tasks
+        
+        # Top task
+        st.title(f"{tasks[0].title}")
+        col1, _, _, col4 = st.columns(4)
+        with col1:
+            st.link_button(f"Open URL", url=tasks[0].url)
+
+        with col4:
+            if st.button(f"Close", key=f"close_top_{tasks[0].url}"):
+                controller.close_task(tasks[0].url)
+                st.rerun()
+
+        st.markdown("---")
+        
+        # Bottom task
+        st.title(f"{tasks[1].title}")
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            st.link_button(f"Open URL", url=tasks[1].url)
+
+        with col2:
+            if st.button(f"Choose", key=f"choose_bottom_{tasks[1].url}"):
+                controller.choose_task(tasks[1].url)
+                st.rerun()
+
+        with col3:
+            if st.button(f"Later", key=f"later_bottom_{tasks[1].url}"):
+                controller.do_later(tasks[1].url)
+                st.rerun()
+        with col4:
+            if st.button(f"Close", key=f"close_bottom_{tasks[1].url}"):
+                controller.close_task(tasks[1].url)
+                st.rerun()
+
     elif isinstance(next_action, DoTheTask):
         st.title(f"Do this task: {next_action.task.title}")
         col1, col2 = st.columns(2)
         with col1:
-            if st.button(f"Close task: {next_action.task.title}"):
+            st.link_button(f"Open URL", url=next_action.task.url)
+        with col2:
+            if st.button(f"Close", key=f"close_bottom_{next_action.task.url}"):
                 controller.close_task(next_action.task.url)
                 st.rerun()
-        with col2:
-            st.link_button(f"Open URL: {next_action.task.title}", url=next_action.task.url)
+
+
