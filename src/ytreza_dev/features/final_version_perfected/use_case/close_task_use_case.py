@@ -1,9 +1,11 @@
+from ytreza_dev.features.final_version_perfected.port.external_todolist import ExternalTodolistPort
 from ytreza_dev.features.final_version_perfected.port.task_repository import TaskRepositoryPort
-from ytreza_dev.features.final_version_perfected.types import TaskNever, TaskNew, TaskNext, TaskBase
+from ytreza_dev.features.final_version_perfected.types import TaskNever, TaskBase
 
 
 class CloseTaskUseCase:
-    def __init__(self, task_repository: TaskRepositoryPort) -> None:
+    def __init__(self, task_repository: TaskRepositoryPort, external_todolist: ExternalTodolistPort) -> None:
+        self._external_todolist = external_todolist
         self._task_repository = task_repository
 
     def execute(self, url: str) -> None:
@@ -12,16 +14,17 @@ class CloseTaskUseCase:
         if all(isinstance(task, TaskNever) for task in after):
             after = [task.to_new() for task in after]
         self._task_repository.save(after)
+        self._external_todolist.close_task(url=url)
 
     @staticmethod
     def _update_task_following_closed_task(before: list[TaskBase]) -> list[TaskBase]:
-        after_bis = []
+        after : list[TaskBase] = []
         for task in before:
             if isinstance(task, TaskNever):
-                after_bis.append(task)
+                after.append(task)
             else:
-                after_bis.append(task.to_new())
-        return after_bis
+                after.append(task.to_new())
+        return after
 
     @staticmethod
     def _extract_task_before_closed_task(before: list[TaskBase], url: str) -> tuple[list[TaskBase], list[TaskBase]]:

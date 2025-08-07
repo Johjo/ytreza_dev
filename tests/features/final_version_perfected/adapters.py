@@ -39,8 +39,8 @@ class TaskReaderForDemo(TaskReader):
 
 
 class TaskRepositoryForTest(TaskRepositoryPort):
-    def __init__(self):
-        self._tasks = []
+    def __init__(self) -> None:
+        self._tasks : list[TaskBase] = []
 
     def all_tasks(self) -> list[TaskBase]:
         return self._tasks
@@ -48,5 +48,5 @@ class TaskRepositoryForTest(TaskRepositoryPort):
     def save(self, tasks: list[TaskBase]) -> None:
         self._tasks = tasks
 
-    def feed(self, tasks):
+    def feed(self, tasks: list[TaskBase]) -> None:
         self._tasks = tasks

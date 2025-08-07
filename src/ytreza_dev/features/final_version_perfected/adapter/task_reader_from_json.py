@@ -14,7 +14,7 @@ class TaskReaderFromJson(TaskReader):
         return [self._to_task(task) for task in tasks]
 
     @staticmethod
-    def _to_task(task):
+    def _to_task(task: dict[str, str]) -> TaskBase:
         match task["status"]:
             case "new":
                 return TaskNew(title=task["title"], url=task["url"])
@@ -24,3 +24,5 @@ class TaskReaderFromJson(TaskReader):
                 return TaskLater(title=task["title"], url=task["url"])
             case "never":
                 return TaskNever(title=task["title"], url=task["url"])
+        raise ValueError(f"Unknown status: {task['status']}")
+

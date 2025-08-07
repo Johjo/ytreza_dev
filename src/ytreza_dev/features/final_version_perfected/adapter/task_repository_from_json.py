@@ -14,7 +14,7 @@ class TaskRepositoryFromJson(TaskRepositoryPort):
         return [self.to_task_base(task) for task in tasks]
 
     @staticmethod
-    def to_task_base(task):
+    def to_task_base(task: dict[str, str]) -> TaskBase:
         match task["status"]:
             case "new":
                 return TaskNew(title=task["title"], url=task["url"])
@@ -24,6 +24,7 @@ class TaskRepositoryFromJson(TaskRepositoryPort):
                 return TaskLater(title=task["title"], url=task["url"])
             case "never":
                 return TaskNever(title=task["title"], url=task["url"])
+        raise ValueError(f"Unknown status: {task['status']}")
 
     def __init__(self, file_path: Path) -> None:
         self._file_path = file_path
