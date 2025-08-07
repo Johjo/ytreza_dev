@@ -36,3 +36,17 @@ class TaskReaderForDemo(TaskReader):
 
     def all_active_tasks(self) -> list[TaskBase]:
         return self._memory.all_tasks()
+
+
+class TaskRepositoryForTest(TaskRepositoryPort):
+    def __init__(self):
+        self._tasks = []
+
+    def all_tasks(self) -> list[TaskBase]:
+        return self._tasks
+
+    def save(self, tasks: list[TaskBase]) -> None:
+        self._tasks = tasks
+
+    def feed(self, tasks):
+        self._tasks = tasks

@@ -1,20 +1,9 @@
 import pytest
 
-from ytreza_dev.features.final_version_perfected.use_case.start_fvp_use_case import StartFvpUseCase
+from tests.features.final_version_perfected.adapters import TaskRepositoryForTest
 from ytreza_dev.features.final_version_perfected.port.todolist_reader import TodolistReaderPort
-from ytreza_dev.features.final_version_perfected.port.task_repository import TaskRepositoryPort
-from ytreza_dev.features.final_version_perfected.types import TaskBase, TaskNew, ExternalTask
-
-
-class TaskRepositoryForTest(TaskRepositoryPort):
-    def __init__(self) -> None:
-        self._tasks : list[TaskBase] = []
-
-    def all_tasks(self) -> list[TaskBase]:
-        return self._tasks
-
-    def save(self, tasks: list[TaskBase]) -> None:
-        self._tasks = tasks
+from ytreza_dev.features.final_version_perfected.types import TaskNew, ExternalTask
+from ytreza_dev.features.final_version_perfected.use_case.start_fvp_use_case import StartFvpUseCase
 
 
 class TodolistReaderForTest(TodolistReaderPort):

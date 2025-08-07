@@ -1,6 +1,6 @@
 import pytest
 
-from tests.features.final_version_perfected.test_choose_task_use_case import TaskRepositoryForTest
+from tests.features.final_version_perfected.adapters import TaskRepositoryForTest
 from ytreza_dev.features.final_version_perfected.types import TaskNext, TaskLater, TaskNew, TaskBase, TaskNever
 from ytreza_dev.features.final_version_perfected.use_case.close_task_use_case import CloseTaskUseCase
 

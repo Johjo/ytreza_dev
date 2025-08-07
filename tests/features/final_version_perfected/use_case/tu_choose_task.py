@@ -1,22 +1,8 @@
 import pytest
 
-from ytreza_dev.features.final_version_perfected.port.task_repository import TaskRepositoryPort
+from tests.features.final_version_perfected.adapters import TaskRepositoryForTest
 from ytreza_dev.features.final_version_perfected.types import TaskNew, TaskLater, TaskNext, TaskBase
 from ytreza_dev.features.final_version_perfected.use_case.choose_task import ChooseTaskUseCase
-
-
-class TaskRepositoryForTest(TaskRepositoryPort):
-    def __init__(self) -> None:
-        self._tasks: list[TaskBase] = []
-
-    def feed(self, tasks: list[TaskBase]) -> None:
-        self._tasks = tasks
-
-    def all_tasks(self) -> list[TaskBase]:
-        return self._tasks
-
-    def save(self, tasks: list[TaskBase]) -> None:
-        self._tasks = tasks
 
 
 def test_repository() -> None:

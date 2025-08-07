@@ -1,22 +1,9 @@
 import pytest
 
+from tests.features.final_version_perfected.adapters import TaskRepositoryForTest
 from ytreza_dev.features.final_version_perfected.port.task_repository import TaskRepositoryPort
 from ytreza_dev.features.final_version_perfected.types import TaskBase, TaskNew, TaskNext, TaskLater, TaskNever
 from ytreza_dev.features.final_version_perfected.use_case.do_next import DoNext
-
-
-class TaskRepositoryForTest(TaskRepositoryPort):
-    def __init__(self):
-        self._tasks = []
-
-    def all_tasks(self) -> list[TaskBase]:
-        return self._tasks
-
-    def save(self, tasks: list[TaskBase]) -> None:
-        self._tasks = tasks
-
-    def feed(self, tasks):
-        self._tasks = tasks
 
 
 @pytest.mark.parametrize("before, url, after", [

@@ -1,8 +1,8 @@
 from pyqure import pyqure, PyqureMemory  # type: ignore
 
-from tests.features.final_version_perfected.adapters import TaskInMemory, TASK_IN_MEMORY_KEY, TaskRepositoryForDemo, \
+from tests.features.final_version_perfected.adapters import TaskInMemory, TaskRepositoryForDemo, TASK_IN_MEMORY_KEY, \
     TaskReaderForDemo
-from tests.features.final_version_perfected.test_start_fvp_use_case import TodolistReaderForTest
+from tests.features.final_version_perfected.use_case.tu_start_fvp import TodolistReaderForTest
 from ytreza_dev.features.final_version_perfected.controller import FvpController
 from ytreza_dev.features.final_version_perfected.injection_keys import TASK_READER_KEY, TODOLIST_READER_KEY, \
     TASK_REPOSITORY_KEY
