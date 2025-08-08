@@ -1,47 +1,47 @@
 import pytest
 
 from tests.features.final_version_perfected.adapters import TaskRepositoryForTest
-from ytreza_dev.features.final_version_perfected.port.task_repository import TaskRepositoryPort
-from ytreza_dev.features.final_version_perfected.types import TaskBase, TaskNew, TaskNext, TaskLater, TaskNever
+from tests.features.final_version_perfected.fixtures import a_task_new, a_task_next, a_task_later, a_task_never
+from ytreza_dev.features.final_version_perfected.types import TaskBase
 from ytreza_dev.features.final_version_perfected.use_case.do_next import DoNext
 
 
 @pytest.mark.parametrize("before, url, after", [
     [
         [
-            TaskNew(title="buy the milk", url="https://url_1.com", id="1"),
-            TaskNew(title="buy the water", url="https://url_2.com", id="2")
+            a_task_new(title="buy the milk", url="https://url_1.com", id="1"),
+            a_task_new(title="buy the water", url="https://url_2.com", id="2")
         ],
         "https://url_2.com",
         [
-            TaskNext(title="buy the milk", url="https://url_1.com", id="1"),
-            TaskNext(title="buy the water", url="https://url_2.com", id="2")
+            a_task_next(title="buy the milk", url="https://url_1.com", id="1"),
+            a_task_next(title="buy the water", url="https://url_2.com", id="2")
         ]
     ],
     [
         [
-            TaskNew(title="buy the milk", url="https://url_1.com", id="1"),
-            TaskLater(title="buy the water", url="https://url_2.com", id="2"),
-            TaskNew(title="buy the bread", url="https://url_3.com", id="3")
+            a_task_new(title="buy the milk", url="https://url_1.com", id="1"),
+            a_task_later(title="buy the water", url="https://url_2.com", id="2"),
+            a_task_new(title="buy the bread", url="https://url_3.com", id="3")
         ],
         "https://url_3.com",
         [
-            TaskNext(title="buy the milk", url="https://url_1.com", id="1"),
-            TaskLater(title="buy the water", url="https://url_2.com", id="2"),
-            TaskNext(title="buy the bread", url="https://url_3.com", id="3")
+            a_task_next(title="buy the milk", url="https://url_1.com", id="1"),
+            a_task_later(title="buy the water", url="https://url_2.com", id="2"),
+            a_task_next(title="buy the bread", url="https://url_3.com", id="3")
         ]
     ],
     [
         [
-            TaskNever(title="buy the milk", url="https://url_1.com", id="1"),
-            TaskLater(title="buy the water", url="https://url_2.com", id="2"),
-            TaskNew(title="buy the bread", url="https://url_3.com", id="3")
+            a_task_never(title="buy the milk", url="https://url_1.com", id="1"),
+            a_task_later(title="buy the water", url="https://url_2.com", id="2"),
+            a_task_new(title="buy the bread", url="https://url_3.com", id="3")
         ],
         "https://url_3.com",
         [
-            TaskNever(title="buy the milk", url="https://url_1.com", id="1"),
-            TaskLater(title="buy the water", url="https://url_2.com", id="2"),
-            TaskNext(title="buy the bread", url="https://url_3.com", id="3")
+            a_task_never(title="buy the milk", url="https://url_1.com", id="1"),
+            a_task_later(title="buy the water", url="https://url_2.com", id="2"),
+            a_task_next(title="buy the bread", url="https://url_3.com", id="3")
         ]
     ],
 ])
