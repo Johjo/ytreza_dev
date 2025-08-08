@@ -42,7 +42,7 @@ def test_synchronize_task_in_repository(todolist_reader: TodolistReaderForTest, 
                                         sut: StartFvpUseCase) -> None:
     todolist_reader.feed([
         an_external_task(name="buy the milk", url="https://url_1.com", id="1"),
-        ExternalTask(name="buy the water", url="https://url_2.com", id="2")])
+        an_external_task(name="buy the water", url="https://url_2.com", id="2")])
 
     sut.execute()
 
