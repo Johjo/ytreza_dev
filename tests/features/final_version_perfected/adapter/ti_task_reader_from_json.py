@@ -11,10 +11,10 @@ def test_read_data_from_json() -> None:
     json_path = Path("data_test/tasks.json")
     task_repository_from_json = TaskRepositoryFromJson(file_path=json_path)
     task_repository_from_json.save([
-        TaskNext(title="buy the milk", url="https://url_1.com"),
-        TaskLater(title="buy the water", url="https://url_2.com"),
-        TaskNew(title="buy the bread", url="https://url_3.com"),
-        TaskNever(title="buy the butter", url="https://url_4.com"),
+        TaskNext(title="buy the milk", url="https://url_1.com", id="1"),
+        TaskLater(title="buy the water", url="https://url_2.com", id="2"),
+        TaskNew(title="buy the bread", url="https://url_3.com", id="3"),
+        TaskNever(title="buy the butter", url="https://url_4.com", id="4"),
 
     ])
 
@@ -24,8 +24,8 @@ def test_read_data_from_json() -> None:
 
     # THEN
     assert actual == [
-        TaskNext(title="buy the milk", url="https://url_1.com"),
-        TaskLater(title="buy the water", url="https://url_2.com"),
-        TaskNew(title="buy the bread", url="https://url_3.com"),
-        TaskNever(title="buy the butter", url="https://url_4.com"),
+        TaskNext(title="buy the milk", url="https://url_1.com", id="1"),
+        TaskLater(title="buy the water", url="https://url_2.com", id="2"),
+        TaskNew(title="buy the bread", url="https://url_3.com", id="3"),
+        TaskNever(title="buy the butter", url="https://url_4.com", id="4"),
     ]

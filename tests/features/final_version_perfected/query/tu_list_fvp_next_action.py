@@ -35,15 +35,15 @@ class TestDoNothing:
 
 class TestDoTheTask:
     def test_do_next_task_when_only_one_task(self, task_reader: TaskReaderForTest, sut: NextActionFvpQuery) -> None:
-        task_reader.feed([TaskNew(title="buy the milk", url="https://url_1.com")])
+        task_reader.feed([TaskNew(title="buy the milk", url="https://url_1.com", id="1")])
         next_action = sut.next_action()
         assert next_action == DoTheTask(task=Task(title="buy the milk", url="https://url_1.com"))
 
     def test_06(self, task_reader: TaskReaderForTest, sut: NextActionFvpQuery) -> None:
         # GIVEN
         task_reader.feed([
-            TaskNext(title="buy the milk", url="https://url_1.com"),
-            TaskNext(title="buy the eggs", url="https://url_3.com"),
+            TaskNext(title="buy the milk", url="https://url_1.com", id="1"),
+            TaskNext(title="buy the eggs", url="https://url_3.com", id="3"),
         ])
 
         # WHEN / THEN
@@ -52,9 +52,9 @@ class TestDoTheTask:
     def test_07(self, task_reader: TaskReaderForTest, sut: NextActionFvpQuery) -> None:
         # GIVEN
         task_reader.feed([
-            TaskNext(title="buy the milk", url="https://url_1.com"),
-            TaskNext(title="buy the water", url="https://url_2.com"),
-            TaskNext(title="buy the eggs", url="https://url_3.com"),
+            TaskNext(title="buy the milk", url="https://url_1.com", id="1"),
+            TaskNext(title="buy the water", url="https://url_2.com", id="2"),
+            TaskNext(title="buy the eggs", url="https://url_3.com", id="3"),
         ])
 
         # WHEN / THEN
@@ -63,9 +63,9 @@ class TestDoTheTask:
     def test_04(self, task_reader: TaskReaderForTest, sut: NextActionFvpQuery) -> None:
         # GIVEN
         task_reader.feed([
-            TaskNext(title="buy the milk", url="https://url_1.com"),
-            TaskNext(title="buy the water", url="https://url_2.com"),
-            TaskLater(title="buy the eggs", url="https://url_3.com"), ])
+            TaskNext(title="buy the milk", url="https://url_1.com", id="1"),
+            TaskNext(title="buy the water", url="https://url_2.com", id="2"),
+            TaskLater(title="buy the eggs", url="https://url_3.com", id="3"), ])
 
         # WHEN / THEN
         assert sut.next_action() == DoTheTask(task=Task(title="buy the water", url="https://url_2.com"))
@@ -73,10 +73,10 @@ class TestDoTheTask:
     def test_08(self, task_reader: TaskReaderForTest, sut: NextActionFvpQuery) -> None:
         # GIVEN
         task_reader.feed([
-            TaskNext(title="buy the milk", url="https://url_1.com"),
-            TaskLater(title="buy the water", url="https://url_2.com"),
-            TaskNext(title="buy the eggs", url="https://url_3.com"),
-            TaskLater(title="buy the bread", url="https://url_4.com"),
+            TaskNext(title="buy the milk", url="https://url_1.com", id="1"),
+            TaskLater(title="buy the water", url="https://url_2.com", id="2"),
+            TaskNext(title="buy the eggs", url="https://url_3.com", id="3"),
+            TaskLater(title="buy the bread", url="https://url_4.com", id="4"),
         ])
 
         # WHEN / THEN
@@ -87,8 +87,8 @@ class TestChooseTaskBetween:
     def test_01(self, task_reader: TaskReaderForTest, sut: NextActionFvpQuery) -> None:
         # GIVEN
         task_reader.feed([
-            TaskNew(title="buy the milk", url="https://url_1.com"),
-            TaskNew(title="buy the water", url="https://url_2.com")])
+            TaskNew(title="buy the milk", url="https://url_1.com", id="1"),
+            TaskNew(title="buy the water", url="https://url_2.com", id="2")])
 
         # WHEN / THEN
         assert sut.next_action() == ChooseTaskBetween(
@@ -100,9 +100,9 @@ class TestChooseTaskBetween:
     def test_02(self, task_reader: TaskReaderForTest, sut: NextActionFvpQuery) -> None:
         # GIVEN
         task_reader.feed([
-            TaskNext(title="buy the milk", url="https://url_1.com"),
-            TaskLater(title="buy the bread", url="https://url_3.com"),
-            TaskNew(title="buy the water", url="https://url_2.com")])
+            TaskNext(title="buy the milk", url="https://url_1.com", id="1"),
+            TaskLater(title="buy the bread", url="https://url_3.com", id="3"),
+            TaskNew(title="buy the water", url="https://url_2.com", id="2")])
 
         # WHEN / THEN
         assert sut.next_action() == ChooseTaskBetween(
@@ -113,10 +113,10 @@ class TestChooseTaskBetween:
     def test_03(self, task_reader: TaskReaderForTest, sut: NextActionFvpQuery) -> None:
         # GIVEN
         task_reader.feed([
-            TaskNext(title="buy the milk", url="https://url_1.com"),
-            TaskLater(title="buy the bread", url="https://url_3.com"),
-            TaskLater(title="buy the eggs", url="https://url_4.com"),
-            TaskNew(title="buy the water", url="https://url_2.com")])
+            TaskNext(title="buy the milk", url="https://url_1.com", id="1"),
+            TaskLater(title="buy the bread", url="https://url_3.com", id="3"),
+            TaskLater(title="buy the eggs", url="https://url_4.com", id="4"),
+            TaskNew(title="buy the water", url="https://url_2.com", id="2")])
 
         # WHEN / THEN
         assert sut.next_action() == ChooseTaskBetween(
@@ -128,9 +128,9 @@ class TestChooseTaskBetween:
     def test_dont_propose_never_task(self, task_reader: TaskReaderForTest, sut: NextActionFvpQuery) -> None:
         # GIVEN
         task_reader.feed([
-            TaskNext(title="buy the milk", url="https://url_1.com"),
-            TaskNever(title="buy the bread", url="https://url_3.com"),
-            TaskNew(title="buy the water", url="https://url_2.com")])
+            TaskNext(title="buy the milk", url="https://url_1.com", id="1"),
+            TaskNever(title="buy the bread", url="https://url_3.com", id="3"),
+            TaskNew(title="buy the water", url="https://url_2.com", id="2")])
 
         # WHEN / THEN
         assert sut.next_action() == ChooseTaskBetween(
@@ -143,10 +143,10 @@ class TestChooseTaskBetween:
     def test_should_ignore_first_never_task(self, task_reader: TaskReaderForTest, sut: NextActionFvpQuery) -> None:
         # GIVEN
         task_reader.feed([
-            TaskNever(title="buy the milk", url="https://url_1.com"),
-            TaskNew(title="buy the water", url="https://url_2.com"),
-            TaskNever(title="buy the bread", url="https://url_3.com"),
-            TaskNew(title="buy the butter", url="https://url_4.com")
+            TaskNever(title="buy the milk", url="https://url_1.com", id="1"),
+            TaskNew(title="buy the water", url="https://url_2.com", id="2"),
+            TaskNever(title="buy the bread", url="https://url_3.com", id="3"),
+            TaskNew(title="buy the butter", url="https://url_4.com", id="4")
         ])
 
         # WHEN / THEN

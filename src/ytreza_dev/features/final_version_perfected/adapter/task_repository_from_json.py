@@ -17,13 +17,13 @@ class TaskRepositoryFromJson(TaskRepositoryPort):
     def to_task_base(task: dict[str, str]) -> TaskBase:
         match task["status"]:
             case "new":
-                return TaskNew(title=task["title"], url=task["url"])
+                return TaskNew(title=task["title"], url=task["url"], id=task["id"])
             case "next":
-                return TaskNext(title=task["title"], url=task["url"])
+                return TaskNext(title=task["title"], url=task["url"], id=task["id"])
             case "later":
-                return TaskLater(title=task["title"], url=task["url"])
+                return TaskLater(title=task["title"], url=task["url"], id=task["id"])
             case "never":
-                return TaskNever(title=task["title"], url=task["url"])
+                return TaskNever(title=task["title"], url=task["url"], id=task["id"])
         raise ValueError(f"Unknown status: {task['status']}")
 
     def __init__(self, file_path: Path) -> None:

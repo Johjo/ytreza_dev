@@ -16,8 +16,8 @@ class ExternalTodolistForTest(ExternalTodolistPort):
     def history(self) -> list[dict[str, Any]]:
         return self._history
 
-    def close_task(self, url: str) -> None:
-        self._history.append({"action": "close", "url": url})
+    def close_task(self, url: str, task_id: str) -> None:
+        self._history.append({"action": "close", "task_id": task_id})
 
 
 @pytest.fixture
@@ -32,15 +32,15 @@ def sut(task_repository: TaskRepositoryForTest, external_todolist: ExternalTodol
 
 @pytest.mark.parametrize("before, url, after", [
     [
-        [TaskNext(title="Buy the milk ", url="https://url_1.com")],
+        [TaskNext(title="Buy the milk ", url="https://url_1.com", id="1")],
         "https://url_1.com",
         []
     ],
     [
-        [TaskNext(title="Buy the milk ", url="https://url_1.com"),
-         TaskNext(title="Buy the water", url="https://url_2.com")],
+        [TaskNext(title="Buy the milk ", url="https://url_1.com", id="1"),
+         TaskNext(title="Buy the water", url="https://url_2.com", id="2")],
         "https://url_2.com",
-        [TaskNext(title="Buy the milk ", url="https://url_1.com")]
+        [TaskNext(title="Buy the milk ", url="https://url_1.com", id="1")]
     ],
 ])
 def test_remove_task_when_closed(before: list[TaskBase], url: str, after: list[TaskBase],
@@ -53,10 +53,12 @@ def test_remove_task_when_closed(before: list[TaskBase], url: str, after: list[T
 def test_close_task_on_external_system(task_repository: TaskRepositoryForTest, sut: CloseTaskUseCase,
                                        external_todolist: ExternalTodolistForTest) -> None:
     task_repository.feed(tasks=[
-        TaskNext(title="Buy the milk ", url="https://url_1.com"),
+        TaskNext(title="Buy the milk ", url="https://url_1.com", id="1"),
+        TaskNext(title="Buy the milk ", url="https://url_2.com", id="2"),
+        TaskLater(title="Buy the milk ", url="https://url_3.com", id="3"),
     ])
-    sut.execute(url="https://url_1.com")
-    assert external_todolist.history() == [{"action": "close", "url": "https://url_1.com"}]
+    sut.execute(url="https://url_2.com")
+    assert external_todolist.history() == [{"action": "close", "task_id": "2"}]
 
 
 
@@ -66,30 +68,30 @@ def test_close_task_on_external_system(task_repository: TaskRepositoryForTest, s
 @pytest.mark.parametrize("before, url, after", [
     [
         [
-            TaskNext(title="Buy the milk ", url="https://url_1.com"),
-            TaskLater(title="Buy the water", url="https://url_2.com"),
-            TaskNext(title="Buy the eggs", url="https://url_3.com"),
-            TaskLater(title="Buy the bread", url="https://url_4.com"),
+            TaskNext(title="Buy the milk ", url="https://url_1.com", id="1"),
+            TaskLater(title="Buy the water", url="https://url_2.com", id="2"),
+            TaskNext(title="Buy the eggs", url="https://url_3.com", id="3"),
+            TaskLater(title="Buy the bread", url="https://url_4.com", id="4"),
         ],
         "https://url_3.com",
         [
-            TaskNext(title="Buy the milk ", url="https://url_1.com"),
-            TaskLater(title="Buy the water", url="https://url_2.com"),
-            TaskNew(title="Buy the bread", url="https://url_4.com"),
+            TaskNext(title="Buy the milk ", url="https://url_1.com", id="1"),
+            TaskLater(title="Buy the water", url="https://url_2.com", id="2"),
+            TaskNew(title="Buy the bread", url="https://url_4.com", id="4"),
         ]
     ],
     [
         [
-            TaskNext(title="Buy the milk ", url="https://url_1.com"),
-            TaskLater(title="Buy the water", url="https://url_2.com"),
-            TaskLater(title="Buy the eggs", url="https://url_3.com"),
-            TaskLater(title="Buy the bread", url="https://url_4.com"),
+            TaskNext(title="Buy the milk ", url="https://url_1.com", id="1"),
+            TaskLater(title="Buy the water", url="https://url_2.com", id="2"),
+            TaskLater(title="Buy the eggs", url="https://url_3.com", id="3"),
+            TaskLater(title="Buy the bread", url="https://url_4.com", id="4"),
         ],
         "https://url_1.com",
         [
-            TaskNew(title="Buy the water", url="https://url_2.com"),
-            TaskNew(title="Buy the eggs", url="https://url_3.com"),
-            TaskNew(title="Buy the bread", url="https://url_4.com"),
+            TaskNew(title="Buy the water", url="https://url_2.com", id="2"),
+            TaskNew(title="Buy the eggs", url="https://url_3.com", id="3"),
+            TaskNew(title="Buy the bread", url="https://url_4.com", id="4"),
         ]
     ],
 ])
@@ -102,16 +104,16 @@ def test_set_following_task_to_new(before: list[TaskBase], url: str, after: list
 @pytest.mark.parametrize("before, url, after", [
     [
         [
-            TaskNext(title="Buy the milk ", url="https://url_1.com"),
-            TaskNever(title="Buy the water", url="https://url_2.com"),
-            TaskNext(title="Buy the eggs", url="https://url_3.com"),
-            TaskNever(title="Buy the bread", url="https://url_4.com"),
+            TaskNext(title="Buy the milk ", url="https://url_1.com", id="1"),
+            TaskNever(title="Buy the water", url="https://url_2.com", id="2"),
+            TaskNext(title="Buy the eggs", url="https://url_3.com", id="3"),
+            TaskNever(title="Buy the bread", url="https://url_4.com", id="4"),
         ],
         "https://url_3.com",
         [
-            TaskNext(title="Buy the milk ", url="https://url_1.com"),
-            TaskNever(title="Buy the water", url="https://url_2.com"),
-            TaskNever(title="Buy the bread", url="https://url_4.com"),
+            TaskNext(title="Buy the milk ", url="https://url_1.com", id="1"),
+            TaskNever(title="Buy the water", url="https://url_2.com", id="2"),
+            TaskNever(title="Buy the bread", url="https://url_4.com", id="4"),
         ]
     ],
 ])
@@ -123,13 +125,13 @@ def test_never_task_stay_never(before: list[TaskBase], url: str, after: list[Tas
 
 
 def test_when_only_never_all_go_new(task_repository: TaskRepositoryForTest, sut: CloseTaskUseCase) -> None:
-    task_repository.feed(tasks=[TaskNext(title="Buy the milk ", url="https://url_1.com"),
-                                TaskNever(title="Buy the water", url="https://url_2.com"),
-                                TaskNever(title="Buy the eggs", url="https://url_3.com"),
-                                TaskNever(title="Buy the bread", url="https://url_4.com")])
+    task_repository.feed(tasks=[TaskNext(title="Buy the milk ", url="https://url_1.com", id="1"),
+                                TaskNever(title="Buy the water", url="https://url_2.com", id="2"),
+                                TaskNever(title="Buy the eggs", url="https://url_3.com", id="3"),
+                                TaskNever(title="Buy the bread", url="https://url_4.com", id="4")])
 
     sut.execute(url="https://url_1.com")
     assert task_repository.all_tasks() == [
-                                TaskNew(title="Buy the water", url="https://url_2.com"),
-                                TaskNew(title="Buy the eggs", url="https://url_3.com"),
-                                TaskNew(title="Buy the bread", url="https://url_4.com")]
+                                TaskNew(title="Buy the water", url="https://url_2.com", id="2"),
+                                TaskNew(title="Buy the eggs", url="https://url_3.com", id="3"),
+                                TaskNew(title="Buy the bread", url="https://url_4.com", id="4")]

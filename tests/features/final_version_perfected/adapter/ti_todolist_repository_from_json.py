@@ -10,8 +10,8 @@ def test_write_in_json() -> None:
     sut = TaskRepositoryFromJson(json_path)
 
     sut.save([
-        TaskNew(title="buy the milk", url="https://url_1.com"),
-        TaskNew(title="buy the water", url="https://url_2.com")])
+        TaskNew(title="buy the milk", url="https://url_1.com", id="1"),
+        TaskNew(title="buy the water", url="https://url_2.com", id="2")])
 
     verify(json_path.read_text(encoding="utf-8"))
 
@@ -21,10 +21,10 @@ def test_read_from_json() -> None:
     sut = TaskRepositoryFromJson(json_path)
 
     expected_task : list[TaskBase] = [
-        TaskNext(title="buy the milk", url="https://url_1.com"),
-        TaskLater(title="buy the water", url="https://url_2.com"),
-        TaskNew(title="buy the bread", url="https://url_3.com"),
-        TaskNever(title="buy the butter", url="https://url_4.com"),
+        TaskNext(title="buy the milk", url="https://url_1.com", id="1"),
+        TaskLater(title="buy the water", url="https://url_2.com", id="2"),
+        TaskNew(title="buy the bread", url="https://url_3.com", id="3"),
+        TaskNever(title="buy the butter", url="https://url_4.com", id="4"),
     ]
     sut.save(expected_task)
 

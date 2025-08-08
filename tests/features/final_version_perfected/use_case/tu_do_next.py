@@ -9,39 +9,39 @@ from ytreza_dev.features.final_version_perfected.use_case.do_next import DoNext
 @pytest.mark.parametrize("before, url, after", [
     [
         [
-            TaskNew(title="buy the milk", url="https://url_1.com"),
-            TaskNew(title="buy the water", url="https://url_2.com")
+            TaskNew(title="buy the milk", url="https://url_1.com", id="1"),
+            TaskNew(title="buy the water", url="https://url_2.com", id="2")
         ],
         "https://url_2.com",
         [
-            TaskNext(title="buy the milk", url="https://url_1.com"),
-            TaskNext(title="buy the water", url="https://url_2.com")
+            TaskNext(title="buy the milk", url="https://url_1.com", id="1"),
+            TaskNext(title="buy the water", url="https://url_2.com", id="2")
         ]
     ],
     [
         [
-            TaskNew(title="buy the milk", url="https://url_1.com"),
-            TaskLater(title="buy the water", url="https://url_2.com"),
-            TaskNew(title="buy the bread", url="https://url_3.com")
+            TaskNew(title="buy the milk", url="https://url_1.com", id="1"),
+            TaskLater(title="buy the water", url="https://url_2.com", id="2"),
+            TaskNew(title="buy the bread", url="https://url_3.com", id="3")
         ],
         "https://url_3.com",
         [
-            TaskNext(title="buy the milk", url="https://url_1.com"),
-            TaskLater(title="buy the water", url="https://url_2.com"),
-            TaskNext(title="buy the bread", url="https://url_3.com")
+            TaskNext(title="buy the milk", url="https://url_1.com", id="1"),
+            TaskLater(title="buy the water", url="https://url_2.com", id="2"),
+            TaskNext(title="buy the bread", url="https://url_3.com", id="3")
         ]
     ],
     [
         [
-            TaskNever(title="buy the milk", url="https://url_1.com"),
-            TaskLater(title="buy the water", url="https://url_2.com"),
-            TaskNew(title="buy the bread", url="https://url_3.com")
+            TaskNever(title="buy the milk", url="https://url_1.com", id="1"),
+            TaskLater(title="buy the water", url="https://url_2.com", id="2"),
+            TaskNew(title="buy the bread", url="https://url_3.com", id="3")
         ],
         "https://url_3.com",
         [
-            TaskNever(title="buy the milk", url="https://url_1.com"),
-            TaskLater(title="buy the water", url="https://url_2.com"),
-            TaskNext(title="buy the bread", url="https://url_3.com")
+            TaskNever(title="buy the milk", url="https://url_1.com", id="1"),
+            TaskLater(title="buy the water", url="https://url_2.com", id="2"),
+            TaskNext(title="buy the bread", url="https://url_3.com", id="3")
         ]
     ],
 ])

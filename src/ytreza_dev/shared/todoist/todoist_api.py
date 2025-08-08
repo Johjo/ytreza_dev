@@ -8,6 +8,7 @@ import requests
 class Task:
     name: str
     url: str
+    id: str
 
 
 class TodoistAPI:
@@ -24,7 +25,7 @@ class TodoistAPI:
 
         json_content = response.text
         tasks = json.loads(json_content)
-        return [Task(name=task["content"], url=task["url"]) for task in tasks]
+        return [Task(name=task["content"], url=task["url"], id=task["id"]) for task in tasks]
 
     def open_task(self, content: str) -> str:
         headers = {
@@ -36,7 +37,7 @@ class TodoistAPI:
 
         json_content = response.text
         task = json.loads(json_content)
-        return task["id"]
+        return str(task["id"])
 
     def close_task(self, task_id: str) -> None:
         headers = {

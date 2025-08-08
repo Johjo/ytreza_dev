@@ -9,4 +9,4 @@ class StartFvpUseCase:
         self._task_repository = task_repository
 
     def execute(self) -> None:
-        self._task_repository.save([TaskNew(title=task.name, url=task.url) for task in self._todolist_reader.all_tasks()])
+        self._task_repository.save([TaskNew(title=task.name, url=task.url, id=task.id) for task in self._todolist_reader.all_tasks()])

@@ -11,4 +11,4 @@ class TodolistReaderFromTodoist(TodolistReaderPort):
     def all_tasks(self) -> list[ExternalTask]:
         todoist = TodoistAPI(self._env_reader.read("TODOIST_API_TOKEN"))
         tasks = todoist.get_all_tasks()
-        return [ExternalTask(name=task.name, url=task.url) for task in tasks]
+        return [ExternalTask(name=task.name, url=task.url, id=task.id) for task in tasks]

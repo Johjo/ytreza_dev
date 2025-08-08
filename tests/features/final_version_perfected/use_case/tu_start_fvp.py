@@ -40,11 +40,11 @@ def test_merge_no_task(task_repository: TaskRepositoryForTest, sut: StartFvpUseC
 def test_synchronize_task_in_repository(todolist_reader: TodolistReaderForTest, task_repository: TaskRepositoryForTest,
                                         sut: StartFvpUseCase) -> None:
     todolist_reader.feed([
-        ExternalTask(name="buy the milk", url="https://url_1.com"),
-        ExternalTask(name="buy the water", url="https://url_2.com")])
+        ExternalTask(name="buy the milk", url="https://url_1.com", id="1"),
+        ExternalTask(name="buy the water", url="https://url_2.com", id="2")])
 
     sut.execute()
 
     assert task_repository.all_tasks() == [
-        TaskNew(title="buy the milk", url="https://url_1.com"),
-        TaskNew(title="buy the water", url="https://url_2.com")]
+        TaskNew(title="buy the milk", url="https://url_1.com", id="1"),
+        TaskNew(title="buy the water", url="https://url_2.com", id="2")]
