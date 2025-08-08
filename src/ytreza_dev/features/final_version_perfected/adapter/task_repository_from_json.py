@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Any
 
 from ytreza_dev.features.final_version_perfected.port.task_repository import TaskRepositoryPort
-from ytreza_dev.features.final_version_perfected.types import TaskBase, TaskNew, TaskNext, TaskLater, TaskNever
+from ytreza_dev.features.final_version_perfected.types import TaskBase, TaskNew, TaskNext, TaskLater, TaskNever, Project
 
 
 class TaskRepositoryFromJson(TaskRepositoryPort):
@@ -13,17 +13,16 @@ class TaskRepositoryFromJson(TaskRepositoryPort):
         tasks = json.loads(self._file_path.read_text())
         return [self.to_task_base(task) for task in tasks]
 
-    @staticmethod
-    def to_task_base(task: dict[str, str]) -> TaskBase:
+    def to_task_base(self, task: dict[str, str]) -> TaskBase:
         match task["status"]:
             case "new":
-                return TaskNew(title=task["title"], url=task["url"], id=task["id"])
+                return TaskNew(title=task["title"], url=task["url"], id=task["id"], project=self._to_project(task))
             case "next":
-                return TaskNext(title=task["title"], url=task["url"], id=task["id"])
+                return TaskNext(title=task["title"], url=task["url"], id=task["id"], project=self._to_project(task))
             case "later":
-                return TaskLater(title=task["title"], url=task["url"], id=task["id"])
+                return TaskLater(title=task["title"], url=task["url"], id=task["id"], project=self._to_project(task))
             case "never":
-                return TaskNever(title=task["title"], url=task["url"], id=task["id"])
+                return TaskNever(title=task["title"], url=task["url"], id=task["id"], project=self._to_project(task))
         raise ValueError(f"Unknown status: {task['status']}")
 
     def __init__(self, file_path: Path) -> None:
@@ -47,3 +46,6 @@ class TaskRepositoryFromJson(TaskRepositoryPort):
                 d.update({"status": "never"})
 
         return d
+
+    def _to_project(self, task) -> Project:
+        return Project(key=task["project"]["key"], name=task["project"]["name"])

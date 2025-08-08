@@ -1,7 +1,9 @@
+from toml.encoder import TomlPreserveInlineDictEncoder
+
 from ytreza_dev.features.final_version_perfected.port.todolist_reader import TodolistReaderPort
-from ytreza_dev.features.final_version_perfected.types import ExternalTask
+from ytreza_dev.features.final_version_perfected.types import ExternalTask, ExternalProject
 from ytreza_dev.shared.env_reader import EnvReaderPort
-from ytreza_dev.shared.todoist.todoist_api import TodoistAPI
+from ytreza_dev.shared.todoist.todoist_api import TodoistAPI, TodoistTask, TodoistProject
 
 
 class TodolistReaderFromTodoist(TodolistReaderPort):
@@ -11,4 +13,10 @@ class TodolistReaderFromTodoist(TodolistReaderPort):
     def all_tasks(self) -> list[ExternalTask]:
         todoist = TodoistAPI(self._env_reader.read("TODOIST_API_TOKEN"))
         tasks = todoist.get_all_tasks()
-        return [ExternalTask(name=task.name, url=task.url, id=task.id) for task in tasks]
+        return [self._to_external_task(task) for task in tasks]
+
+    def _to_external_task(self, task: TodoistTask):
+        return ExternalTask(name=task.name, url=task.url, id=task.id, project=self._to_external_project(task.project))
+
+    def _to_external_project(self, project: TodoistProject) -> ExternalProject:
+        return ExternalProject(name=project.name, key=project.id)

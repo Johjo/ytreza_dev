@@ -25,24 +25,30 @@ class ChooseTaskBetween:
 
 NextAction = NothingToDo | DoTheTask | ChooseTaskBetween
 
+@dataclass(frozen=True, eq=True)
+class Project:
+    key: str
+    name: str
+
 
 @dataclass()
 class TaskBase:
     title: str
     url: str
     id: str
+    project: Project
 
     def to_next(self) -> 'TaskNext':
-        return TaskNext(title=self.title, url=self.url, id=self.id)
+        return TaskNext(title=self.title, url=self.url, id=self.id, project=self.project)
 
     def to_later(self) -> 'TaskLater':
-        return TaskLater(title=self.title, url=self.url, id=self.id)
+        return TaskLater(title=self.title, url=self.url, id=self.id, project=self.project)
 
     def to_new(self) -> 'TaskNew':
-        return TaskNew(title=self.title, url=self.url, id=self.id)
+        return TaskNew(title=self.title, url=self.url, id=self.id, project=self.project)
 
     def to_never(self) -> 'TaskNever':
-        return TaskNever(title=self.title, url=self.url, id=self.id)
+        return TaskNever(title=self.title, url=self.url, id=self.id, project=self.project)
 
 
 @dataclass
@@ -65,7 +71,13 @@ class TaskNever(TaskBase):
 
 
 @dataclass
+class ExternalProject:
+    name: str
+    key: str
+
+@dataclass
 class ExternalTask:
     name: str
     url: str
     id: str
+    project: ExternalProject

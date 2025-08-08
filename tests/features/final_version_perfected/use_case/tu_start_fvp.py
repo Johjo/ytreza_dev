@@ -1,7 +1,10 @@
+from dataclasses import dataclass
+
 import pytest
+from attr.setters import frozen
 
 from tests.features.final_version_perfected.adapters import TaskRepositoryForTest
-from tests.features.final_version_perfected.fixtures import a_task_new, an_external_task
+from tests.features.final_version_perfected.fixtures import a_task_new, an_external_task, an_external_project, a_project
 from ytreza_dev.features.final_version_perfected.port.todolist_reader import TodolistReaderPort
 from ytreza_dev.features.final_version_perfected.types import ExternalTask
 from ytreza_dev.features.final_version_perfected.use_case.start_fvp_use_case import StartFvpUseCase
@@ -41,11 +44,13 @@ def test_merge_no_task(task_repository: TaskRepositoryForTest, sut: StartFvpUseC
 def test_synchronize_task_in_repository(todolist_reader: TodolistReaderForTest, task_repository: TaskRepositoryForTest,
                                         sut: StartFvpUseCase) -> None:
     todolist_reader.feed([
-        an_external_task(name="buy the milk", url="https://url_1.com", id="1"),
-        an_external_task(name="buy the water", url="https://url_2.com", id="2")])
+        an_external_task(name="buy the milk", url="https://url_1.com", id="1",
+                         project=an_external_project("1", "project 1")),
+        an_external_task(name="buy the water", url="https://url_2.com", id="2",
+                         project=an_external_project(key="2", name="project 2"))])
 
     sut.execute()
 
     assert task_repository.all_tasks() == [
-        a_task_new(title="buy the milk", url="https://url_1.com", id="1"),
-        a_task_new(title="buy the water", url="https://url_2.com", id="2")]
+        a_task_new(title="buy the milk", url="https://url_1.com", id="1", project=a_project(key="1", name="project 1")),
+        a_task_new(title="buy the water", url="https://url_2.com", id="2", project=a_project(key="2", name="project 2"))]

@@ -2,29 +2,32 @@ from pyqure import pyqure, PyqureMemory  # type: ignore
 
 from tests.features.final_version_perfected.adapters import TaskInMemory, TaskRepositoryForDemo, TASK_IN_MEMORY_KEY, \
     TaskReaderForDemo
+from tests.features.final_version_perfected.fixtures import an_external_task, a_task_new, an_external_project, a_project
 from tests.features.final_version_perfected.use_case.tu_start_fvp import TodolistReaderForTest
 from ytreza_dev.features.final_version_perfected.controller import FvpController
 from ytreza_dev.features.final_version_perfected.injection_keys import TASK_READER_KEY, TODOLIST_READER_KEY, \
     TASK_REPOSITORY_KEY, EXTERNAL_TODOLIST_KEY
 from ytreza_dev.features.final_version_perfected.port.external_todolist import ExternalTodolistPort
 from ytreza_dev.features.final_version_perfected.port.todolist_reader import TodolistReaderPort
-from ytreza_dev.features.final_version_perfected.types import ChooseTaskBetween, TaskNew, Task, DoTheTask, \
-    NothingToDo, ExternalTask
+from ytreza_dev.features.final_version_perfected.types import ChooseTaskBetween, Task, DoTheTask, \
+    NothingToDo
 
 
 def test_fvp_later() -> None:
+    external_project = an_external_project(key="1", name="Project 1")
+    project = a_project(key="1", name="Project 1")
     todolist_reader = TodolistReaderForTest()
     todolist_reader.feed([
-        ExternalTask(name="Email ", url="https://url_1.com", id="1"),
-        ExternalTask(name="In-Tray", url="https://url_2.com", id="2"),
-        ExternalTask(name="Voicemail", url="https://url_3.com", id="3"),
-        ExternalTask(name="Project X Report", url="https://url_4.com", id="4"),
-        ExternalTask(name="Tidy Desk", url="https://url_5.com", id="5"),
-        ExternalTask(name="Call Dissatisfied Customer", url="https://url_6.com", id="6"),
-        ExternalTask(name="Make Dental Appointment", url="https://url_7.com", id="7"),
-        ExternalTask(name="File Invoices", url="https://url_8.com", id="8"),
-        ExternalTask(name="Discuss Project Y with Bob", url="https://url_9.com", id="9"),
-        ExternalTask(name="Back Up  ", url="https://url_10.com", id="10"),
+        an_external_task(name="Email ", url="https://url_1.com", id="1", project=external_project),
+        an_external_task(name="In-Tray", url="https://url_2.com", id="2", project=external_project),
+        an_external_task(name="Voicemail", url="https://url_3.com", id="3", project=external_project),
+        an_external_task(name="Project X Report", url="https://url_4.com", id="4", project=external_project),
+        an_external_task(name="Tidy Desk", url="https://url_5.com", id="5", project=external_project),
+        an_external_task(name="Call Dissatisfied Customer", url="https://url_6.com", id="6", project=external_project),
+        an_external_task(name="Make Dental Appointment", url="https://url_7.com", id="7", project=external_project),
+        an_external_task(name="File Invoices", url="https://url_8.com", id="8", project=external_project),
+        an_external_task(name="Discuss Project Y with Bob", url="https://url_9.com", id="9", project=external_project),
+        an_external_task(name="Back Up  ", url="https://url_10.com", id="10", project=external_project),
     ]
 )
     task_in_memory = TaskInMemory()
@@ -32,16 +35,16 @@ def test_fvp_later() -> None:
     controller.start_fvp_session()
 
     assert task_in_memory.all_tasks() == [
-        TaskNew(title="Email ", url="https://url_1.com", id="1"),
-        TaskNew(title="In-Tray", url="https://url_2.com", id="2"),
-        TaskNew(title="Voicemail", url="https://url_3.com", id="3"),
-        TaskNew(title="Project X Report", url="https://url_4.com", id="4"),
-        TaskNew(title="Tidy Desk", url="https://url_5.com", id="5"),
-        TaskNew(title="Call Dissatisfied Customer", url="https://url_6.com", id="6"),
-        TaskNew(title="Make Dental Appointment", url="https://url_7.com", id="7"),
-        TaskNew(title="File Invoices", url="https://url_8.com", id="8"),
-        TaskNew(title="Discuss Project Y with Bob", url="https://url_9.com", id="9"),
-        TaskNew(title="Back Up  ", url="https://url_10.com", id="10"),
+        a_task_new(title="Email ", url="https://url_1.com", id="1", project=project),
+        a_task_new(title="In-Tray", url="https://url_2.com", id="2", project=project),
+        a_task_new(title="Voicemail", url="https://url_3.com", id="3", project=project),
+        a_task_new(title="Project X Report", url="https://url_4.com", id="4", project=project),
+        a_task_new(title="Tidy Desk", url="https://url_5.com", id="5", project=project),
+        a_task_new(title="Call Dissatisfied Customer", url="https://url_6.com", id="6", project=project),
+        a_task_new(title="Make Dental Appointment", url="https://url_7.com", id="7", project=project),
+        a_task_new(title="File Invoices", url="https://url_8.com", id="8", project=project),
+        a_task_new(title="Discuss Project Y with Bob", url="https://url_9.com", id="9", project=project),
+        a_task_new(title="Back Up  ", url="https://url_10.com", id="10", project=project),
     ]
 
     assert controller.next_action() == ChooseTaskBetween((
@@ -216,14 +219,16 @@ def test_fvp_later() -> None:
 
 
 def test_fvp_never() -> None:
+    external_project = an_external_project(key="1", name="Project 1")
+    project = a_project(key="1", name="Project 1")
     todolist_reader = TodolistReaderForTest()
     todolist_reader.feed([
-        ExternalTask(name="Email ", url="https://url_1.com", id="1"),
-        ExternalTask(name="In-Tray", url="https://url_2.com", id="2"),
-        ExternalTask(name="Voicemail", url="https://url_3.com", id="3"),
-        ExternalTask(name="Project X Report", url="https://url_4.com", id="4"),
-        ExternalTask(name="Tidy Desk", url="https://url_5.com", id="5"),
-        ExternalTask(name="Call Dissatisfied Customer", url="https://url_6.com", id="6"),
+        an_external_task(name="Email ", url="https://url_1.com", id="1", project=external_project),
+        an_external_task(name="In-Tray", url="https://url_2.com", id="2", project=external_project),
+        an_external_task(name="Voicemail", url="https://url_3.com", id="3", project=external_project),
+        an_external_task(name="Project X Report", url="https://url_4.com", id="4", project=external_project),
+        an_external_task(name="Tidy Desk", url="https://url_5.com", id="5", project=external_project),
+        an_external_task(name="Call Dissatisfied Customer", url="https://url_6.com", id="6", project=external_project),
     ]
     )
     task_in_memory = TaskInMemory()
@@ -231,12 +236,12 @@ def test_fvp_never() -> None:
     controller.start_fvp_session()
 
     assert task_in_memory.all_tasks() == [
-        TaskNew(title="Email ", url="https://url_1.com", id="1"),
-        TaskNew(title="In-Tray", url="https://url_2.com", id="2"),
-        TaskNew(title="Voicemail", url="https://url_3.com", id="3"),
-        TaskNew(title="Project X Report", url="https://url_4.com", id="4"),
-        TaskNew(title="Tidy Desk", url="https://url_5.com", id="5"),
-        TaskNew(title="Call Dissatisfied Customer", url="https://url_6.com", id="6"),
+        a_task_new(title="Email ", url="https://url_1.com", id="1", project=project),
+        a_task_new(title="In-Tray", url="https://url_2.com", id="2", project=project),
+        a_task_new(title="Voicemail", url="https://url_3.com", id="3", project=project),
+        a_task_new(title="Project X Report", url="https://url_4.com", id="4", project=project),
+        a_task_new(title="Tidy Desk", url="https://url_5.com", id="5", project=project),
+        a_task_new(title="Call Dissatisfied Customer", url="https://url_6.com", id="6", project=project),
     ]
 
     assert controller.next_action() == ChooseTaskBetween((
