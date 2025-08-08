@@ -43,7 +43,7 @@ def todolist_page() -> None:
         tasks = next_action.tasks
         
         # Top task
-        st.title(f"{tasks[0].title}")
+        st.title(f"{tasks[0].project_name} / {tasks[0].title}")
         col1, _, _, _, col5 = st.columns(5)
         with col1:
             st.link_button(f"Open URL", url=tasks[0].url)
@@ -56,14 +56,14 @@ def todolist_page() -> None:
         st.markdown("---")
         
         # Bottom task
-        st.title(f"{tasks[1].title}")
+        st.title(f"{tasks[1].project_name} / {tasks[1].title}")
         col1, col2, col3, col4, col5 = st.columns(5)
         with col1:
             st.link_button(f"Open URL", url=tasks[1].url)
 
         with col2:
             if st.button(f"Choose", key=f"choose_bottom_{tasks[1].url}"):
-                controller.choose_task(tasks[1].url)
+                controller.do_next(tasks[1].url)
                 st.rerun()
 
         with col3:

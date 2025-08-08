@@ -2,23 +2,24 @@ from dataclasses import dataclass
 from typing import Tuple
 
 
-@dataclass
+@dataclass(frozen=True, eq=True)
 class Task:
     title: str
     url: str
+    project_name: str
 
 
-@dataclass
+@dataclass(frozen=True, eq=True)
 class NothingToDo:
     pass
 
 
-@dataclass
+@dataclass(frozen=True, eq=True)
 class DoTheTask:
     task: Task
 
 
-@dataclass
+@dataclass(frozen=True, eq=True)
 class ChooseTaskBetween:
     tasks: Tuple[Task, Task]
 
@@ -31,7 +32,7 @@ class Project:
     name: str
 
 
-@dataclass()
+@dataclass(frozen=True, eq=True)
 class TaskBase:
     title: str
     url: str
@@ -51,31 +52,31 @@ class TaskBase:
         return TaskNever(title=self.title, url=self.url, id=self.id, project=self.project)
 
 
-@dataclass
+@dataclass(frozen=True, eq=True)
 class TaskNew(TaskBase):
     pass
 
 
-@dataclass
+@dataclass(frozen=True, eq=True)
 class TaskNext(TaskBase):
     pass
 
 
-@dataclass
+@dataclass(frozen=True, eq=True)
 class TaskLater(TaskBase):
     pass
 
-@dataclass
+@dataclass(frozen=True, eq=True)
 class TaskNever(TaskBase):
     pass
 
 
-@dataclass
+@dataclass(frozen=True, eq=True)
 class ExternalProject:
     name: str
     key: str
 
-@dataclass
+@dataclass(frozen=True, eq=True)
 class ExternalTask:
     name: str
     url: str

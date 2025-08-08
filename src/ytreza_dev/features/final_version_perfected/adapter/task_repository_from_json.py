@@ -47,5 +47,6 @@ class TaskRepositoryFromJson(TaskRepositoryPort):
 
         return d
 
-    def _to_project(self, task) -> Project:
+    @staticmethod
+    def _to_project(task) -> Project:
         return Project(key=task["project"]["key"], name=task["project"]["name"])

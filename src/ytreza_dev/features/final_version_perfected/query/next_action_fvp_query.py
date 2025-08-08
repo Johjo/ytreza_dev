@@ -18,11 +18,16 @@ class NextActionFvpQuery:
 
         if new_task_index > next_task_index:
             return ChooseTaskBetween(tasks=(
-                Task(title=tasks[next_task_index].title, url=tasks[next_task_index].url),
-                Task(title=tasks[new_task_index].title, url=tasks[new_task_index].url)
+                Task(title=tasks[next_task_index].title, url=tasks[next_task_index].url,
+                     project_name=tasks[next_task_index].project.name),
+                Task(title=tasks[new_task_index].title, url=tasks[new_task_index].url,
+                     project_name=tasks[new_task_index].project.name)
             ))
 
-        return DoTheTask(task=Task(title=tasks[next_task_index].title, url=tasks[next_task_index].url))
+        return DoTheTask(task=Task(
+            title=tasks[next_task_index].title,
+            url=tasks[next_task_index].url,
+            project_name=tasks[next_task_index].project.name))
 
     @staticmethod
     def _new_task_index(next_task_index: int, tasks: list[TaskBase]) -> int:
