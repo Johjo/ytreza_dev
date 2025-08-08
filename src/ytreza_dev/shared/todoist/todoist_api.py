@@ -1,14 +1,21 @@
 import json
 from dataclasses import dataclass
+from typing import Any
 
 import requests
 
+@dataclass
+class TodoistProject:
+    id: str
+    name: str
+
 
 @dataclass
-class Task:
+class TodoistTask:
     name: str
     url: str
     id: str
+    project: TodoistProject
 
 
 class TodoistAPI:
@@ -16,16 +23,37 @@ class TodoistAPI:
         self._api_token = api_token
         self._base_url = "https://api.todoist.com/rest/v2"
 
-    def get_all_tasks(self) -> list[Task]:
+    def get_all_tasks(self) -> list[TodoistTask]:
+        tasks = json.loads(self._get_all_tasks_json())
+        projects : dict[str, Any] = {p["id"]: p for p in json.loads(self._get_all_projects_json())}
+        return [self._to_todoist_task(task, projects) for task in tasks]
+
+    def _get_all_tasks_json(self):
         headers = {
             "Authorization": f"Bearer {self._api_token}"
         }
         response = requests.get(f"{self._base_url}/tasks", headers=headers)
         response.raise_for_status()
-
         json_content = response.text
-        tasks = json.loads(json_content)
-        return [Task(name=task["content"], url=task["url"], id=task["id"]) for task in tasks]
+        return json_content
+
+    def _get_all_projects_json(self):
+        headers = {
+            "Authorization": f"Bearer {self._api_token}"
+        }
+        response = requests.get(f"{self._base_url}/projects", headers=headers)
+        response.raise_for_status()
+        json_content = response.text
+        return json_content
+
+    @staticmethod
+    def _to_todoist_task(task, projects: [dict[str, Any]]):
+        return TodoistTask(
+            name=task["content"],
+            url=task["url"],
+            id=task["id"],
+            project=TodoistProject(id=task["project_id"], name=projects[task["project_id"]]["name"])
+        )
 
     def open_task(self, content: str) -> str:
         headers = {
