@@ -1,8 +1,10 @@
+from enum import auto
+
 import pytest
 
 from tests.features.final_version_perfected.adapters import TaskRepositoryForTest
 from tests.features.final_version_perfected.fixtures import a_task_new, a_task_next, a_task_later
-from ytreza_dev.features.final_version_perfected.types import TaskBase
+from ytreza_dev.features.final_version_perfected.types import TaskBase, TaskNext, Project, TaskLater, TaskNew
 from ytreza_dev.features.final_version_perfected.use_case.do_later import DoLater
 
 
