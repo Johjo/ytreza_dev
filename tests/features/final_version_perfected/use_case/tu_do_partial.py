@@ -50,9 +50,9 @@ class DoPartially:
         if len(before) > index:
             after.append(before[index].to_next())
             index += 1
-        while len(before) > index:
-            after.append(before[index])
-            index += 1
+
+        after.extend(before[index:])
+
         return after
 
 @dataclass
