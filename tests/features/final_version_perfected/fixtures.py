@@ -1,7 +1,7 @@
-from attr import dataclass
+from dataclasses import dataclass
 
 from ytreza_dev.features.final_version_perfected.types import TaskNext, TaskLater, TaskNew, TaskNever, ExternalTask, \
-    ExternalProject, Project
+    ExternalProject, Project, TaskBase
 
 
 def a_project(key:str, name:str)-> Project:
@@ -36,20 +36,27 @@ def an_external_task(name: str, url: str, id: str,
 class TaskBuilder:
     key: str
     url: str
+    title: str | None = None
+    project: Project | None = None
+
+    def __post_init__(self):
+        if self.title is None:
+            self.title = f"do {self.key}"
+
+        if self.project is None:
+            self.project = Project(key=self.key, name="Project")
+
+        self.task_base = TaskBase(id=self.key, url=self.url, title=self.title,
+                       project=self.project)
 
     def as_new(self) -> TaskNew:
-        return TaskNew(id=self.key, url=self.url, title=f"do {self.key}",
-                       project=Project(key=self.key, name="Project"))
+        return self.task_base.to_new()
 
     def as_next(self) -> TaskNext:
-        return TaskNext(id=self.key, url=self.url, title=f"do {self.key}",
-                        project=Project(key=self.key, name="Project"))
+        return self.task_base.to_next()
 
     def as_later(self) -> TaskLater:
-        return TaskLater(id=self.key, url=self.url, title=f"do {self.key}",
-                         project=Project(key=self.key, name="Project"))
+        return self.task_base.to_later()
 
     def as_never(self) ->  TaskNever:
-        return TaskNever(id=self.key, url=self.url, title=f"do {self.key}",
-                         project=Project(key=self.key, name="Project"))
-        pass
+        return self.task_base.to_never()
