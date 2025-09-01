@@ -1,5 +1,6 @@
 from pyqure import PyqureMemory, pyqure # type: ignore
 
+from ytreza_dev.features.final_version_perfected.use_case.do_partially import DoPartially
 from ytreza_dev.features.final_version_perfected.use_case.do_never import DoNever
 from ytreza_dev.features.final_version_perfected.use_case.do_next import DoNext
 from ytreza_dev.features.final_version_perfected.injection_keys import TODOLIST_READER_KEY, TASK_REPOSITORY_KEY, \
@@ -35,3 +36,7 @@ class FvpController:
 
     def do_never(self, url: str) -> None:
         DoNever(task_repository=self._inject(TASK_REPOSITORY_KEY)).execute(url)
+
+    def do_partial(self, url: str) -> None:
+        DoPartially(task_repository=self._inject(TASK_REPOSITORY_KEY)).execute(url)
+

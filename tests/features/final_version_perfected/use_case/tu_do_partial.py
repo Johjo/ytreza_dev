@@ -1,81 +1,9 @@
 import pytest
-from attr import dataclass
 
 from tests.features.final_version_perfected.adapters import TaskRepositoryForTest
-from ytreza_dev.features.final_version_perfected.port.task_repository import TaskRepositoryPort
-from ytreza_dev.features.final_version_perfected.types import TaskNext, Project, TaskNew, TaskLater, TaskBase, TaskNever
-
-
-class DoPartially:
-    def __init__(self, task_repository: TaskRepositoryPort) -> None:
-        self._task_repository = task_repository
-
-    def execute(self, url: str, test_id) -> None:
-        before = self._task_repository.all_tasks()
-        if before[0].url == url:
-            after = self._first_task_done_partially(before)
-        else:
-            after = self._another_task_done_partially(before, url)
-
-        self._task_repository.save(after)
-
-    def _another_task_done_partially(self, before: list[TaskBase], url: str):
-        after = []
-        index = 0
-        after.append(before[index].to_next())
-        index += 1
-        while len(before) > index and before[index].url != url:
-            after.append(before[index])
-            index += 1
-        after.append(before[index].to_later())
-        index += 1
-
-        while len(before) > index:
-            if isinstance(before[index], TaskLater):
-                after.append(before[index].to_new())
-            else:
-                after.append(before[index])
-            index += 1
-        return after
-
-
-    def _first_task_done_partially(self, before: list[TaskBase]) -> list[TaskBase]:
-        after = []
-        index = 0
-        after.append(before[index].to_next())
-        index += 1
-        while len(before) > index and not isinstance(before[index], TaskNew):
-            after.append(before[index])
-            index += 1
-        if len(before) > index:
-            after.append(before[index].to_next())
-            index += 1
-
-        after.extend(before[index:])
-
-        return after
-
-@dataclass
-class TaskBuilder:
-    key: str
-    url: str
-
-    def as_new(self) -> TaskNew:
-        return TaskNew(id=self.key, url=self.url, title=f"do {self.key}",
-                       project=Project(key=self.key, name="Project"))
-
-    def as_next(self) -> TaskNext:
-        return TaskNext(id=self.key, url=self.url, title=f"do {self.key}",
-                        project=Project(key=self.key, name="Project"))
-
-    def as_later(self) -> TaskLater:
-        return TaskLater(id=self.key, url=self.url, title=f"do {self.key}",
-                         project=Project(key=self.key, name="Project"))
-
-    def as_never(self) ->  TaskNever:
-        return TaskNever(id=self.key, url=self.url, title=f"do {self.key}",
-                         project=Project(key=self.key, name="Project"))
-        pass
+from tests.features.final_version_perfected.fixtures import TaskBuilder
+from ytreza_dev.features.final_version_perfected.types import TaskBase
+from ytreza_dev.features.final_version_perfected.use_case.do_partially import DoPartially
 
 
 def a_task(key: str) -> TaskBuilder:
@@ -96,7 +24,7 @@ class TestSingleTaskIsAlwaysNext:
             TASKS[0].as_new(),
         ])
 
-        sut.execute(url=TASKS[0].url, test_id="1")
+        sut.execute(url=TASKS[0].url)
 
         assert task_repository.all_tasks() == [
             TASKS[0].as_next(),
@@ -107,7 +35,7 @@ class TestSingleTaskIsAlwaysNext:
             TASKS[0].as_next(),
         ])
 
-        sut.execute(url=TASKS[0].url, test_id="2")
+        sut.execute(url=TASKS[0].url)
 
         assert task_repository.all_tasks() == [
             TASKS[0].as_next(),
@@ -177,7 +105,7 @@ class TestWhenPartialIsFirstTask:
     def test_following_new_task_become_next(self, test_id, initial, expected, sut: DoPartially,
                                             task_repository: TaskRepositoryForTest):
         task_repository.feed(tasks=initial)
-        sut.execute(url=TASKS[0].url, test_id=test_id)
+        sut.execute(url=TASKS[0].url)
         assert task_repository.all_tasks() == expected
 
     def test_always_become_next(self, sut: DoPartially, task_repository: TaskRepositoryForTest):
@@ -186,7 +114,7 @@ class TestWhenPartialIsFirstTask:
             TASKS[1].as_new(),
         ])
 
-        sut.execute(url=TASKS[0].url, test_id="D")
+        sut.execute(url=TASKS[0].url)
 
         assert task_repository.all_tasks() == [
             TASKS[0].as_next(),
@@ -258,7 +186,7 @@ class TestWhenPartialIsAnotherTask:
                                     initial: list[TaskBase], url: str, expected: list[TaskBase]):
         task_repository.feed(tasks=initial)
 
-        sut.execute(url=url, test_id=test_id)
+        sut.execute(url=url)
 
         assert task_repository.all_tasks() == expected
 
@@ -298,10 +226,10 @@ class TestWhenPartialIsAnotherTask:
 
     ])
     def test_task_later_following_partially_become_new(self, sut: DoPartially, task_repository: TaskRepositoryForTest, test_id: str,
-                                    initial: list[TaskBase], url: str, expected: list[TaskBase]):
+                                                       initial: list[TaskBase], url: str, expected: list[TaskBase]):
         task_repository.feed(tasks=initial)
 
-        sut.execute(url=url, test_id=test_id)
+        sut.execute(url=url)
 
         assert task_repository.all_tasks() == expected
 
@@ -325,10 +253,10 @@ class TestWhenPartialIsAnotherTask:
         ],
     ])
     def test_task_never_following_partially_become_never(self, sut: DoPartially, task_repository: TaskRepositoryForTest, test_id: str,
-                                    initial: list[TaskBase], url: str, expected: list[TaskBase]):
+                                                         initial: list[TaskBase], url: str, expected: list[TaskBase]):
         task_repository.feed(tasks=initial)
 
-        sut.execute(url=url, test_id=test_id)
+        sut.execute(url=url)
 
         assert task_repository.all_tasks() == expected
 

@@ -1,3 +1,5 @@
+from attr import dataclass
+
 from ytreza_dev.features.final_version_perfected.types import TaskNext, TaskLater, TaskNew, TaskNever, ExternalTask, \
     ExternalProject, Project
 
@@ -28,3 +30,26 @@ def an_external_project(key: str, name: str):
 def an_external_task(name: str, url: str, id: str,
                      project: ExternalProject = ExternalProject(name="Project", key="1")) -> ExternalTask:
     return ExternalTask(name=name, url=url, id=id, project=project)
+
+
+@dataclass
+class TaskBuilder:
+    key: str
+    url: str
+
+    def as_new(self) -> TaskNew:
+        return TaskNew(id=self.key, url=self.url, title=f"do {self.key}",
+                       project=Project(key=self.key, name="Project"))
+
+    def as_next(self) -> TaskNext:
+        return TaskNext(id=self.key, url=self.url, title=f"do {self.key}",
+                        project=Project(key=self.key, name="Project"))
+
+    def as_later(self) -> TaskLater:
+        return TaskLater(id=self.key, url=self.url, title=f"do {self.key}",
+                         project=Project(key=self.key, name="Project"))
+
+    def as_never(self) ->  TaskNever:
+        return TaskNever(id=self.key, url=self.url, title=f"do {self.key}",
+                         project=Project(key=self.key, name="Project"))
+        pass

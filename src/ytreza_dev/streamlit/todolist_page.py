@@ -81,10 +81,15 @@ def todolist_page() -> None:
 
     elif isinstance(next_action, DoTheTask):
         st.title(f"Do this task: {next_action.task.title}")
-        col1, col2 = st.columns(2)
+        col1, col2, col3 = st.columns(3)
         with col1:
             st.link_button(f"Open URL", url=next_action.task.url)
         with col2:
+            if st.button(f"Partially done", key=f"partially_done_bottom_{next_action.task.url}"):
+                controller.do_partial(next_action.task.url)
+                st.rerun()
+
+        with col3:
             if st.button(f"Close", key=f"close_bottom_{next_action.task.url}"):
                 controller.close_task(next_action.task.url)
                 st.rerun()

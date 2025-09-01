@@ -2,7 +2,8 @@ from pyqure import pyqure, PyqureMemory  # type: ignore
 
 from tests.features.final_version_perfected.adapters import TaskInMemory, TaskRepositoryForDemo, TASK_IN_MEMORY_KEY, \
     TaskReaderForDemo
-from tests.features.final_version_perfected.fixtures import an_external_task, a_task_new, an_external_project, a_project
+from tests.features.final_version_perfected.fixtures import an_external_task, a_task_new, an_external_project, \
+    a_project, a_task_later, a_task_next
 from tests.features.final_version_perfected.use_case.tu_start_fvp import TodolistReaderForTest
 from ytreza_dev.features.final_version_perfected.controller import FvpController
 from ytreza_dev.features.final_version_perfected.injection_keys import TASK_READER_KEY, TODOLIST_READER_KEY, \
@@ -332,3 +333,48 @@ def provide_dependencies(task_in_memory: TaskInMemory, todolist_reader: Todolist
     provide(EXTERNAL_TODOLIST_KEY, ExternalTodolistForDemo())
 
     return dependencies
+
+
+def test_do_partial() -> None:
+    external_project = an_external_project(key="1", name="Project 1")
+    project = a_project(key="1", name="Project 1")
+    todolist_reader = TodolistReaderForTest()
+    todolist_reader.feed([
+        an_external_task(name="Email ", url="https://url_1.com", id="1", project=external_project),
+        an_external_task(name="In-Tray", url="https://url_2.com", id="2", project=external_project),
+        an_external_task(name="Voicemail", url="https://url_3.com", id="3", project=external_project),
+    ]
+    )
+    task_in_memory = TaskInMemory()
+    controller = FvpController(dependencies=provide_dependencies(task_in_memory, todolist_reader))
+    controller.start_fvp_session()
+
+    assert task_in_memory.all_tasks() == [
+        a_task_new(title="Email ", url="https://url_1.com", id="1", project=project),
+        a_task_new(title="In-Tray", url="https://url_2.com", id="2", project=project),
+        a_task_new(title="Voicemail", url="https://url_3.com", id="3", project=project),
+    ]
+
+    assert controller.next_action() == ChooseTaskBetween((
+        Task(title="Email ", url="https://url_1.com", project_name="Project 1"),
+        Task(title="In-Tray", url="https://url_2.com", project_name="Project 1")))
+
+    controller.do_later(url="https://url_2.com")
+
+    assert controller.next_action() == ChooseTaskBetween(tasks=(
+        Task(title='Email ', url='https://url_1.com', project_name='Project 1'),
+        Task(title='Voicemail', url='https://url_3.com', project_name='Project 1')))
+
+    controller.do_next(url='https://url_3.com')
+
+    assert controller.next_action() == DoTheTask(task=(
+        Task(title='Voicemail', url='https://url_3.com', project_name='Project 1')))
+
+    controller.do_partial('https://url_3.com')
+
+    assert task_in_memory.all_tasks() == [
+        a_task_next(title="Email ", url="https://url_1.com", id="1", project=project),
+        a_task_later(title="In-Tray", url="https://url_2.com", id="2", project=project),
+        a_task_later(title="Voicemail", url="https://url_3.com", id="3", project=project),
+    ]
+
