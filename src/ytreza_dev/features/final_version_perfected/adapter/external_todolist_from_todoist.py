@@ -8,5 +8,4 @@ class ExternalTodolistFromTodoist(ExternalTodolistPort):
         self._todoist = TodoistAPI(env_reader.read("TODOIST_API_TOKEN"))
 
     def close_task(self, url: str, task_id: str) -> None:
-        print(f"close task {task_id} on {url}")
         self._todoist.close_task(task_id=task_id)
