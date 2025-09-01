@@ -3,7 +3,7 @@ from typing import Any
 import pytest
 
 from tests.features.final_version_perfected.adapters import TaskFvpRepositoryForTest
-from tests.features.final_version_perfected.fixtures import a_task_next, a_task_later, a_task_new, a_task_never
+from tests.features.final_version_perfected.fixtures import a_fvp_task
 from tests.features.final_version_perfected.use_case.conftest import task_repository
 from ytreza_dev.features.final_version_perfected.port.external_todolist import ExternalTodolistPort
 from ytreza_dev.features.final_version_perfected.types import TaskBase
@@ -33,15 +33,15 @@ def sut(task_repository: TaskFvpRepositoryForTest, external_todolist: ExternalTo
 
 @pytest.mark.parametrize("before, key, after", [
     [
-        [a_task_next(title="Buy the milk ", url="https://url_1.com", id="1")],
+        [a_fvp_task(key="1").to_next()],
         "1",
         []
     ],
     [
-        [a_task_next(title="Buy the milk ", url="https://url_1.com", id="1"),
-         a_task_next(title="Buy the water", url="https://url_2.com", id="2")],
+        [a_fvp_task(key="1").to_next(),
+         a_fvp_task(key="2").to_next()],
         "2",
-        [a_task_next(title="Buy the milk ", url="https://url_1.com", id="1")]
+        [a_fvp_task(key="1").to_next()]
     ],
 ])
 def test_remove_task_when_closed(before: list[TaskBase], key, after: list[TaskBase],
@@ -56,45 +56,40 @@ def test_remove_task_when_closed(before: list[TaskBase], key, after: list[TaskBa
 def test_close_task_on_external_system(task_repository: TaskFvpRepositoryForTest, sut: CloseTaskUseCase,
                                        external_todolist: ExternalTodolistForTest) -> None:
     task_repository.feed(tasks=[
-        a_task_next(title="Buy the milk ", url="https://url_1.com", id="1"),
-        a_task_next(title="Buy the milk ", url="https://url_2.com", id="2"),
-        a_task_later(title="Buy the milk ", url="https://url_3.com", id="3"),
+        a_fvp_task(key="1").to_next(),
+        a_fvp_task(key="2").to_next(),
+        a_fvp_task(key="3").to_later(),
     ])
     sut.execute(key="2")
     assert external_todolist.history() == [{"action": "close", "task_id": "2"}]
 
-
-
-
-
-
 @pytest.mark.parametrize("before, key, after", [
     [
         [
-            a_task_next(title="Buy the milk ", url="https://url_1.com", id="1"),
-            a_task_later(title="Buy the water", url="https://url_2.com", id="2"),
-            a_task_next(title="Buy the eggs", url="https://url_3.com", id="3"),
-            a_task_later(title="Buy the bread", url="https://url_4.com", id="4"),
+            a_fvp_task(key="1").to_next(),
+            a_fvp_task(key="2").to_later(),
+            a_fvp_task(key="3").to_next(),
+            a_fvp_task(key="4").to_later(),
         ],
         "3",
         [
-            a_task_next(title="Buy the milk ", url="https://url_1.com", id="1"),
-            a_task_later(title="Buy the water", url="https://url_2.com", id="2"),
-            a_task_new(title="Buy the bread", url="https://url_4.com", id="4"),
+            a_fvp_task(key="1").to_next(),
+            a_fvp_task(key="2").to_later(),
+            a_fvp_task("4").to_new(),
         ]
     ],
     [
         [
-            a_task_next(title="Buy the milk ", url="https://url_1.com", id="1"),
-            a_task_later(title="Buy the water", url="https://url_2.com", id="2"),
-            a_task_later(title="Buy the eggs", url="https://url_3.com", id="3"),
-            a_task_later(title="Buy the bread", url="https://url_4.com", id="4"),
+            a_fvp_task(key="1").to_next(),
+            a_fvp_task(key="2").to_later(),
+            a_fvp_task(key="3").to_later(),
+            a_fvp_task(key="4").to_later(),
         ],
         "1",
         [
-            a_task_new(title="Buy the water", url="https://url_2.com", id="2"),
-            a_task_new(title="Buy the eggs", url="https://url_3.com", id="3"),
-            a_task_new(title="Buy the bread", url="https://url_4.com", id="4"),
+            a_fvp_task("2").to_new(),
+            a_fvp_task("3").to_new(),
+            a_fvp_task("4").to_new(),
         ]
     ],
 ])
@@ -107,16 +102,16 @@ def test_set_following_task_to_new(before: list[TaskBase], key, after: list[Task
 @pytest.mark.parametrize("before, url, after", [
     [
         [
-            a_task_next(title="Buy the milk ", url="https://url_1.com", id="1"),
-            a_task_never(title="Buy the water", url="https://url_2.com", id="2"),
-            a_task_next(title="Buy the eggs", url="https://url_3.com", id="3"),
-            a_task_never(title="Buy the bread", url="https://url_4.com", id="4"),
+            a_fvp_task(key="1").to_next(),
+            a_fvp_task(key="2").to_never(),
+            a_fvp_task(key="3").to_next(),
+            a_fvp_task(key="4").to_never(),
         ],
         "3",
         [
-            a_task_next(title="Buy the milk ", url="https://url_1.com", id="1"),
-            a_task_never(title="Buy the water", url="https://url_2.com", id="2"),
-            a_task_never(title="Buy the bread", url="https://url_4.com", id="4"),
+            a_fvp_task(key="1").to_next(),
+            a_fvp_task(key="2").to_never(),
+            a_fvp_task(key="4").to_never(),
         ]
     ],
 ])
@@ -128,13 +123,14 @@ def test_never_task_stay_never(before: list[TaskBase], url: str, after: list[Tas
 
 
 def test_when_only_never_all_go_new(task_repository: TaskFvpRepositoryForTest, sut: CloseTaskUseCase) -> None:
-    task_repository.feed(tasks=[a_task_next(title="Buy the milk ", url="https://url_1.com", id="1"),
-                                a_task_never(title="Buy the water", url="https://url_2.com", id="2"),
-                                a_task_never(title="Buy the eggs", url="https://url_3.com", id="3"),
-                                a_task_never(title="Buy the bread", url="https://url_4.com", id="4")])
+    task_repository.feed(tasks=[a_fvp_task(key="1").to_next(),
+                                a_fvp_task(key="2").to_never(),
+                                a_fvp_task(key="3").to_never(),
+                                a_fvp_task(key="4").to_never()])
 
     sut.execute(key="1")
+
     assert task_repository.all_tasks() == [
-                                a_task_new(title="Buy the water", url="https://url_2.com", id="2"),
-                                a_task_new(title="Buy the eggs", url="https://url_3.com", id="3"),
-                                a_task_new(title="Buy the bread", url="https://url_4.com", id="4")]
+        a_fvp_task("2").to_new(),
+        a_fvp_task("3").to_new(),
+        a_fvp_task("4").to_new()]

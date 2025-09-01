@@ -1,7 +1,7 @@
 import pytest
 
 from tests.features.final_version_perfected.adapters import TaskFvpRepositoryForTest
-from tests.features.final_version_perfected.fixtures import a_task_new, a_task_next, a_task_never
+from tests.features.final_version_perfected.fixtures import a_fvp_task
 from ytreza_dev.features.final_version_perfected.types import TaskBase
 from ytreza_dev.features.final_version_perfected.use_case.do_never import DoNever
 
@@ -9,26 +9,26 @@ from ytreza_dev.features.final_version_perfected.use_case.do_never import DoNeve
 @pytest.mark.parametrize("before, url, after", [
     [
         [
-            a_task_new(title="buy the milk", url="https://url_1.com", id="1"),
-            a_task_new(title="buy the water", url="https://url_2.com", id="2")
+            a_fvp_task("1").to_new(),
+            a_fvp_task("2").to_new()
         ],
         "2",
         [
-            a_task_next(title="buy the milk", url="https://url_1.com", id="1"),
-            a_task_never(title="buy the water", url="https://url_2.com", id="2")
+            a_fvp_task(key="1").to_next(),
+            a_fvp_task(key="2").to_never()
         ]
     ],
     [
         [
-            a_task_new(title="buy the milk", url="https://url_1.com", id="1"),
-            a_task_new(title="buy the water", url="https://url_2.com", id="2"),
-            a_task_new(title="buy the bread", url="https://url_3.com", id="3")
+            a_fvp_task("1").to_new(),
+            a_fvp_task("2").to_new(),
+            a_fvp_task("3").to_new()
         ],
         "3",
         [
-            a_task_next(title="buy the milk", url="https://url_1.com", id="1"),
-            a_task_new(title="buy the water", url="https://url_2.com", id="2"),
-            a_task_never(title="buy the bread", url="https://url_3.com", id="3")
+            a_fvp_task(key="1").to_next(),
+            a_fvp_task("2").to_new(),
+            a_fvp_task(key="3").to_never()
         ]
     ],
 ])

@@ -7,20 +7,26 @@ from ytreza_dev.features.final_version_perfected.types import TaskNext, TaskLate
 def a_project(key:str, name:str)-> Project:
     return Project(key=key, name=name)
 
-def a_task_next(title: str, url:str, id: str, project:Project = a_project(key="1", name="Project 1")) -> TaskNext:
-    return TaskBuilder(title=title, url=url, key=id, project=project).to_next()
+
+@dataclass(frozen=True, eq=True)
+class FvpTaskBuilder:
+    key: str
+
+    def to_new(self) -> TaskNew:
+        return TaskNew(id=self.key)
+
+    def to_never(self) -> TaskNever:
+        return TaskNever(id=self.key)
+
+    def to_next(self) -> TaskNext:
+        return TaskNext(id=self.key)
+
+    def to_later(self) -> TaskLater:
+        return TaskLater(id=self.key)
 
 
-def a_task_later(title: str, url:str, id: str, project:Project = a_project(key="1", name="Project 1")) -> TaskLater:
-    return TaskLater(id=id)
-
-
-def a_task_new(title: str, url:str, id: str, project:Project = a_project(key="1", name="Project 1")) -> TaskLater:
-    return TaskNew(id=id)
-
-
-def a_task_never(title: str, url:str, id: str, project:Project = a_project(key="1", name="Project 1")) -> TaskNever:
-    return TaskNever(id=id)
+def a_fvp_task(key: str) -> FvpTaskBuilder:
+    return FvpTaskBuilder(key=key)
 
 
 def an_external_project(key: str, name: str):

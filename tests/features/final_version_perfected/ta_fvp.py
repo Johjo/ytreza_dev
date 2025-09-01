@@ -3,8 +3,8 @@ from pyqure import pyqure, PyqureMemory  # type: ignore
 
 from tests.features.final_version_perfected.adapters import TaskInMemory, TaskFvpRepositoryForDemo, TASK_IN_MEMORY_KEY, \
     TaskFvpReaderForDemo
-from tests.features.final_version_perfected.fixtures import an_external_task, a_task_new, an_external_project, \
-    a_project, a_task_later, a_task_next
+from tests.features.final_version_perfected.fixtures import an_external_task, an_external_project, \
+    a_fvp_task
 from tests.features.final_version_perfected.use_case.tu_start_fvp import TodolistReaderForTest
 from ytreza_dev.features.final_version_perfected.controller import FvpController
 from ytreza_dev.features.final_version_perfected.injection_keys import TASK_FVP_READER_KEY, TODOLIST_READER_KEY, \
@@ -19,7 +19,6 @@ from ytreza_dev.features.final_version_perfected.types import ChooseTaskBetween,
 
 def test_fvp_later() -> None:
     external_project = an_external_project(key="1", name="Project 1")
-    project = a_project(key="1", name="Project 1")
     todolist_reader = TodolistReaderForTest()
     task_information_reader = TaskInformationReaderForDemo()
     external_tasks = [
@@ -44,16 +43,16 @@ def test_fvp_later() -> None:
     controller.start_fvp_session()
 
     assert task_in_memory.all_tasks() == [
-        a_task_new(title="Email ", url="https://url_1.com", id="1", project=project),
-        a_task_new(title="In-Tray", url="https://url_2.com", id="2", project=project),
-        a_task_new(title="Voicemail", url="https://url_3.com", id="3", project=project),
-        a_task_new(title="Project X Report", url="https://url_4.com", id="4", project=project),
-        a_task_new(title="Tidy Desk", url="https://url_5.com", id="5", project=project),
-        a_task_new(title="Call Dissatisfied Customer", url="https://url_6.com", id="6", project=project),
-        a_task_new(title="Make Dental Appointment", url="https://url_7.com", id="7", project=project),
-        a_task_new(title="File Invoices", url="https://url_8.com", id="8", project=project),
-        a_task_new(title="Discuss Project Y with Bob", url="https://url_9.com", id="9", project=project),
-        a_task_new(title="Back Up  ", url="https://url_10.com", id="10", project=project),
+        a_fvp_task("1").to_new(),
+        a_fvp_task("2").to_new(),
+        a_fvp_task("3").to_new(),
+        a_fvp_task("4").to_new(),
+        a_fvp_task("5").to_new(),
+        a_fvp_task("6").to_new(),
+        a_fvp_task("7").to_new(),
+        a_fvp_task("8").to_new(),
+        a_fvp_task("9").to_new(),
+        a_fvp_task("10").to_new(),
     ]
 
     assert controller.next_action() == ChooseTaskBetween((
@@ -229,7 +228,6 @@ def test_fvp_later() -> None:
 
 def test_fvp_never() -> None:
     external_project = an_external_project(key="1", name="Project 1")
-    project = a_project(key="1", name="Project 1")
     todolist_reader = TodolistReaderForTest()
     external_tasks = [
         an_external_task(name="Email ", url="https://url_1.com", id="1", project=external_project),
@@ -249,12 +247,12 @@ def test_fvp_never() -> None:
     controller.start_fvp_session()
 
     assert task_in_memory.all_tasks() == [
-        a_task_new(title="Email ", url="https://url_1.com", id="1", project=project),
-        a_task_new(title="In-Tray", url="https://url_2.com", id="2", project=project),
-        a_task_new(title="Voicemail", url="https://url_3.com", id="3", project=project),
-        a_task_new(title="Project X Report", url="https://url_4.com", id="4", project=project),
-        a_task_new(title="Tidy Desk", url="https://url_5.com", id="5", project=project),
-        a_task_new(title="Call Dissatisfied Customer", url="https://url_6.com", id="6", project=project),
+        a_fvp_task("1").to_new(),
+        a_fvp_task("2").to_new(),
+        a_fvp_task("3").to_new(),
+        a_fvp_task("4").to_new(),
+        a_fvp_task("5").to_new(),
+        a_fvp_task("6").to_new(),
     ]
 
     assert controller.next_action() == ChooseTaskBetween((
@@ -363,7 +361,6 @@ def provide_dependencies(task_in_memory: TaskInMemory, todolist_reader: Todolist
 
 def test_do_partial() -> None:
     external_project = an_external_project(key="1", name="Project 1")
-    project = a_project(key="1", name="Project 1")
     todolist_reader = TodolistReaderForTest()
     external_tasks = [
         an_external_task(name="Email ", url="https://url_1.com", id="1", project=external_project),
@@ -380,9 +377,9 @@ def test_do_partial() -> None:
     controller.start_fvp_session()
 
     assert task_in_memory.all_tasks() == [
-        a_task_new(title="Email ", url="https://url_1.com", id="1", project=project),
-        a_task_new(title="In-Tray", url="https://url_2.com", id="2", project=project),
-        a_task_new(title="Voicemail", url="https://url_3.com", id="3", project=project),
+        a_fvp_task("1").to_new(),
+        a_fvp_task("2").to_new(),
+        a_fvp_task("3").to_new(),
     ]
 
     assert controller.next_action() == ChooseTaskBetween((
@@ -403,8 +400,8 @@ def test_do_partial() -> None:
     controller.do_partial(key='3')
 
     assert task_in_memory.all_tasks() == [
-        a_task_next(title="Email ", url="https://url_1.com", id="1", project=project),
-        a_task_later(title="In-Tray", url="https://url_2.com", id="2", project=project),
-        a_task_later(title="Voicemail", url="https://url_3.com", id="3", project=project),
+        a_fvp_task(key="1").to_next(),
+        a_fvp_task(key="2").to_later(),
+        a_fvp_task(key="3").to_later(),
     ]
 

@@ -1,10 +1,8 @@
-from dataclasses import dataclass
-
 import pytest
-from attr.setters import frozen
 
 from tests.features.final_version_perfected.adapters import TaskFvpRepositoryForTest
-from tests.features.final_version_perfected.fixtures import a_task_new, an_external_task, an_external_project, a_project
+from tests.features.final_version_perfected.fixtures import an_external_task, an_external_project, \
+    a_fvp_task
 from ytreza_dev.features.final_version_perfected.port.todolist_reader import TodolistReaderPort
 from ytreza_dev.features.final_version_perfected.types import ExternalTask
 from ytreza_dev.features.final_version_perfected.use_case.start_fvp_use_case import StartFvpUseCase
@@ -52,5 +50,5 @@ def test_synchronize_task_in_repository(todolist_reader: TodolistReaderForTest, 
     sut.execute()
 
     assert task_repository.all_tasks() == [
-        a_task_new(title="buy the milk", url="https://url_1.com", id="1", project=a_project(key="1", name="project 1")),
-        a_task_new(title="buy the water", url="https://url_2.com", id="2", project=a_project(key="2", name="project 2"))]
+        a_fvp_task("1").to_new(),
+        a_fvp_task("2").to_new()]
