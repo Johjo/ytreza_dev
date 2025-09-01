@@ -7,6 +7,7 @@ from expression import Option
 
 @dataclass(frozen=True, eq=True)
 class TaskDetail:
+    key: str
     title: str
     url: str
     project_name: str
@@ -38,21 +39,19 @@ class Project:
 
 @dataclass(frozen=True, eq=True)
 class TaskBase:
-    title: str
-    url: str
     id: str
 
     def to_next(self) -> 'TaskNext':
-        return TaskNext(title=self.title, url=self.url, id=self.id)
+        return TaskNext(id=self.id)
 
     def to_later(self) -> 'TaskLater':
-        return TaskLater(title=self.title, url=self.url, id=self.id)
+        return TaskLater(id=self.id)
 
     def to_new(self) -> 'TaskNew':
-        return TaskNew(title=self.title, url=self.url, id=self.id)
+        return TaskNew(id=self.id)
 
     def to_never(self) -> 'TaskNever':
-        return TaskNever(title=self.title, url=self.url, id=self.id)
+        return TaskNever(id=self.id)
 
 
 @dataclass(frozen=True, eq=True)

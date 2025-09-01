@@ -11,8 +11,9 @@ class StartFvpUseCase:
     def execute(self) -> None:
         self._task_repository.save([self._to_task_new(task) for task in self._todolist_reader.all_tasks()])
 
-    def _to_task_new(self, task: ExternalTask) -> TaskNew :
-        return TaskNew(title=task.name, url=task.url, id=task.id)
+    @staticmethod
+    def _to_task_new(task: ExternalTask) -> TaskNew :
+        return TaskNew(id=task.id)
 
     @staticmethod
     def _to_project(project: ExternalProject) -> Project:

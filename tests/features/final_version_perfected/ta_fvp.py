@@ -57,173 +57,173 @@ def test_fvp_later() -> None:
     ]
 
     assert controller.next_action() == ChooseTaskBetween((
-        TaskDetail(title="Email ", url="https://url_1.com", project_name="Project 1", due_date=Nothing),
-        TaskDetail(title="In-Tray", url="https://url_2.com", project_name="Project 1", due_date=Nothing)))
+        TaskDetail(key="1", title="Email ", url="https://url_1.com", project_name="Project 1", due_date=Nothing),
+        TaskDetail(key="2", title="In-Tray", url="https://url_2.com", project_name="Project 1", due_date=Nothing)))
 
-    controller.do_later(url="https://url_2.com")
-
-    assert controller.next_action() == ChooseTaskBetween((
-        TaskDetail(title="Email ", url="https://url_1.com", project_name="Project 1", due_date=Nothing),
-        TaskDetail(title="Voicemail", url="https://url_3.com", project_name="Project 1", due_date=Nothing)))
-
-    controller.do_next(url="https://url_3.com")
+    controller.do_later(key="2")
 
     assert controller.next_action() == ChooseTaskBetween((
-        TaskDetail(title="Voicemail", url="https://url_3.com", project_name="Project 1", due_date=Nothing),
-        TaskDetail(title="Project X Report", url="https://url_4.com", project_name="Project 1", due_date=Nothing)))
+        TaskDetail(key="1", title="Email ", url="https://url_1.com", project_name="Project 1", due_date=Nothing),
+        TaskDetail(key="3", title="Voicemail", url="https://url_3.com", project_name="Project 1", due_date=Nothing)))
 
-    controller.do_later(url="https://url_4.com")
+    controller.do_next(key="3")
 
     assert controller.next_action() == ChooseTaskBetween((
-        TaskDetail(title="Voicemail", url="https://url_3.com", project_name="Project 1", due_date=Nothing),
-        TaskDetail(title="Tidy Desk", url="https://url_5.com", project_name="Project 1", due_date=Nothing)))
+        TaskDetail(key="3", title="Voicemail", url="https://url_3.com", project_name="Project 1", due_date=Nothing),
+        TaskDetail(key="4", title="Project X Report", url="https://url_4.com", project_name="Project 1", due_date=Nothing)))
 
-    controller.do_next(url="https://url_5.com")
+    controller.do_later(key="4")
+
     assert controller.next_action() == ChooseTaskBetween((
-        TaskDetail(title="Tidy Desk", url="https://url_5.com", project_name="Project 1", due_date=Nothing),
-        TaskDetail(title="Call Dissatisfied Customer", url="https://url_6.com", project_name="Project 1", due_date=Nothing)))
+        TaskDetail(key="3", title="Voicemail", url="https://url_3.com", project_name="Project 1", due_date=Nothing),
+        TaskDetail(key="5", title="Tidy Desk", url="https://url_5.com", project_name="Project 1", due_date=Nothing)))
 
-    controller.do_later(url="https://url_6.com")
+    controller.do_next(key="5")
     assert controller.next_action() == ChooseTaskBetween((
-        TaskDetail(title="Tidy Desk", url="https://url_5.com", project_name="Project 1", due_date=Nothing),
-        TaskDetail(title="Make Dental Appointment", url="https://url_7.com", project_name="Project 1", due_date=Nothing)))
+        TaskDetail(key="5", title="Tidy Desk", url="https://url_5.com", project_name="Project 1", due_date=Nothing),
+        TaskDetail(key="6", title="Call Dissatisfied Customer", url="https://url_6.com", project_name="Project 1", due_date=Nothing)))
 
-    controller.do_later(url="https://url_7.com")
+    controller.do_later(key="6")
     assert controller.next_action() == ChooseTaskBetween((
-        TaskDetail(title="Tidy Desk", url="https://url_5.com", project_name="Project 1", due_date=Nothing),
-        TaskDetail(title="File Invoices", url="https://url_8.com", project_name="Project 1", due_date=Nothing)))
+        TaskDetail(key="5", title="Tidy Desk", url="https://url_5.com", project_name="Project 1", due_date=Nothing),
+        TaskDetail(key="7", title="Make Dental Appointment", url="https://url_7.com", project_name="Project 1", due_date=Nothing)))
 
-    controller.do_later(url="https://url_8.com")
+    controller.do_later(key="7")
     assert controller.next_action() == ChooseTaskBetween((
-        TaskDetail(title="Tidy Desk", url="https://url_5.com", project_name="Project 1", due_date=Nothing),
-        TaskDetail(title="Discuss Project Y with Bob", url="https://url_9.com", project_name="Project 1", due_date=Nothing)))
+        TaskDetail(key="5", title="Tidy Desk", url="https://url_5.com", project_name="Project 1", due_date=Nothing),
+        TaskDetail(key="8", title="File Invoices", url="https://url_8.com", project_name="Project 1", due_date=Nothing)))
 
-    controller.do_later(url="https://url_9.com")
+    controller.do_later(key="8")
     assert controller.next_action() == ChooseTaskBetween((
-        TaskDetail(title="Tidy Desk", url="https://url_5.com", project_name="Project 1", due_date=Nothing),
-        TaskDetail(title="Back Up  ", url="https://url_10.com", project_name="Project 1", due_date=Nothing)))
+        TaskDetail(key="5", title="Tidy Desk", url="https://url_5.com", project_name="Project 1", due_date=Nothing),
+        TaskDetail(key="9", title="Discuss Project Y with Bob", url="https://url_9.com", project_name="Project 1", due_date=Nothing)))
 
-    controller.do_later(url="https://url_10.com")
+    controller.do_later(key="9")
+    assert controller.next_action() == ChooseTaskBetween((
+        TaskDetail(key="5", title="Tidy Desk", url="https://url_5.com", project_name="Project 1", due_date=Nothing),
+        TaskDetail(key="10", title="Back Up  ", url="https://url_10.com", project_name="Project 1", due_date=Nothing)))
+
+    controller.do_later(key="10")
     assert controller.next_action() == DoTheTask(
-        TaskDetail(title="Tidy Desk", url="https://url_5.com", project_name="Project 1", due_date=Nothing))
+        TaskDetail(key="5", title="Tidy Desk", url="https://url_5.com", project_name="Project 1", due_date=Nothing))
 
-    controller.close_task(url="https://url_5.com")
+    controller.close_task(key="5")
     assert controller.next_action() == ChooseTaskBetween((
-        TaskDetail(title="Voicemail", url="https://url_3.com", project_name="Project 1", due_date=Nothing),
-        TaskDetail(title="Call Dissatisfied Customer", url="https://url_6.com", project_name="Project 1", due_date=Nothing)))
+        TaskDetail(key="3", title="Voicemail", url="https://url_3.com", project_name="Project 1", due_date=Nothing),
+        TaskDetail(key="6", title="Call Dissatisfied Customer", url="https://url_6.com", project_name="Project 1", due_date=Nothing)))
 
-    controller.do_later(url="https://url_6.com")
+    controller.do_later(key="6")
     assert controller.next_action() == ChooseTaskBetween((
-        TaskDetail(title="Voicemail", url="https://url_3.com", project_name="Project 1", due_date=Nothing),
-        TaskDetail(title="Make Dental Appointment", url="https://url_7.com", project_name="Project 1", due_date=Nothing)))
+        TaskDetail(key="3", title="Voicemail", url="https://url_3.com", project_name="Project 1", due_date=Nothing),
+        TaskDetail(key="7", title="Make Dental Appointment", url="https://url_7.com", project_name="Project 1", due_date=Nothing)))
 
-    controller.do_later(url="https://url_7.com")
+    controller.do_later(key="7")
     assert controller.next_action() == ChooseTaskBetween((
-        TaskDetail(title="Voicemail", url="https://url_3.com", project_name="Project 1", due_date=Nothing),
-        TaskDetail(title="File Invoices", url="https://url_8.com", project_name="Project 1", due_date=Nothing)))
+        TaskDetail(key="3", title="Voicemail", url="https://url_3.com", project_name="Project 1", due_date=Nothing),
+        TaskDetail(key="8", title="File Invoices", url="https://url_8.com", project_name="Project 1", due_date=Nothing)))
 
-    controller.do_later(url="https://url_8.com")
+    controller.do_later(key="8")
     assert controller.next_action() == ChooseTaskBetween((
-        TaskDetail(title="Voicemail", url="https://url_3.com", project_name="Project 1", due_date=Nothing),
-        TaskDetail(title="Discuss Project Y with Bob", url="https://url_9.com", project_name="Project 1", due_date=Nothing)))
+        TaskDetail(key="3", title="Voicemail", url="https://url_3.com", project_name="Project 1", due_date=Nothing),
+        TaskDetail(key="9", title="Discuss Project Y with Bob", url="https://url_9.com", project_name="Project 1", due_date=Nothing)))
 
-    controller.do_later(url="https://url_9.com")
+    controller.do_later(key="9")
     assert controller.next_action() == ChooseTaskBetween((
-        TaskDetail(title="Voicemail", url="https://url_3.com", project_name="Project 1", due_date=Nothing),
-        TaskDetail(title="Back Up  ", url="https://url_10.com", project_name="Project 1", due_date=Nothing)))
+        TaskDetail(key="3", title="Voicemail", url="https://url_3.com", project_name="Project 1", due_date=Nothing),
+        TaskDetail(key="10", title="Back Up  ", url="https://url_10.com", project_name="Project 1", due_date=Nothing)))
 
-    controller.do_next(url="https://url_10.com")
+    controller.do_next(key="10")
     assert controller.next_action() == DoTheTask(
-        TaskDetail(title="Back Up  ", url="https://url_10.com", project_name="Project 1", due_date=Nothing))
+        TaskDetail(key="10", title="Back Up  ", url="https://url_10.com", project_name="Project 1", due_date=Nothing))
 
-    controller.close_task(url="https://url_10.com")
+    controller.close_task(key="10")
     assert controller.next_action() == DoTheTask(
-        TaskDetail(title="Voicemail", url="https://url_3.com", project_name="Project 1", due_date=Nothing))
+        TaskDetail(key="3", title="Voicemail", url="https://url_3.com", project_name="Project 1", due_date=Nothing))
 
-    controller.close_task(url="https://url_3.com")
+    controller.close_task(key="3")
     assert controller.next_action() == ChooseTaskBetween((
-        TaskDetail(title="Email ", url="https://url_1.com", project_name="Project 1", due_date=Nothing),
-        TaskDetail(title="Project X Report", url="https://url_4.com", project_name="Project 1", due_date=Nothing)))
+        TaskDetail(key="1", title="Email ", url="https://url_1.com", project_name="Project 1", due_date=Nothing),
+        TaskDetail(key="4", title="Project X Report", url="https://url_4.com", project_name="Project 1", due_date=Nothing)))
 
-    controller.do_later(url="https://url_4.com")
+    controller.do_later(key="4")
     assert controller.next_action() == ChooseTaskBetween((
-        TaskDetail(title="Email ", url="https://url_1.com", project_name="Project 1", due_date=Nothing),
-        TaskDetail(title="Call Dissatisfied Customer", url="https://url_6.com", project_name="Project 1", due_date=Nothing)))
+        TaskDetail(key="1", title="Email ", url="https://url_1.com", project_name="Project 1", due_date=Nothing),
+        TaskDetail(key="6", title="Call Dissatisfied Customer", url="https://url_6.com", project_name="Project 1", due_date=Nothing)))
 
-    controller.do_later(url="https://url_6.com")
+    controller.do_later(key="6")
     assert controller.next_action() == ChooseTaskBetween((
-        TaskDetail(title="Email ", url="https://url_1.com", project_name="Project 1", due_date=Nothing),
-        TaskDetail(title="Make Dental Appointment", url="https://url_7.com", project_name="Project 1", due_date=Nothing)))
+        TaskDetail(key="1", title="Email ", url="https://url_1.com", project_name="Project 1", due_date=Nothing),
+        TaskDetail(key="7", title="Make Dental Appointment", url="https://url_7.com", project_name="Project 1", due_date=Nothing)))
 
-    controller.do_next(url="https://url_7.com")
+    controller.do_next(key="7")
     assert controller.next_action() == ChooseTaskBetween((
-        TaskDetail(title="Make Dental Appointment", url="https://url_7.com", project_name="Project 1", due_date=Nothing),
-        TaskDetail(title="File Invoices", url="https://url_8.com", project_name="Project 1", due_date=Nothing)))
+        TaskDetail(key="7", title="Make Dental Appointment", url="https://url_7.com", project_name="Project 1", due_date=Nothing),
+        TaskDetail(key="8", title="File Invoices", url="https://url_8.com", project_name="Project 1", due_date=Nothing)))
 
-    controller.do_later(url="https://url_8.com")
+    controller.do_later(key="8")
     assert controller.next_action() == ChooseTaskBetween((
-        TaskDetail(title="Make Dental Appointment", url="https://url_7.com", project_name="Project 1", due_date=Nothing),
-        TaskDetail(title="Discuss Project Y with Bob", url="https://url_9.com", project_name="Project 1", due_date=Nothing)))
+        TaskDetail(key="7", title="Make Dental Appointment", url="https://url_7.com", project_name="Project 1", due_date=Nothing),
+        TaskDetail(key="9", title="Discuss Project Y with Bob", url="https://url_9.com", project_name="Project 1", due_date=Nothing)))
 
-    controller.do_next(url="https://url_9.com")
+    controller.do_next(key="9")
     assert controller.next_action() == DoTheTask(
-        TaskDetail(title="Discuss Project Y with Bob", url="https://url_9.com", project_name="Project 1", due_date=Nothing))
+        TaskDetail(key="9", title="Discuss Project Y with Bob", url="https://url_9.com", project_name="Project 1", due_date=Nothing))
 
-    controller.close_task(url="https://url_9.com")
+    controller.close_task(key="9")
     assert controller.next_action() == DoTheTask(
-        TaskDetail(title="Make Dental Appointment", url="https://url_7.com", project_name="Project 1", due_date=Nothing))
+        TaskDetail(key="7", title="Make Dental Appointment", url="https://url_7.com", project_name="Project 1", due_date=Nothing))
 
-    controller.close_task(url="https://url_7.com")
+    controller.close_task(key="7")
     assert controller.next_action() == ChooseTaskBetween(
-        tasks=(TaskDetail(title='Email ', url='https://url_1.com', project_name="Project 1", due_date=Nothing),
-               TaskDetail(title='File Invoices', url='https://url_8.com', project_name="Project 1", due_date=Nothing)))
+        tasks=(TaskDetail(key="1", title='Email ', url='https://url_1.com', project_name="Project 1", due_date=Nothing),
+               TaskDetail(key="8", title='File Invoices', url='https://url_8.com', project_name="Project 1", due_date=Nothing)))
 
-    controller.do_later(url="https://url_8.com")
+    controller.do_later(key="8")
     assert controller.next_action() == DoTheTask(
-        task=TaskDetail(title='Email ', url='https://url_1.com', project_name="Project 1", due_date=Nothing))
+        task=TaskDetail(key="1", title='Email ', url='https://url_1.com', project_name="Project 1", due_date=Nothing))
 
-    controller.close_task(url="https://url_1.com")
+    controller.close_task(key="1")
     assert controller.next_action() == ChooseTaskBetween(
-        tasks=(TaskDetail(title='In-Tray', url='https://url_2.com', project_name="Project 1", due_date=Nothing),
-               TaskDetail(title='Project X Report', url='https://url_4.com', project_name="Project 1", due_date=Nothing)))
+        tasks=(TaskDetail(key="2", title='In-Tray', url='https://url_2.com', project_name="Project 1", due_date=Nothing),
+               TaskDetail(key="4", title='Project X Report', url='https://url_4.com', project_name="Project 1", due_date=Nothing)))
 
-    controller.do_next(url="https://url_4.com")
+    controller.do_next(key="4")
     assert controller.next_action() == ChooseTaskBetween(
-        tasks=(TaskDetail(title='Project X Report', url='https://url_4.com', project_name="Project 1", due_date=Nothing),
-               TaskDetail(title='Call Dissatisfied Customer', url='https://url_6.com', project_name="Project 1", due_date=Nothing)))
+        tasks=(TaskDetail(key="4", title='Project X Report', url='https://url_4.com', project_name="Project 1", due_date=Nothing),
+               TaskDetail(key="6", title='Call Dissatisfied Customer', url='https://url_6.com', project_name="Project 1", due_date=Nothing)))
 
-    controller.do_later(url="https://url_6.com")
+    controller.do_later(key="6")
     assert controller.next_action() == ChooseTaskBetween(
-        tasks=(TaskDetail(title='Project X Report', url='https://url_4.com', project_name="Project 1", due_date=Nothing),
-               TaskDetail(title='File Invoices', url='https://url_8.com', project_name="Project 1", due_date=Nothing)))
+        tasks=(TaskDetail(key="4", title='Project X Report', url='https://url_4.com', project_name="Project 1", due_date=Nothing),
+               TaskDetail(key="8", title='File Invoices', url='https://url_8.com', project_name="Project 1", due_date=Nothing)))
 
-    controller.do_later(url="https://url_8.com")
+    controller.do_later(key="8")
     assert controller.next_action() == DoTheTask(
-        task=TaskDetail(title='Project X Report', url='https://url_4.com', project_name="Project 1", due_date=Nothing))
+        task=TaskDetail(key="4", title='Project X Report', url='https://url_4.com', project_name="Project 1", due_date=Nothing))
 
-    controller.close_task(url="https://url_4.com")
+    controller.close_task(key="4")
     assert controller.next_action() == ChooseTaskBetween(
-        tasks=(TaskDetail(title='In-Tray', url='https://url_2.com', project_name="Project 1", due_date=Nothing),
-               TaskDetail(title='Call Dissatisfied Customer', url='https://url_6.com', project_name="Project 1", due_date=Nothing)))
+        tasks=(TaskDetail(key="2", title='In-Tray', url='https://url_2.com', project_name="Project 1", due_date=Nothing),
+               TaskDetail(key="6", title='Call Dissatisfied Customer', url='https://url_6.com', project_name="Project 1", due_date=Nothing)))
 
-    controller.do_next(url="https://url_6.com")
+    controller.do_next(key="6")
     assert controller.next_action() == ChooseTaskBetween(
-        tasks=(TaskDetail(title='Call Dissatisfied Customer', url='https://url_6.com', project_name="Project 1", due_date=Nothing),
-               TaskDetail(title='File Invoices', url='https://url_8.com', project_name="Project 1", due_date=Nothing)))
+        tasks=(TaskDetail(key="6", title='Call Dissatisfied Customer', url='https://url_6.com', project_name="Project 1", due_date=Nothing),
+               TaskDetail(key="8", title='File Invoices', url='https://url_8.com', project_name="Project 1", due_date=Nothing)))
 
-    controller.do_next(url="https://url_8.com")
+    controller.do_next(key="8")
     assert controller.next_action() == DoTheTask(
-        task=TaskDetail(title='File Invoices', url='https://url_8.com', project_name="Project 1", due_date=Nothing))
+        task=TaskDetail(key="8", title='File Invoices', url='https://url_8.com', project_name="Project 1", due_date=Nothing))
 
-    controller.close_task(url="https://url_8.com")
+    controller.close_task(key="8")
     assert controller.next_action() == DoTheTask(
-        task=TaskDetail(title='Call Dissatisfied Customer', url='https://url_6.com', project_name="Project 1", due_date=Nothing))
+        task=TaskDetail(key="6", title='Call Dissatisfied Customer', url='https://url_6.com', project_name="Project 1", due_date=Nothing))
 
-    controller.close_task(url="https://url_6.com")
+    controller.close_task(key="6")
     assert controller.next_action() == DoTheTask(
-        task=TaskDetail(title='In-Tray', url='https://url_2.com', project_name="Project 1", due_date=Nothing))
+        task=TaskDetail(key="2", title='In-Tray', url='https://url_2.com', project_name="Project 1", due_date=Nothing))
 
-    controller.close_task(url="https://url_2.com")
+    controller.close_task(key="2")
     assert controller.next_action() == NothingToDo()
 
 
@@ -258,75 +258,75 @@ def test_fvp_never() -> None:
     ]
 
     assert controller.next_action() == ChooseTaskBetween((
-        TaskDetail(title="Email ", url="https://url_1.com", project_name="Project 1", due_date=Nothing),
-        TaskDetail(title="In-Tray", url="https://url_2.com", project_name="Project 1", due_date=Nothing)))
+        TaskDetail(key="1", title="Email ", url="https://url_1.com", project_name="Project 1", due_date=Nothing),
+        TaskDetail(key="2", title="In-Tray", url="https://url_2.com", project_name="Project 1", due_date=Nothing)))
 
-    controller.do_never(url="https://url_2.com")
-
-    assert controller.next_action() == ChooseTaskBetween((
-        TaskDetail(title="Email ", url="https://url_1.com", project_name="Project 1", due_date=Nothing),
-        TaskDetail(title="Voicemail", url="https://url_3.com", project_name="Project 1", due_date=Nothing)))
-
-    controller.do_later(url="https://url_3.com")
+    controller.do_never(key="2")
 
     assert controller.next_action() == ChooseTaskBetween((
-        TaskDetail(title="Email ", url="https://url_1.com", project_name="Project 1", due_date=Nothing),
-        TaskDetail(title="Project X Report", url="https://url_4.com", project_name="Project 1", due_date=Nothing)))
+        TaskDetail(key="1", title="Email ", url="https://url_1.com", project_name="Project 1", due_date=Nothing),
+        TaskDetail(key="3", title="Voicemail", url="https://url_3.com", project_name="Project 1", due_date=Nothing)))
 
-    controller.do_next(url="https://url_4.com")
+    controller.do_later(key="3")
 
     assert controller.next_action() == ChooseTaskBetween((
-        TaskDetail(title="Project X Report", url="https://url_4.com", project_name="Project 1", due_date=Nothing),
-        TaskDetail(title="Tidy Desk", url="https://url_5.com", project_name="Project 1", due_date=Nothing)))
+        TaskDetail(key="1", title="Email ", url="https://url_1.com", project_name="Project 1", due_date=Nothing),
+        TaskDetail(key="4", title="Project X Report", url="https://url_4.com", project_name="Project 1", due_date=Nothing)))
 
-    controller.do_never(url="https://url_5.com")
+    controller.do_next(key="4")
+
     assert controller.next_action() == ChooseTaskBetween((
-        TaskDetail(title="Project X Report", url="https://url_4.com", project_name="Project 1", due_date=Nothing),
-        TaskDetail(title="Call Dissatisfied Customer", url="https://url_6.com", project_name="Project 1", due_date=Nothing)))
+        TaskDetail(key="4", title="Project X Report", url="https://url_4.com", project_name="Project 1", due_date=Nothing),
+        TaskDetail(key="5", title="Tidy Desk", url="https://url_5.com", project_name="Project 1", due_date=Nothing)))
 
-    controller.do_later(url="https://url_6.com")
+    controller.do_never(key="5")
+    assert controller.next_action() == ChooseTaskBetween((
+        TaskDetail(key="4", title="Project X Report", url="https://url_4.com", project_name="Project 1", due_date=Nothing),
+        TaskDetail(key="6", title="Call Dissatisfied Customer", url="https://url_6.com", project_name="Project 1", due_date=Nothing)))
+
+    controller.do_later(key="6")
     assert controller.next_action() == DoTheTask(
-        TaskDetail(title="Project X Report", url="https://url_4.com", project_name="Project 1", due_date=Nothing))
+        TaskDetail(key="4", title="Project X Report", url="https://url_4.com", project_name="Project 1", due_date=Nothing))
 
-    controller.close_task(url="https://url_4.com")
-
-    assert controller.next_action() == ChooseTaskBetween((
-        TaskDetail(title="Email ", url="https://url_1.com", project_name="Project 1", due_date=Nothing),
-        TaskDetail(title="Call Dissatisfied Customer", url="https://url_6.com", project_name="Project 1", due_date=Nothing)))
-
-    controller.do_later(url="https://url_6.com")
-
-    assert controller.next_action() == DoTheTask(
-        TaskDetail(title="Email ", url="https://url_1.com", project_name="Project 1", due_date=Nothing))
-
-    controller.close_task(url="https://url_1.com")
+    controller.close_task(key="4")
 
     assert controller.next_action() == ChooseTaskBetween((
-        TaskDetail(title="Voicemail", url="https://url_3.com", project_name="Project 1", due_date=Nothing),
-        TaskDetail(title="Call Dissatisfied Customer", url="https://url_6.com", project_name="Project 1", due_date=Nothing)))
+        TaskDetail(key="1", title="Email ", url="https://url_1.com", project_name="Project 1", due_date=Nothing),
+        TaskDetail(key="6", title="Call Dissatisfied Customer", url="https://url_6.com", project_name="Project 1", due_date=Nothing)))
 
-    controller.do_next(url="https://url_6.com")
+    controller.do_later(key="6")
+
     assert controller.next_action() == DoTheTask(
-        TaskDetail(title="Call Dissatisfied Customer", url="https://url_6.com", project_name="Project 1", due_date=Nothing))
+        TaskDetail(key="1", title="Email ", url="https://url_1.com", project_name="Project 1", due_date=Nothing))
 
-    controller.close_task(url="https://url_6.com")
-    assert controller.next_action() == DoTheTask(
-        TaskDetail(title="Voicemail", url="https://url_3.com", project_name="Project 1", due_date=Nothing))
+    controller.close_task(key="1")
 
-    controller.close_task(url="https://url_3.com")
     assert controller.next_action() == ChooseTaskBetween((
-        TaskDetail(title='In-Tray', url='https://url_2.com', project_name="Project 1", due_date=Nothing),
-        TaskDetail(title='Tidy Desk', url='https://url_5.com', project_name="Project 1", due_date=Nothing)))
+        TaskDetail(key="3", title="Voicemail", url="https://url_3.com", project_name="Project 1", due_date=Nothing),
+        TaskDetail(key="6", title="Call Dissatisfied Customer", url="https://url_6.com", project_name="Project 1", due_date=Nothing)))
 
-    controller.do_later(url="https://url_5.com")
+    controller.do_next(key="6")
     assert controller.next_action() == DoTheTask(
-        TaskDetail(title='In-Tray', url='https://url_2.com', project_name="Project 1", due_date=Nothing))
+        TaskDetail(key="6", title="Call Dissatisfied Customer", url="https://url_6.com", project_name="Project 1", due_date=Nothing))
 
-    controller.close_task(url="https://url_2.com")
+    controller.close_task(key="6")
     assert controller.next_action() == DoTheTask(
-        TaskDetail(title="Tidy Desk", url="https://url_5.com", project_name="Project 1", due_date=Nothing))
+        TaskDetail(key="3", title="Voicemail", url="https://url_3.com", project_name="Project 1", due_date=Nothing))
 
-    controller.close_task(url="https://url_5.com")
+    controller.close_task(key="3")
+    assert controller.next_action() == ChooseTaskBetween((
+        TaskDetail(key="2", title='In-Tray', url='https://url_2.com', project_name="Project 1", due_date=Nothing),
+        TaskDetail(key="5", title='Tidy Desk', url='https://url_5.com', project_name="Project 1", due_date=Nothing)))
+
+    controller.do_later(key="5")
+    assert controller.next_action() == DoTheTask(
+        TaskDetail(key="2", title='In-Tray', url='https://url_2.com', project_name="Project 1", due_date=Nothing))
+
+    controller.close_task(key="2")
+    assert controller.next_action() == DoTheTask(
+        TaskDetail(key="5", title="Tidy Desk", url="https://url_5.com", project_name="Project 1", due_date=Nothing))
+
+    controller.close_task(key="5")
     assert controller.next_action() == NothingToDo()
 
 
@@ -386,21 +386,21 @@ def test_do_partial() -> None:
     ]
 
     assert controller.next_action() == ChooseTaskBetween((
-        TaskDetail(title="Email ", url="https://url_1.com", project_name="Project 1", due_date=Nothing),
-        TaskDetail(title="In-Tray", url="https://url_2.com", project_name="Project 1", due_date=Nothing)))
+        TaskDetail(key="1", title="Email ", url="https://url_1.com", project_name="Project 1", due_date=Nothing),
+        TaskDetail(key="2", title="In-Tray", url="https://url_2.com", project_name="Project 1", due_date=Nothing)))
 
-    controller.do_later(url="https://url_2.com")
+    controller.do_later(key="2")
 
     assert controller.next_action() == ChooseTaskBetween(tasks=(
-        TaskDetail(title='Email ', url='https://url_1.com', project_name='Project 1', due_date=Nothing),
-        TaskDetail(title='Voicemail', url='https://url_3.com', project_name='Project 1', due_date=Nothing)))
+        TaskDetail(key="1", title='Email ', url='https://url_1.com', project_name='Project 1', due_date=Nothing),
+        TaskDetail(key="3", title='Voicemail', url='https://url_3.com', project_name='Project 1', due_date=Nothing)))
 
-    controller.do_next(url='https://url_3.com')
+    controller.do_next(key='3')
 
     assert controller.next_action() == DoTheTask(task=(
-        TaskDetail(title='Voicemail', url='https://url_3.com', project_name='Project 1', due_date=Nothing)))
+        TaskDetail(key="3", title='Voicemail', url='https://url_3.com', project_name='Project 1', due_date=Nothing)))
 
-    controller.do_partial('https://url_3.com')
+    controller.do_partial(key='3')
 
     assert task_in_memory.all_tasks() == [
         a_task_next(title="Email ", url="https://url_1.com", id="1", project=project),

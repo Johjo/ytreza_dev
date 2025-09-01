@@ -16,13 +16,13 @@ class TaskFvpReaderFromJson(TaskFvpReaderPort):
     def _to_task(self, task: dict[str, str]) -> TaskBase:
         match task["status"]:
             case "new":
-                return TaskNew(title=task["title"], url=task["url"], id=task["id"])
+                return TaskNew(id=task["id"])
             case "next":
-                return TaskNext(title=task["title"], url=task["url"], id=task["id"])
+                return TaskNext(id=task["id"])
             case "later":
-                return TaskLater(title=task["title"], url=task["url"], id=task["id"])
+                return TaskLater(id=task["id"])
             case "never":
-                return TaskNever(title=task["title"], url=task["url"], id=task["id"])
+                return TaskNever(id=task["id"])
         raise ValueError(f"Unknown status: {task['status']}")
 
     @staticmethod

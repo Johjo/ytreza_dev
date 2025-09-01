@@ -54,14 +54,14 @@ class TestDoTheTask:
         task_information_reader.feed([TaskInformation(key="1", title="buy the milk", project=project_1, due_date=Nothing, url="https://url_1.com")])
         task_fvp_reader.feed([a_task_new(title="buy the milk", url="https://url_1.com", id="1", project=project_1)])
         next_action = sut.next_action()
-        assert next_action == DoTheTask(task=TaskDetail(title="buy the milk", url="https://url_1.com", project_name=project_1.name, due_date=Nothing))
+        assert next_action == DoTheTask(task=TaskDetail(key="1", title="buy the milk", url="https://url_1.com", project_name=project_1.name, due_date=Nothing))
 
     def test_display_date(self, task_fvp_reader: TaskFvpReaderForTest, sut: NextActionFvpQuery,
                                              task_information_reader: TaskInformationReaderForTest) -> None:
         task_information_reader.feed([TaskInformation(key="1", title="buy the milk", project=project_1, due_date=Some(TODAY), url="https://url_1.com")])
         task_fvp_reader.feed([a_task_new(title="buy the milk", url="https://url_1.com", id="1", project=project_1)])
         next_action = sut.next_action()
-        assert next_action == DoTheTask(task=TaskDetail(title="buy the milk", url="https://url_1.com", project_name=project_1.name, due_date=Some(TODAY)))
+        assert next_action == DoTheTask(task=TaskDetail(key="1", title="buy the milk", url="https://url_1.com", project_name=project_1.name, due_date=Some(TODAY)))
 
     def test_06(self, task_fvp_reader: TaskFvpReaderForTest, sut: NextActionFvpQuery, task_information_reader: TaskInformationReaderForTest) -> None:
         task_information_reader.feed([TaskInformation(key="3", title="buy the eggs", project=project_1, due_date=Nothing, url="https://url_3.com")])
@@ -73,7 +73,7 @@ class TestDoTheTask:
         ])
 
         # WHEN / THEN
-        assert sut.next_action() == DoTheTask(task=TaskDetail(title="buy the eggs", url="https://url_3.com", project_name="Project 1", due_date=Nothing))
+        assert sut.next_action() == DoTheTask(task=TaskDetail(key="3", title="buy the eggs", url="https://url_3.com", project_name="Project 1", due_date=Nothing))
 
     def test_07(self, task_fvp_reader: TaskFvpReaderForTest, sut: NextActionFvpQuery, task_information_reader: TaskInformationReaderForTest) -> None:
         # GIVEN
@@ -86,7 +86,7 @@ class TestDoTheTask:
         ])
 
         # WHEN / THEN
-        assert sut.next_action() == DoTheTask(task=TaskDetail(title="buy the eggs", url="https://url_3.com", project_name="Project 1", due_date=Nothing))
+        assert sut.next_action() == DoTheTask(task=TaskDetail(key="3", title="buy the eggs", url="https://url_3.com", project_name="Project 1", due_date=Nothing))
 
     def test_04(self, task_fvp_reader: TaskFvpReaderForTest, sut: NextActionFvpQuery, task_information_reader: TaskInformationReaderForTest) -> None:
         # GIVEN
@@ -98,7 +98,7 @@ class TestDoTheTask:
             a_task_later(title="buy the eggs", url="https://url_3.com", id="3"), ])
 
         # WHEN / THEN
-        assert sut.next_action() == DoTheTask(task=TaskDetail(title="buy the water", url="https://url_2.com", project_name="Project 1", due_date=Nothing))
+        assert sut.next_action() == DoTheTask(task=TaskDetail(key="2", title="buy the water", url="https://url_2.com", project_name="Project 1", due_date=Nothing))
 
     def test_08(self, task_fvp_reader: TaskFvpReaderForTest, sut: NextActionFvpQuery, task_information_reader: TaskInformationReaderForTest) -> None:
         # GIVEN
@@ -112,7 +112,7 @@ class TestDoTheTask:
         ])
 
         # WHEN / THEN
-        assert sut.next_action() == DoTheTask(task=TaskDetail(title="buy the eggs", url="https://url_3.com", project_name="Project 1", due_date=Nothing))
+        assert sut.next_action() == DoTheTask(task=TaskDetail(key="3", title="buy the eggs", url="https://url_3.com", project_name="Project 1", due_date=Nothing))
 
 
 class TestChooseTaskBetween:
@@ -130,8 +130,8 @@ class TestChooseTaskBetween:
         # WHEN / THEN
         assert sut.next_action() == ChooseTaskBetween(
             tasks=(
-                TaskDetail(title="buy the milk", url="https://url_1.com", project_name="Project 1", due_date=Nothing),
-                TaskDetail(title="buy the water", url="https://url_2.com", project_name="Project 2", due_date=Nothing)
+                TaskDetail(key="1", title="buy the milk", url="https://url_1.com", project_name="Project 1", due_date=Nothing),
+                TaskDetail(key="2", title="buy the water", url="https://url_2.com", project_name="Project 2", due_date=Nothing)
             ))
 
     def test_02(self, task_fvp_reader: TaskFvpReaderForTest, sut: NextActionFvpQuery, task_information_reader) -> None:
@@ -150,8 +150,8 @@ class TestChooseTaskBetween:
         # WHEN / THEN
         assert sut.next_action() == ChooseTaskBetween(
             tasks=(
-                TaskDetail(title="buy the milk", url="https://url_1.com", project_name="Project 1", due_date=Nothing),
-                TaskDetail(title="buy the water", url="https://url_2.com", project_name="Project 1", due_date=Nothing)
+                TaskDetail(key="1", title="buy the milk", url="https://url_1.com", project_name="Project 1", due_date=Nothing),
+                TaskDetail(key="2", title="buy the water", url="https://url_2.com", project_name="Project 1", due_date=Nothing)
             ))
 
     def test_03(self, task_fvp_reader: TaskFvpReaderForTest, sut: NextActionFvpQuery, task_information_reader) -> None:
@@ -171,8 +171,8 @@ class TestChooseTaskBetween:
         # WHEN / THEN
         assert sut.next_action() == ChooseTaskBetween(
             tasks=(
-                TaskDetail(title="buy the milk", url="https://url_1.com", project_name="Project 1", due_date=Nothing),
-                TaskDetail(title="buy the water", url="https://url_2.com", project_name="Project 1", due_date=Nothing)
+                TaskDetail(key="1", title="buy the milk", url="https://url_1.com", project_name="Project 1", due_date=Nothing),
+                TaskDetail(key="2", title="buy the water", url="https://url_2.com", project_name="Project 1", due_date=Nothing)
             ))
 
     def test_dont_propose_never_task(self, task_fvp_reader: TaskFvpReaderForTest, sut: NextActionFvpQuery,
@@ -192,8 +192,8 @@ class TestChooseTaskBetween:
         # WHEN / THEN
         assert sut.next_action() == ChooseTaskBetween(
             tasks=(
-                TaskDetail(title="buy the milk", url="https://url_1.com", project_name="Project 1", due_date=Nothing),
-                TaskDetail(title="buy the water", url="https://url_2.com", project_name="Project 1", due_date=Nothing)
+                TaskDetail(key="1", title="buy the milk", url="https://url_1.com", project_name="Project 1", due_date=Nothing),
+                TaskDetail(key="2", title="buy the water", url="https://url_2.com", project_name="Project 1", due_date=Nothing)
             ))
 
     def test_should_ignore_first_never_task(self, task_fvp_reader: TaskFvpReaderForTest,
@@ -215,8 +215,8 @@ class TestChooseTaskBetween:
         # WHEN / THEN
         assert sut.next_action() == ChooseTaskBetween(
             tasks=(
-                TaskDetail(title="buy the water", url="https://url_2.com", project_name="Project 1", due_date=Nothing),
-                TaskDetail(title="buy the butter", url="https://url_4.com", project_name="Project 1", due_date=Nothing)
+                TaskDetail(key="2", title="buy the water", url="https://url_2.com", project_name="Project 1", due_date=Nothing),
+                TaskDetail(key="4", title="buy the butter", url="https://url_4.com", project_name="Project 1", due_date=Nothing)
             ))
 
     def test_display_due_date(self, task_fvp_reader: TaskFvpReaderForTest, sut: NextActionFvpQuery,
@@ -234,8 +234,8 @@ class TestChooseTaskBetween:
         # WHEN / THEN
         assert sut.next_action() == ChooseTaskBetween(
             tasks=(
-                TaskDetail(title="buy the milk", url="https://url_1.com", project_name="Project 1", due_date=Some(TODAY)),
-                TaskDetail(title="buy the water", url="https://url_2.com", project_name="Project 2", due_date=Some(YESTERDAY))
+                TaskDetail(key="1", title="buy the milk", url="https://url_1.com", project_name="Project 1", due_date=Some(TODAY)),
+                TaskDetail(key="2", title="buy the water", url="https://url_2.com", project_name="Project 2", due_date=Some(YESTERDAY))
             ))
 
 

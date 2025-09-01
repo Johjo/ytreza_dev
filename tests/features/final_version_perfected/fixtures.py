@@ -12,19 +12,23 @@ def a_task_next(title: str, url:str, id: str, project:Project = a_project(key="1
 
 
 def a_task_later(title: str, url:str, id: str, project:Project = a_project(key="1", name="Project 1")) -> TaskLater:
-    return TaskLater(title=title, url=url, id=id)
+    return TaskLater(id=id)
 
 
 def a_task_new(title: str, url:str, id: str, project:Project = a_project(key="1", name="Project 1")) -> TaskLater:
-    return TaskNew(title=title, url=url, id=id)
+    return TaskNew(id=id)
 
 
 def a_task_never(title: str, url:str, id: str, project:Project = a_project(key="1", name="Project 1")) -> TaskNever:
-    return TaskNever(title=title, url=url, id=id)
+    return TaskNever(id=id)
 
 
 def an_external_project(key: str, name: str):
     return ExternalProject(name=name, key=key)
+
+
+class ExternalTaskBuilder:
+    pass
 
 
 def an_external_task(name: str, url: str, id: str,
@@ -46,7 +50,7 @@ class TaskBuilder:
         if self.project is None:
             self.project = Project(key=self.key, name="Project")
 
-        self.task_base = TaskBase(id=self.key, url=self.url, title=self.title)
+        self.task_base = TaskBase(id=self.key)
 
     def to_new(self) -> TaskNew:
         return self.task_base.to_new()

@@ -25,18 +25,18 @@ class FvpController:
     def next_action(self) -> NextAction :
         return NextActionFvpQuery(task_fvp_reader=self._inject(TASK_FVP_READER_KEY), task_information_reader=self._inject(TASK_INFORMATION_READER_KEY)).next_action()
 
-    def close_task(self, url: str) -> None:
-        CloseTaskUseCase(task_repository=self._inject(TASK_FVP_REPOSITORY_KEY), external_todolist=self._inject(EXTERNAL_TODOLIST_KEY)).execute(url)
+    def close_task(self, key: str) -> None:
+        CloseTaskUseCase(task_repository=self._inject(TASK_FVP_REPOSITORY_KEY), external_todolist=self._inject(EXTERNAL_TODOLIST_KEY)).execute(key)
 
-    def do_later(self, url: str) -> None:
-        DoLater(task_repository=self._inject(TASK_FVP_REPOSITORY_KEY)).execute(url)
+    def do_later(self, key: str) -> None:
+        DoLater(task_repository=self._inject(TASK_FVP_REPOSITORY_KEY)).execute(key)
 
-    def do_next(self, url: str) -> None:
-        DoNext(task_repository=self._inject(TASK_FVP_REPOSITORY_KEY)).execute(url)
+    def do_next(self, key: str) -> None:
+        DoNext(task_repository=self._inject(TASK_FVP_REPOSITORY_KEY)).execute(key)
 
-    def do_never(self, url: str) -> None:
-        DoNever(task_repository=self._inject(TASK_FVP_REPOSITORY_KEY)).execute(url)
+    def do_never(self, key: str) -> None:
+        DoNever(task_repository=self._inject(TASK_FVP_REPOSITORY_KEY)).execute(key)
 
-    def do_partial(self, url: str) -> None:
-        DoPartially(task_repository=self._inject(TASK_FVP_REPOSITORY_KEY)).execute(url)
+    def do_partial(self, key: str) -> None:
+        DoPartially(task_repository=self._inject(TASK_FVP_REPOSITORY_KEY)).execute(key)
 

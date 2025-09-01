@@ -8,13 +8,13 @@ from ytreza_dev.features.final_version_perfected.types import TaskBase, TaskNext
 from ytreza_dev.features.final_version_perfected.use_case.do_later import DoLater
 
 
-@pytest.mark.parametrize("before, url, after", [
+@pytest.mark.parametrize("before, key, after", [
     [
         [
             a_task_new(title="buy the milk", url="https://url_1.com", id="1"),
             a_task_new(title="buy the water", url="https://url_2.com", id="2")
         ],
-        "https://url_2.com",
+        "2",
         [
             a_task_next(title="buy the milk", url="https://url_1.com", id="1"),
             a_task_later(title="buy the water", url="https://url_2.com", id="2")
@@ -26,7 +26,7 @@ from ytreza_dev.features.final_version_perfected.use_case.do_later import DoLate
             a_task_new(title="buy the water", url="https://url_2.com", id="2"),
             a_task_new(title="buy the bread", url="https://url_3.com", id="3")
         ],
-        "https://url_3.com",
+        "3",
         [
             a_task_next(title="buy the milk", url="https://url_1.com", id="1"),
             a_task_new(title="buy the water", url="https://url_2.com", id="2"),
@@ -34,10 +34,10 @@ from ytreza_dev.features.final_version_perfected.use_case.do_later import DoLate
         ]
     ],
 ])
-def test_do_later(before: list[TaskBase], url: str, after: list[TaskBase]) -> None:
+def test_do_later(before: list[TaskBase], key, after: list[TaskBase]) -> None:
     task_repository = TaskFvpRepositoryForTest()
     task_repository.feed(tasks=before)
 
-    DoLater(task_repository).execute(url=url)
+    DoLater(task_repository).execute(updated_key=key)
 
     assert task_repository.all_tasks() == after

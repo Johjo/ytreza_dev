@@ -55,7 +55,7 @@ def todolist_page() -> None:
 
         with col5:
             if st.button(f"Close", key=f"close_top_{tasks[0].url}"):
-                controller.close_task(tasks[0].url)
+                controller.close_task(key=tasks[0].key)
                 st.rerun()
 
         st.markdown("---")
@@ -68,21 +68,21 @@ def todolist_page() -> None:
             st.link_button(f"Open URL", url=tasks[1].url)
 
         with col2:
-            if st.button(f"Choose", key=f"choose_bottom_{tasks[1].url}"):
-                controller.do_next(tasks[1].url)
+            if st.button(f"Choose", key=f"choose_bottom_{tasks[1].key}"):
+                controller.do_next(key=tasks[1].key)
                 st.rerun()
 
         with col3:
-            if st.button(f"Later", key=f"later_bottom_{tasks[1].url}"):
-                controller.do_later(tasks[1].url)
+            if st.button(f"Later", key=f"later_bottom_{tasks[1].key}"):
+                controller.do_later(key=tasks[1].key)
                 st.rerun()
         with col4:
-            if st.button(f"Never", key=f"never_bottom_{tasks[1].url}"):
-                controller.do_never(tasks[1].url)
+            if st.button(f"Never", key=f"never_bottom_{tasks[1].key}"):
+                controller.do_never(key=tasks[1].key)
                 st.rerun()
         with col5:
-            if st.button(f"Close", key=f"close_bottom_{tasks[1].url}"):
-                controller.close_task(tasks[1].url)
+            if st.button(f"Close", key=f"close_bottom_{tasks[1].key}"):
+                controller.close_task(key=tasks[1].key)
                 st.rerun()
 
     elif isinstance(next_action, DoTheTask):
@@ -92,13 +92,13 @@ def todolist_page() -> None:
         with col1:
             st.link_button(f"Open URL", url=next_action.task.url)
         with col2:
-            if st.button(f"Partially done", key=f"partially_done_bottom_{next_action.task.url}"):
-                controller.do_partial(next_action.task.url)
+            if st.button(f"Partially done", key=f"partially_done_bottom_{next_action.task.key}"):
+                controller.do_partial(key=next_action.task.key)
                 st.rerun()
 
         with col3:
-            if st.button(f"Close", key=f"close_bottom_{next_action.task.url}"):
-                controller.close_task(next_action.task.url)
+            if st.button(f"Close", key=f"close_bottom_{next_action.task.key}"):
+                controller.close_task(key=next_action.task.key)
                 st.rerun()
 
 

@@ -13,16 +13,17 @@ class TaskFvpRepositoryFromJson(TaskFvpRepositoryPort):
         tasks = json.loads(self._file_path.read_text())
         return [self.to_task_base(task) for task in tasks]
 
-    def to_task_base(self, task: dict[str, str]) -> TaskBase:
+    @staticmethod
+    def to_task_base(task: dict[str, str]) -> TaskBase:
         match task["status"]:
             case "new":
-                return TaskNew(title=task["title"], url=task["url"], id=task["id"])
+                return TaskNew(id=task["id"])
             case "next":
-                return TaskNext(title=task["title"], url=task["url"], id=task["id"])
+                return TaskNext(id=task["id"])
             case "later":
-                return TaskLater(title=task["title"], url=task["url"], id=task["id"])
+                return TaskLater(id=task["id"])
             case "never":
-                return TaskNever(title=task["title"], url=task["url"], id=task["id"])
+                return TaskNever(id=task["id"])
         raise ValueError(f"Unknown status: {task['status']}")
 
     def __init__(self, file_path: Path) -> None:

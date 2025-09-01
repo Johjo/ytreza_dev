@@ -24,7 +24,7 @@ class TestSingleTaskIsAlwaysNext:
             TASKS[0].to_new(),
         ])
 
-        sut.execute(url=TASKS[0].url)
+        sut.execute(updated_key=TASKS[0].key)
 
         assert task_repository.all_tasks() == [
             TASKS[0].to_next(),
@@ -35,7 +35,7 @@ class TestSingleTaskIsAlwaysNext:
             TASKS[0].to_next(),
         ])
 
-        sut.execute(url=TASKS[0].url)
+        sut.execute(updated_key=TASKS[0].key)
 
         assert task_repository.all_tasks() == [
             TASKS[0].to_next(),
@@ -105,7 +105,7 @@ class TestWhenPartialIsFirstTask:
     def test_following_new_task_become_next(self, test_id, initial, expected, sut: DoPartially,
                                             task_repository: TaskFvpRepositoryForTest):
         task_repository.feed(tasks=initial)
-        sut.execute(url=TASKS[0].url)
+        sut.execute(updated_key=TASKS[0].key)
         assert task_repository.all_tasks() == expected
 
     def test_always_become_next(self, sut: DoPartially, task_repository: TaskFvpRepositoryForTest):
@@ -114,7 +114,7 @@ class TestWhenPartialIsFirstTask:
             TASKS[1].to_new(),
         ])
 
-        sut.execute(url=TASKS[0].url)
+        sut.execute(updated_key=TASKS[0].key)
 
         assert task_repository.all_tasks() == [
             TASKS[0].to_next(),
@@ -124,14 +124,14 @@ class TestWhenPartialIsFirstTask:
 
 class TestWhenPartialIsAnotherTask:
 
-    @pytest.mark.parametrize("test_id, initial, url, expected", [
+    @pytest.mark.parametrize("test_id, initial, key, expected", [
         [
             "TestWhenPartialIsAnotherTask.test_partially_become_later.01",
             [
                 TASKS[0].to_next(),
                 TASKS[1].to_next(),
             ],
-            TASKS[1].url,
+            TASKS[1].key,
             [
                 TASKS[0].to_next(),
                 TASKS[1].to_later(),
@@ -145,7 +145,7 @@ class TestWhenPartialIsAnotherTask:
                 TASKS[1].to_next(),
                 TASKS[2].to_next(),
             ],
-            TASKS[2].url,
+            TASKS[2].key,
             [
                 TASKS[0].to_next(),
                 TASKS[1].to_next(),
@@ -158,7 +158,7 @@ class TestWhenPartialIsAnotherTask:
                 TASKS[0].to_new(),
                 TASKS[1].to_new(),
             ],
-            TASKS[1].url,
+            TASKS[1].key,
             [
                 TASKS[0].to_next(),
                 TASKS[1].to_later(),
@@ -172,7 +172,7 @@ class TestWhenPartialIsAnotherTask:
                 TASKS[2].to_next(),
                 TASKS[3].to_next(),
             ],
-            TASKS[3].url,
+            TASKS[3].key,
             [
                 TASKS[0].to_next(),
                 TASKS[1].to_later(),
@@ -183,10 +183,10 @@ class TestWhenPartialIsAnotherTask:
 
     ])
     def test_partially_become_later(self, sut: DoPartially, task_repository: TaskFvpRepositoryForTest, test_id: str,
-                                    initial: list[TaskBase], url: str, expected: list[TaskBase]):
+                                    initial: list[TaskBase], key, expected: list[TaskBase]):
         task_repository.feed(tasks=initial)
 
-        sut.execute(url=url)
+        sut.execute(updated_key=key)
 
         assert task_repository.all_tasks() == expected
 
@@ -198,7 +198,7 @@ class TestWhenPartialIsAnotherTask:
                 TASKS[1].to_next(),
                 TASKS[2].to_later(),
             ],
-            TASKS[1].url,
+            TASKS[1].key,
             [
                 TASKS[0].to_next(),
                 TASKS[1].to_later(),
@@ -214,7 +214,7 @@ class TestWhenPartialIsAnotherTask:
                 TASKS[2].to_later(),
                 TASKS[3].to_later(),
             ],
-            TASKS[1].url,
+            TASKS[1].key,
             [
                 TASKS[0].to_next(),
                 TASKS[1].to_later(),
@@ -229,11 +229,11 @@ class TestWhenPartialIsAnotherTask:
                                                        initial: list[TaskBase], url: str, expected: list[TaskBase]):
         task_repository.feed(tasks=initial)
 
-        sut.execute(url=url)
+        sut.execute(updated_key=url)
 
         assert task_repository.all_tasks() == expected
 
-    @pytest.mark.parametrize("test_id, initial, url, expected", [
+    @pytest.mark.parametrize("test_id, initial, key, expected", [
         [
             "TestWhenPartialIsAnotherTask.test_partially_become_later.02",
             [
@@ -242,7 +242,7 @@ class TestWhenPartialIsAnotherTask:
                 TASKS[2].to_never(),
                 TASKS[3].to_later(),
             ],
-            TASKS[1].url,
+            TASKS[1].key,
             [
                 TASKS[0].to_next(),
                 TASKS[1].to_later(),
@@ -253,10 +253,10 @@ class TestWhenPartialIsAnotherTask:
         ],
     ])
     def test_task_never_following_partially_become_never(self, sut: DoPartially, task_repository: TaskFvpRepositoryForTest, test_id: str,
-                                                         initial: list[TaskBase], url: str, expected: list[TaskBase]):
+                                                         initial: list[TaskBase], key, expected: list[TaskBase]):
         task_repository.feed(tasks=initial)
 
-        sut.execute(url=url)
+        sut.execute(updated_key=key)
 
         assert task_repository.all_tasks() == expected
 
