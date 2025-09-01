@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Any
 
 from ytreza_dev.features.final_version_perfected.port.task_repository import TaskRepositoryPort
-from ytreza_dev.features.final_version_perfected.types import TaskBase, TaskNew, TaskNext, TaskLater, TaskNever, Project
+from ytreza_dev.features.final_version_perfected.types import TaskBase, TaskNew, TaskNext, TaskLater, TaskNever
 
 
 class TaskRepositoryFromJson(TaskRepositoryPort):
@@ -16,13 +16,13 @@ class TaskRepositoryFromJson(TaskRepositoryPort):
     def to_task_base(self, task: dict[str, str]) -> TaskBase:
         match task["status"]:
             case "new":
-                return TaskNew(title=task["title"], url=task["url"], id=task["id"], project=self._to_project(task))
+                return TaskNew(title=task["title"], url=task["url"], id=task["id"])
             case "next":
-                return TaskNext(title=task["title"], url=task["url"], id=task["id"], project=self._to_project(task))
+                return TaskNext(title=task["title"], url=task["url"], id=task["id"])
             case "later":
-                return TaskLater(title=task["title"], url=task["url"], id=task["id"], project=self._to_project(task))
+                return TaskLater(title=task["title"], url=task["url"], id=task["id"])
             case "never":
-                return TaskNever(title=task["title"], url=task["url"], id=task["id"], project=self._to_project(task))
+                return TaskNever(title=task["title"], url=task["url"], id=task["id"])
         raise ValueError(f"Unknown status: {task['status']}")
 
     def __init__(self, file_path: Path) -> None:
@@ -46,7 +46,3 @@ class TaskRepositoryFromJson(TaskRepositoryPort):
                 d.update({"status": "never"})
 
         return d
-
-    @staticmethod
-    def _to_project(task) -> Project:
-        return Project(key=task["project"]["key"], name=task["project"]["name"])

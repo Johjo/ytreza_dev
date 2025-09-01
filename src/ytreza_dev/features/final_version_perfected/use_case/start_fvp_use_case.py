@@ -12,7 +12,7 @@ class StartFvpUseCase:
         self._task_repository.save([self._to_task_new(task) for task in self._todolist_reader.all_tasks()])
 
     def _to_task_new(self, task: ExternalTask) -> TaskNew :
-        return TaskNew(title=task.name, url=task.url, id=task.id, project=self._to_project(task.project))
+        return TaskNew(title=task.name, url=task.url, id=task.id)
 
     @staticmethod
     def _to_project(project: ExternalProject) -> Project:

@@ -1,10 +1,9 @@
 from pathlib import Path
 
-from tests.features.final_version_perfected.fixtures import a_task_next, a_task_later, a_task_new, a_task_never
-from ytreza_dev.features.final_version_perfected.types import TaskNew, TaskNext, TaskLater, TaskNever
 
+from tests.features.final_version_perfected.fixtures import a_task_next, a_task_later, a_task_new, a_task_never
+from ytreza_dev.features.final_version_perfected.adapter.task_fvp_reader_from_json import TaskFvpReaderFromJson
 from ytreza_dev.features.final_version_perfected.adapter.task_repository_from_json import TaskRepositoryFromJson
-from ytreza_dev.features.final_version_perfected.adapter.task_reader_from_json import TaskReaderFromJson
 
 
 def test_read_data_from_json() -> None:
@@ -20,7 +19,7 @@ def test_read_data_from_json() -> None:
     ])
 
     # WHEN
-    sut = TaskReaderFromJson(json_path)
+    sut = TaskFvpReaderFromJson(json_path)
     actual = sut.all_active_tasks()
 
     # THEN

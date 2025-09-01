@@ -74,3 +74,17 @@ class TodoistAPI:
         }
         response = requests.post(f"{self._base_url}/tasks/{task_id}/close", headers=headers)
         response.raise_for_status()
+
+    def task_by_id(self, task_id: str) -> TodoistTask:
+        task = json.loads(self._json_task_by_id(task_id))
+        projects: dict[str, Any] = {p["id"]: p for p in json.loads(self._get_all_projects_json())}
+        return self._to_todoist_task(task, projects)
+
+    def _json_task_by_id(self, task_id: str) -> str:
+        headers = {
+            "Authorization": f"Bearer {self._api_token}"
+        }
+        response = requests.get(f"{self._base_url}/tasks/{task_id}", headers=headers)
+        response.raise_for_status()
+        json_content = response.text
+        return json_content

@@ -1,14 +1,16 @@
-from ytreza_dev.features.final_version_perfected.port.task_reader import TaskReader
+from ytreza_dev.features.final_version_perfected.port.task_information_reader import TaskInformationReaderPort
+from ytreza_dev.features.final_version_perfected.port.task_reader import TaskFvpReaderPort
 from ytreza_dev.features.final_version_perfected.types import Task, NothingToDo, DoTheTask, ChooseTaskBetween, NextAction, \
     TaskNew, TaskNext, TaskBase
 
 
 class NextActionFvpQuery:
-    def __init__(self, task_reader: TaskReader):
-        self._task_reader = task_reader
+    def __init__(self, task_fvp_reader: TaskFvpReaderPort, task_information_reader: TaskInformationReaderPort):
+        self._task_fvp_reader = task_fvp_reader
+        self._task_information_reader = task_information_reader
 
     def next_action(self) -> NextAction:
-        tasks = self._task_reader.all_active_tasks()
+        tasks = self._task_fvp_reader.all_active_tasks()
 
         if not tasks:
             return NothingToDo()
@@ -19,15 +21,15 @@ class NextActionFvpQuery:
         if new_task_index > next_task_index:
             return ChooseTaskBetween(tasks=(
                 Task(title=tasks[next_task_index].title, url=tasks[next_task_index].url,
-                     project_name=tasks[next_task_index].project.name),
+                     project_name=self._task_information_reader.by_key(tasks[next_task_index].id).project.name),
                 Task(title=tasks[new_task_index].title, url=tasks[new_task_index].url,
-                     project_name=tasks[new_task_index].project.name)
+                     project_name=self._task_information_reader.by_key(tasks[new_task_index].id).project.name)
             ))
 
         return DoTheTask(task=Task(
             title=tasks[next_task_index].title,
             url=tasks[next_task_index].url,
-            project_name=tasks[next_task_index].project.name))
+            project_name=self._task_information_reader.by_key(tasks[next_task_index].id).project.name))
 
     @staticmethod
     def _new_task_index(next_task_index: int, tasks: list[TaskBase]) -> int:

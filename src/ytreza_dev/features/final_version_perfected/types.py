@@ -37,19 +37,18 @@ class TaskBase:
     title: str
     url: str
     id: str
-    project: Project
 
     def to_next(self) -> 'TaskNext':
-        return TaskNext(title=self.title, url=self.url, id=self.id, project=self.project)
+        return TaskNext(title=self.title, url=self.url, id=self.id)
 
     def to_later(self) -> 'TaskLater':
-        return TaskLater(title=self.title, url=self.url, id=self.id, project=self.project)
+        return TaskLater(title=self.title, url=self.url, id=self.id)
 
     def to_new(self) -> 'TaskNew':
-        return TaskNew(title=self.title, url=self.url, id=self.id, project=self.project)
+        return TaskNew(title=self.title, url=self.url, id=self.id)
 
     def to_never(self) -> 'TaskNever':
-        return TaskNever(title=self.title, url=self.url, id=self.id, project=self.project)
+        return TaskNever(title=self.title, url=self.url, id=self.id)
 
 
 @dataclass(frozen=True, eq=True)

@@ -1,8 +1,11 @@
+from attr import dataclass
 from pyqure import Key # type: ignore
 
+from ytreza_dev.features.final_version_perfected.port.task_information_reader import TaskInformationReaderPort, \
+    TaskInformation
 from ytreza_dev.features.final_version_perfected.port.task_repository import TaskRepositoryPort
-from ytreza_dev.features.final_version_perfected.port.task_reader import TaskReader
-from ytreza_dev.features.final_version_perfected.types import TaskBase
+from ytreza_dev.features.final_version_perfected.port.task_reader import TaskFvpReaderPort
+from ytreza_dev.features.final_version_perfected.types import TaskBase, Project
 
 
 class TaskInMemory:
@@ -30,7 +33,7 @@ class TaskRepositoryForDemo(TaskRepositoryPort):
         self._memory.save(tasks)
 
 
-class TaskReaderForDemo(TaskReader):
+class TaskFvpReaderForDemo(TaskFvpReaderPort):
     def __init__(self, memory: TaskInMemory):
         self._memory = memory
 
@@ -50,3 +53,15 @@ class TaskRepositoryForTest(TaskRepositoryPort):
 
     def feed(self, tasks: list[TaskBase]) -> None:
         self._tasks = tasks
+
+
+class TaskInformationReaderForTest(TaskInformationReaderPort):
+    def __init__(self):
+        self._tasks: dict[str, TaskInformation] = {}
+
+    def feed(self, tasks: list[TaskInformation]):
+        for task in tasks:
+            self._tasks[task.key] = task
+
+    def by_key(self, key: str) -> TaskInformation:
+        return self._tasks[key]
