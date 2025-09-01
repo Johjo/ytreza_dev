@@ -1,8 +1,8 @@
 import pytest
 
-from tests.features.final_version_perfected.adapters import TaskRepositoryForTest
+from tests.features.final_version_perfected.adapters import TaskFvpRepositoryForTest
 
 
 @pytest.fixture
-def task_repository() -> TaskRepositoryForTest:
-    return TaskRepositoryForTest()
+def task_repository() -> TaskFvpRepositoryForTest:
+    return TaskFvpRepositoryForTest()

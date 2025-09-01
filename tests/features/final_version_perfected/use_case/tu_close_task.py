@@ -2,7 +2,7 @@ from typing import Any
 
 import pytest
 
-from tests.features.final_version_perfected.adapters import TaskRepositoryForTest
+from tests.features.final_version_perfected.adapters import TaskFvpRepositoryForTest
 from tests.features.final_version_perfected.fixtures import a_task_next, a_task_later, a_task_new, a_task_never
 from tests.features.final_version_perfected.use_case.conftest import task_repository
 from ytreza_dev.features.final_version_perfected.port.external_todolist import ExternalTodolistPort
@@ -27,7 +27,7 @@ def external_todolist() -> ExternalTodolistForTest:
 
 
 @pytest.fixture
-def sut(task_repository: TaskRepositoryForTest, external_todolist: ExternalTodolistForTest) -> CloseTaskUseCase:
+def sut(task_repository: TaskFvpRepositoryForTest, external_todolist: ExternalTodolistForTest) -> CloseTaskUseCase:
     return CloseTaskUseCase(task_repository=task_repository, external_todolist=external_todolist)
 
 
@@ -45,7 +45,7 @@ def sut(task_repository: TaskRepositoryForTest, external_todolist: ExternalTodol
     ],
 ])
 def test_remove_task_when_closed(before: list[TaskBase], url: str, after: list[TaskBase],
-                                 task_repository: TaskRepositoryForTest, sut: CloseTaskUseCase) -> None:
+                                 task_repository: TaskFvpRepositoryForTest, sut: CloseTaskUseCase) -> None:
     task_repository.feed(tasks=before)
     sut.execute(url=url)
     assert task_repository.all_tasks() == after
@@ -53,7 +53,7 @@ def test_remove_task_when_closed(before: list[TaskBase], url: str, after: list[T
 
 
 
-def test_close_task_on_external_system(task_repository: TaskRepositoryForTest, sut: CloseTaskUseCase,
+def test_close_task_on_external_system(task_repository: TaskFvpRepositoryForTest, sut: CloseTaskUseCase,
                                        external_todolist: ExternalTodolistForTest) -> None:
     task_repository.feed(tasks=[
         a_task_next(title="Buy the milk ", url="https://url_1.com", id="1"),
@@ -98,7 +98,7 @@ def test_close_task_on_external_system(task_repository: TaskRepositoryForTest, s
         ]
     ],
 ])
-def test_set_following_task_to_new(before: list[TaskBase], url: str, after: list[TaskBase], task_repository: TaskRepositoryForTest, sut: CloseTaskUseCase) -> None:
+def test_set_following_task_to_new(before: list[TaskBase], url: str, after: list[TaskBase], task_repository: TaskFvpRepositoryForTest, sut: CloseTaskUseCase) -> None:
     task_repository.feed(tasks=before)
     sut.execute(url=url)
     assert task_repository.all_tasks() == after
@@ -120,14 +120,14 @@ def test_set_following_task_to_new(before: list[TaskBase], url: str, after: list
         ]
     ],
 ])
-def test_never_task_stay_never(before: list[TaskBase], url: str, after: list[TaskBase], task_repository: TaskRepositoryForTest, sut: CloseTaskUseCase) -> None:
+def test_never_task_stay_never(before: list[TaskBase], url: str, after: list[TaskBase], task_repository: TaskFvpRepositoryForTest, sut: CloseTaskUseCase) -> None:
     task_repository.feed(tasks=before)
     sut.execute(url=url)
     assert task_repository.all_tasks() == after
 
 
 
-def test_when_only_never_all_go_new(task_repository: TaskRepositoryForTest, sut: CloseTaskUseCase) -> None:
+def test_when_only_never_all_go_new(task_repository: TaskFvpRepositoryForTest, sut: CloseTaskUseCase) -> None:
     task_repository.feed(tasks=[a_task_next(title="Buy the milk ", url="https://url_1.com", id="1"),
                                 a_task_never(title="Buy the water", url="https://url_2.com", id="2"),
                                 a_task_never(title="Buy the eggs", url="https://url_3.com", id="3"),

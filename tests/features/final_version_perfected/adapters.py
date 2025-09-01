@@ -3,7 +3,7 @@ from pyqure import Key # type: ignore
 
 from ytreza_dev.features.final_version_perfected.port.task_information_reader import TaskInformationReaderPort, \
     TaskInformation
-from ytreza_dev.features.final_version_perfected.port.task_repository import TaskRepositoryPort
+from ytreza_dev.features.final_version_perfected.port.task_repository import TaskFvpRepositoryPort
 from ytreza_dev.features.final_version_perfected.port.task_reader import TaskFvpReaderPort
 from ytreza_dev.features.final_version_perfected.types import TaskBase, Project
 
@@ -22,7 +22,7 @@ class TaskInMemory:
 TASK_IN_MEMORY_KEY = Key("task_in_memory", TaskInMemory)
 
 
-class TaskRepositoryForDemo(TaskRepositoryPort):
+class TaskFvpRepositoryForDemo(TaskFvpRepositoryPort):
     def all_tasks(self) -> list[TaskBase]:
         return self._memory.all_tasks()
 
@@ -41,7 +41,7 @@ class TaskFvpReaderForDemo(TaskFvpReaderPort):
         return self._memory.all_tasks()
 
 
-class TaskRepositoryForTest(TaskRepositoryPort):
+class TaskFvpRepositoryForTest(TaskFvpRepositoryPort):
     def __init__(self) -> None:
         self._tasks : list[TaskBase] = []
 

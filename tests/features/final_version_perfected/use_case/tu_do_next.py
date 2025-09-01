@@ -1,6 +1,6 @@
 import pytest
 
-from tests.features.final_version_perfected.adapters import TaskRepositoryForTest
+from tests.features.final_version_perfected.adapters import TaskFvpRepositoryForTest
 from tests.features.final_version_perfected.fixtures import a_task_new, a_task_next, a_task_later, a_task_never
 from ytreza_dev.features.final_version_perfected.types import TaskBase
 from ytreza_dev.features.final_version_perfected.use_case.do_next import DoNext
@@ -46,7 +46,7 @@ from ytreza_dev.features.final_version_perfected.use_case.do_next import DoNext
     ],
 ])
 def test_do_later(before: list[TaskBase], url: str, after: list[TaskBase]) -> None:
-    task_repository = TaskRepositoryForTest()
+    task_repository = TaskFvpRepositoryForTest()
     task_repository.feed(tasks=before)
 
     DoNext(task_repository).execute(url=url)

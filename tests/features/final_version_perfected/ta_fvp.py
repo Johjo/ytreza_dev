@@ -1,14 +1,14 @@
 from expression import Nothing
 from pyqure import pyqure, PyqureMemory  # type: ignore
 
-from tests.features.final_version_perfected.adapters import TaskInMemory, TaskRepositoryForDemo, TASK_IN_MEMORY_KEY, \
+from tests.features.final_version_perfected.adapters import TaskInMemory, TaskFvpRepositoryForDemo, TASK_IN_MEMORY_KEY, \
     TaskFvpReaderForDemo
 from tests.features.final_version_perfected.fixtures import an_external_task, a_task_new, an_external_project, \
     a_project, a_task_later, a_task_next
 from tests.features.final_version_perfected.use_case.tu_start_fvp import TodolistReaderForTest
 from ytreza_dev.features.final_version_perfected.controller import FvpController
 from ytreza_dev.features.final_version_perfected.injection_keys import TASK_FVP_READER_KEY, TODOLIST_READER_KEY, \
-    TASK_REPOSITORY_KEY, EXTERNAL_TODOLIST_KEY, TASK_INFORMATION_READER_KEY
+    TASK_FVP_REPOSITORY_KEY, EXTERNAL_TODOLIST_KEY, TASK_INFORMATION_READER_KEY
 from ytreza_dev.features.final_version_perfected.port.external_todolist import ExternalTodolistPort
 from ytreza_dev.features.final_version_perfected.port.task_information_reader import TaskInformationReaderPort, \
     TaskInformation
@@ -352,7 +352,7 @@ def provide_dependencies(task_in_memory: TaskInMemory, todolist_reader: Todolist
     dependencies: PyqureMemory = {}
     (provide, inject) = pyqure(dependencies)
     provide(TODOLIST_READER_KEY, todolist_reader)
-    provide(TASK_REPOSITORY_KEY, TaskRepositoryForDemo(memory=task_in_memory))
+    provide(TASK_FVP_REPOSITORY_KEY, TaskFvpRepositoryForDemo(memory=task_in_memory))
     provide(TASK_IN_MEMORY_KEY, task_in_memory)
     provide(TASK_FVP_READER_KEY, TaskFvpReaderForDemo(inject(TASK_IN_MEMORY_KEY)))
     provide(EXTERNAL_TODOLIST_KEY, ExternalTodolistForDemo())

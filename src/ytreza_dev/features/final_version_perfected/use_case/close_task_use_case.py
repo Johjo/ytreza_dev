@@ -1,10 +1,10 @@
 from ytreza_dev.features.final_version_perfected.port.external_todolist import ExternalTodolistPort
-from ytreza_dev.features.final_version_perfected.port.task_repository import TaskRepositoryPort
+from ytreza_dev.features.final_version_perfected.port.task_repository import TaskFvpRepositoryPort
 from ytreza_dev.features.final_version_perfected.types import TaskNever, TaskBase
 
 
 class CloseTaskUseCase:
-    def __init__(self, task_repository: TaskRepositoryPort, external_todolist: ExternalTodolistPort) -> None:
+    def __init__(self, task_repository: TaskFvpRepositoryPort, external_todolist: ExternalTodolistPort) -> None:
         self._external_todolist = external_todolist
         self._task_repository = task_repository
 

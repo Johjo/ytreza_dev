@@ -1,10 +1,10 @@
-from ytreza_dev.features.final_version_perfected.port.task_repository import TaskRepositoryPort
+from ytreza_dev.features.final_version_perfected.port.task_repository import TaskFvpRepositoryPort
 from ytreza_dev.features.final_version_perfected.port.todolist_reader import TodolistReaderPort
 from ytreza_dev.features.final_version_perfected.types import TaskNew, ExternalTask, ExternalProject, Project
 
 
 class StartFvpUseCase:
-    def __init__(self, todolist_reader: TodolistReaderPort, task_repository: TaskRepositoryPort) -> None:
+    def __init__(self, todolist_reader: TodolistReaderPort, task_repository: TaskFvpRepositoryPort) -> None:
         self._todolist_reader = todolist_reader
         self._task_repository = task_repository
 

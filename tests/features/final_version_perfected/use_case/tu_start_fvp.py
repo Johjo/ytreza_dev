@@ -3,7 +3,7 @@ from dataclasses import dataclass
 import pytest
 from attr.setters import frozen
 
-from tests.features.final_version_perfected.adapters import TaskRepositoryForTest
+from tests.features.final_version_perfected.adapters import TaskFvpRepositoryForTest
 from tests.features.final_version_perfected.fixtures import a_task_new, an_external_task, an_external_project, a_project
 from ytreza_dev.features.final_version_perfected.port.todolist_reader import TodolistReaderPort
 from ytreza_dev.features.final_version_perfected.types import ExternalTask
@@ -22,8 +22,8 @@ class TodolistReaderForTest(TodolistReaderPort):
 
 
 @pytest.fixture
-def task_repository() -> TaskRepositoryForTest:
-    return TaskRepositoryForTest()
+def task_repository() -> TaskFvpRepositoryForTest:
+    return TaskFvpRepositoryForTest()
 
 
 @pytest.fixture
@@ -32,16 +32,16 @@ def todolist_reader() -> TodolistReaderForTest:
 
 
 @pytest.fixture
-def sut(todolist_reader: TodolistReaderForTest, task_repository: TaskRepositoryForTest) -> StartFvpUseCase:
+def sut(todolist_reader: TodolistReaderForTest, task_repository: TaskFvpRepositoryForTest) -> StartFvpUseCase:
     return StartFvpUseCase(todolist_reader, task_repository)
 
 
-def test_merge_no_task(task_repository: TaskRepositoryForTest, sut: StartFvpUseCase) -> None:
+def test_merge_no_task(task_repository: TaskFvpRepositoryForTest, sut: StartFvpUseCase) -> None:
     sut.execute()
     assert task_repository.all_tasks() == []
 
 
-def test_synchronize_task_in_repository(todolist_reader: TodolistReaderForTest, task_repository: TaskRepositoryForTest,
+def test_synchronize_task_in_repository(todolist_reader: TodolistReaderForTest, task_repository: TaskFvpRepositoryForTest,
                                         sut: StartFvpUseCase) -> None:
     todolist_reader.feed([
         an_external_task(name="buy the milk", url="https://url_1.com", id="1",
