@@ -10,6 +10,7 @@ from ytreza_dev.features.final_version_perfected.types import Project
 @dataclass
 class TaskInformation:
     key: str
+    url: str
     title: str
     project: Project
     due_date: Option[datetime.date]

@@ -48,6 +48,7 @@ def todolist_page() -> None:
         
         # Top task
         st.title(f"{tasks[0].project_name} / {tasks[0].title}")
+        st.write(tasks[0].due_date.default_value(""))
         col1, _, _, _, col5 = st.columns(5)
         with col1:
             st.link_button(f"Open URL", url=tasks[0].url)
@@ -61,6 +62,7 @@ def todolist_page() -> None:
         
         # Bottom task
         st.title(f"{tasks[1].project_name} / {tasks[1].title}")
+        st.write(tasks[1].due_date.default_value(""))
         col1, col2, col3, col4, col5 = st.columns(5)
         with col1:
             st.link_button(f"Open URL", url=tasks[1].url)
@@ -85,6 +87,7 @@ def todolist_page() -> None:
 
     elif isinstance(next_action, DoTheTask):
         st.title(f"Do this task: {next_action.task.title}")
+        st.write(next_action.task.due_date.default_value(""))
         col1, col2, col3 = st.columns(3)
         with col1:
             st.link_button(f"Open URL", url=next_action.task.url)

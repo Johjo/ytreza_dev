@@ -344,7 +344,7 @@ class TaskInformationReaderForDemo(TaskInformationReaderPort):
 
     def feed(self, tasks: list[ExternalTask]):
         for task in tasks:
-            self._tasks[task.id] = TaskInformation(key=task.id, title=task.name, project=task.project, due_date=Nothing)
+            self._tasks[task.id] = TaskInformation(key=task.id, title=task.name, project=task.project, due_date=Nothing, url=task.url)
 
 
 def provide_dependencies(task_in_memory: TaskInMemory, todolist_reader: TodolistReaderPort,

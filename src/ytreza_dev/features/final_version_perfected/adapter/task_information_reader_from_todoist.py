@@ -11,4 +11,4 @@ class TaskInformationReaderFromTodoist(TaskInformationReaderPort):
 
     def by_key(self, key: str) -> TaskInformation:
         task : TodoistTask = self._todoist.task_by_id(task_id=key)
-        return TaskInformation(key=task.id, title=task.name, project=Project(key=task.project.id, name=task.project.name), due_date=None)
+        return TaskInformation(key=task.id, title=task.name, project=Project(key=task.project.id, name=task.project.name), due_date=task.due_date, url=task.url)

@@ -51,20 +51,20 @@ class TestDoNothing:
 class TestDoTheTask:
     def test_do_next_task_when_only_one_task(self, task_fvp_reader: TaskFvpReaderForTest, sut: NextActionFvpQuery,
                                              task_information_reader: TaskInformationReaderForTest) -> None:
-        task_information_reader.feed([TaskInformation(key="1", title="buy the milk", project=project_1, due_date=Nothing)])
+        task_information_reader.feed([TaskInformation(key="1", title="buy the milk", project=project_1, due_date=Nothing, url="https://url_1.com")])
         task_fvp_reader.feed([a_task_new(title="buy the milk", url="https://url_1.com", id="1", project=project_1)])
         next_action = sut.next_action()
         assert next_action == DoTheTask(task=TaskDetail(title="buy the milk", url="https://url_1.com", project_name=project_1.name, due_date=Nothing))
 
     def test_display_date(self, task_fvp_reader: TaskFvpReaderForTest, sut: NextActionFvpQuery,
                                              task_information_reader: TaskInformationReaderForTest) -> None:
-        task_information_reader.feed([TaskInformation(key="1", title="buy the milk", project=project_1, due_date=Some(TODAY))])
+        task_information_reader.feed([TaskInformation(key="1", title="buy the milk", project=project_1, due_date=Some(TODAY), url="https://url_1.com")])
         task_fvp_reader.feed([a_task_new(title="buy the milk", url="https://url_1.com", id="1", project=project_1)])
         next_action = sut.next_action()
         assert next_action == DoTheTask(task=TaskDetail(title="buy the milk", url="https://url_1.com", project_name=project_1.name, due_date=Some(TODAY)))
 
     def test_06(self, task_fvp_reader: TaskFvpReaderForTest, sut: NextActionFvpQuery, task_information_reader: TaskInformationReaderForTest) -> None:
-        task_information_reader.feed([TaskInformation(key="3", title="buy the eggs", project=project_1, due_date=Nothing)])
+        task_information_reader.feed([TaskInformation(key="3", title="buy the eggs", project=project_1, due_date=Nothing, url="https://url_3.com")])
 
         # GIVEN
         task_fvp_reader.feed([
@@ -77,7 +77,7 @@ class TestDoTheTask:
 
     def test_07(self, task_fvp_reader: TaskFvpReaderForTest, sut: NextActionFvpQuery, task_information_reader: TaskInformationReaderForTest) -> None:
         # GIVEN
-        task_information_reader.feed([TaskInformation(key="3", title="buy the eggs", project=project_1, due_date=Nothing)])
+        task_information_reader.feed([TaskInformation(key="3", title="buy the eggs", project=project_1, due_date=Nothing, url="https://url_3.com")])
 
         task_fvp_reader.feed([
             a_task_next(title="buy the milk", url="https://url_1.com", id="1"),
@@ -90,7 +90,7 @@ class TestDoTheTask:
 
     def test_04(self, task_fvp_reader: TaskFvpReaderForTest, sut: NextActionFvpQuery, task_information_reader: TaskInformationReaderForTest) -> None:
         # GIVEN
-        task_information_reader.feed([TaskInformation(key="2", title="buy the water", project=project_1, due_date=Nothing)])
+        task_information_reader.feed([TaskInformation(key="2", title="buy the water", project=project_1, due_date=Nothing, url="https://url_2.com")])
 
         task_fvp_reader.feed([
             a_task_next(title="buy the milk", url="https://url_1.com", id="1"),
@@ -102,7 +102,7 @@ class TestDoTheTask:
 
     def test_08(self, task_fvp_reader: TaskFvpReaderForTest, sut: NextActionFvpQuery, task_information_reader: TaskInformationReaderForTest) -> None:
         # GIVEN
-        task_information_reader.feed([TaskInformation(key="3", title="buy the eggs", project=project_1, due_date=Nothing)])
+        task_information_reader.feed([TaskInformation(key="3", title="buy the eggs", project=project_1, due_date=Nothing, url="https://url_3.com")])
 
         task_fvp_reader.feed([
             a_task_next(title="buy the milk", url="https://url_1.com", id="1"),
@@ -119,8 +119,8 @@ class TestChooseTaskBetween:
     def test_01(self, task_fvp_reader: TaskFvpReaderForTest, sut: NextActionFvpQuery, task_information_reader) -> None:
         # GIVEN
         task_information_reader.feed([
-            TaskInformation(key="1", title="buy the milk", project=project_1, due_date=Nothing),
-            TaskInformation(key="2", title="buy the water", project=project_2, due_date=Nothing),
+            TaskInformation(key="1", title="buy the milk", project=project_1, due_date=Nothing, url="https://url_1.com"),
+            TaskInformation(key="2", title="buy the water", project=project_2, due_date=Nothing, url="https://url_2.com"),
         ])
 
         task_fvp_reader.feed([
@@ -137,8 +137,8 @@ class TestChooseTaskBetween:
     def test_02(self, task_fvp_reader: TaskFvpReaderForTest, sut: NextActionFvpQuery, task_information_reader) -> None:
         # GIVEN
         task_information_reader.feed([
-            TaskInformation(key="1", title="buy the milk", project=project_1, due_date=Nothing),
-            TaskInformation(key="2", title="buy the water", project=project_1, due_date=Nothing),
+            TaskInformation(key="1", title="buy the milk", project=project_1, due_date=Nothing, url="https://url_1.com"),
+            TaskInformation(key="2", title="buy the water", project=project_1, due_date=Nothing, url="https://url_2.com"),
         ])
 
 
@@ -157,8 +157,8 @@ class TestChooseTaskBetween:
     def test_03(self, task_fvp_reader: TaskFvpReaderForTest, sut: NextActionFvpQuery, task_information_reader) -> None:
         # GIVEN
         task_information_reader.feed([
-            TaskInformation(key="1", title="buy the milk", project=project_1, due_date=Nothing),
-            TaskInformation(key="2", title="buy the water", project=project_1, due_date=Nothing),
+            TaskInformation(key="1", title="buy the milk", project=project_1, due_date=Nothing, url="https://url_1.com"),
+            TaskInformation(key="2", title="buy the water", project=project_1, due_date=Nothing, url="https://url_2.com"),
         ])
 
 
@@ -179,8 +179,8 @@ class TestChooseTaskBetween:
                                      task_information_reader) -> None:
         # GIVEN
         task_information_reader.feed([
-            TaskInformation(key="1", title="buy the milk", project=project_1, due_date=Nothing),
-            TaskInformation(key="2", title="buy the water", project=project_1, due_date=Nothing),
+            TaskInformation(key="1", title="buy the milk", project=project_1, due_date=Nothing, url="https://url_1.com"),
+            TaskInformation(key="2", title="buy the water", project=project_1, due_date=Nothing, url="https://url_2.com"),
         ])
 
 
@@ -200,8 +200,8 @@ class TestChooseTaskBetween:
                                             sut: NextActionFvpQuery, task_information_reader) -> None:
         # GIVEN
         task_information_reader.feed([
-            TaskInformation(key="2", title="buy the water", project=project_1, due_date=Nothing),
-            TaskInformation(key="4", title="buy the butter", project=project_1, due_date=Nothing),
+            TaskInformation(key="2", title="buy the water", project=project_1, due_date=Nothing, url="https://url_2.com"),
+            TaskInformation(key="4", title="buy the butter", project=project_1, due_date=Nothing, url="https://url_4.com"),
         ])
 
 
@@ -223,8 +223,8 @@ class TestChooseTaskBetween:
                 task_information_reader) -> None:
         # GIVEN
         task_information_reader.feed([
-            TaskInformation(key="1", title="buy the milk", project=project_1, due_date=Some(TODAY)),
-            TaskInformation(key="2", title="buy the water", project=project_2, due_date=Some(YESTERDAY)),
+            TaskInformation(key="1", title="buy the milk", project=project_1, due_date=Some(TODAY), url="https://url_1.com"),
+            TaskInformation(key="2", title="buy the water", project=project_2, due_date=Some(YESTERDAY), url="https://url_2.com"),
         ])
 
         task_fvp_reader.feed([

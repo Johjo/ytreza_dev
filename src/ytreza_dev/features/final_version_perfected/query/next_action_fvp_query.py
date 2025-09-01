@@ -37,9 +37,8 @@ class NextActionFvpQuery:
 
     def _to_task_detail(self, task):
         task_information = self._task_information_reader.by_key(task.id)
-
         return TaskDetail(title=task_information.title,
-                          url=task.url,
+                          url=task_information.url,
                           project_name=task_information.project.name,
                           due_date=task_information.due_date)
 
