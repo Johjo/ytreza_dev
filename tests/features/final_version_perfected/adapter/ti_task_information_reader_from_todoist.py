@@ -9,6 +9,6 @@ def test_read_information() -> None:
     env_reader = EnvReaderFromEnv(env_path=".env.test")
 
     sut = TaskInformationReaderFromTodoist(env_reader=env_reader)
-    information = sut.by_key("9497217837")
+    information = sut.by_key("9388991121")
 
     verify(information, encoding="utf-8")

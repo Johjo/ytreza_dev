@@ -1,6 +1,7 @@
 from ytreza_dev.features.final_version_perfected.port.task_information_reader import TaskInformationReaderPort
 from ytreza_dev.features.final_version_perfected.port.task_reader import TaskFvpReaderPort
-from ytreza_dev.features.final_version_perfected.types import Task, NothingToDo, DoTheTask, ChooseTaskBetween, NextAction, \
+from ytreza_dev.features.final_version_perfected.types import TaskDetail, NothingToDo, DoTheTask, ChooseTaskBetween, \
+    NextAction, \
     TaskNew, TaskNext, TaskBase
 
 
@@ -18,18 +19,29 @@ class NextActionFvpQuery:
         next_task_index = self._next_task_index(tasks)
         new_task_index = self._new_task_index(next_task_index, tasks)
 
+        next_task = tasks[next_task_index]
         if new_task_index > next_task_index:
-            return ChooseTaskBetween(tasks=(
-                Task(title=tasks[next_task_index].title, url=tasks[next_task_index].url,
-                     project_name=self._task_information_reader.by_key(tasks[next_task_index].id).project.name),
-                Task(title=tasks[new_task_index].title, url=tasks[new_task_index].url,
-                     project_name=self._task_information_reader.by_key(tasks[new_task_index].id).project.name)
-            ))
+            new_task = tasks[new_task_index]
+            return self._choose_action(new_task, next_task)
 
-        return DoTheTask(task=Task(
-            title=tasks[next_task_index].title,
-            url=tasks[next_task_index].url,
-            project_name=self._task_information_reader.by_key(tasks[next_task_index].id).project.name))
+        return self._do_action(next_task)
+
+    def _do_action(self, next_task):
+        return DoTheTask(task=self._to_task_detail(next_task))
+
+    def _choose_action(self, new_task, next_task):
+        return ChooseTaskBetween(tasks=(
+            self._to_task_detail(next_task),
+            self._to_task_detail(new_task)
+        ))
+
+    def _to_task_detail(self, task):
+        task_information = self._task_information_reader.by_key(task.id)
+
+        return TaskDetail(title=task_information.title,
+                          url=task.url,
+                          project_name=task_information.project.name,
+                          due_date=task_information.due_date)
 
     @staticmethod
     def _new_task_index(next_task_index: int, tasks: list[TaskBase]) -> int:

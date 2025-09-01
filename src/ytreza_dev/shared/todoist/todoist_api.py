@@ -1,8 +1,11 @@
+import datetime
 import json
 from dataclasses import dataclass
 from typing import Any
 
 import requests
+from expression import Option, Nothing, Some
+
 
 @dataclass
 class TodoistProject:
@@ -16,6 +19,7 @@ class TodoistTask:
     url: str
     id: str
     project: TodoistProject
+    due_date: Option[datetime.date]
 
 
 class TodoistAPI:
@@ -52,7 +56,8 @@ class TodoistAPI:
             name=task["content"],
             url=task["url"],
             id=task["id"],
-            project=TodoistProject(id=task["project_id"], name=projects[task["project_id"]]["name"])
+            project=TodoistProject(id=task["project_id"], name=projects[task["project_id"]]["name"]),
+            due_date=Nothing if not task["due"] else Some(datetime.date.fromisoformat(task["due"]["date"])),
         )
 
     def open_task(self, content: str) -> str:

@@ -1,12 +1,16 @@
+import datetime
 from dataclasses import dataclass
 from typing import Tuple
 
+from expression import Option
+
 
 @dataclass(frozen=True, eq=True)
-class Task:
+class TaskDetail:
     title: str
     url: str
     project_name: str
+    due_date: Option[datetime.date]
 
 
 @dataclass(frozen=True, eq=True)
@@ -16,12 +20,12 @@ class NothingToDo:
 
 @dataclass(frozen=True, eq=True)
 class DoTheTask:
-    task: Task
+    task: TaskDetail
 
 
 @dataclass(frozen=True, eq=True)
 class ChooseTaskBetween:
-    tasks: Tuple[Task, Task]
+    tasks: Tuple[TaskDetail, TaskDetail]
 
 
 NextAction = NothingToDo | DoTheTask | ChooseTaskBetween

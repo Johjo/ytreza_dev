@@ -300,6 +300,25 @@ files = [
 requests = "*"
 
 [[package]]
+name = "expression"
+version = "5.6.0"
+description = "Practical functional programming for Python 3.10+"
+optional = false
+python-versions = "<4,>=3.10"
+groups = ["main"]
+files = [
+    {file = "expression-5.6.0-py3-none-any.whl", hash = "sha256:f5c62e38186c9287e088dee9cf3939b0bbde21cb4c59571872154a53d33dd7c0"},
+    {file = "expression-5.6.0.tar.gz", hash = "sha256:454f6fe138347194a43c7f878d958efe9b84b9cc770e462010c7a52e18058065"},
+]
+
+[package.dependencies]
+typing-extensions = ">=4.6.0"
+
+[package.extras]
+all = ["pydantic (>=2.6.2,<3.0.0)"]
+pydantic = ["pydantic (>=2.6.2,<3.0.0)"]
+
+[[package]]
 name = "gitdb"
 version = "4.0.12"
 description = "Git Object Database"
@@ -1497,5 +1516,5 @@ watchmedo = ["PyYAML (>=3.10)"]
 
 [metadata]
 lock-version = "2.1"
-python-versions = ">=3.13"
-content-hash = "6866a6711e36b235d992cc5b6d2fa26728f37ede94344208bb2d6194cc66896a"
+python-versions = ">=3.13,<4"
+content-hash = "522c3ebf381b1e93bc4efcb76c1aa026066b9be66c304ee7c0c8b3321e06b932"
