@@ -8,7 +8,7 @@ def a_project(key:str, name:str)-> Project:
     return Project(key=key, name=name)
 
 def a_task_next(title: str, url:str, id: str, project:Project = a_project(key="1", name="Project 1")) -> TaskNext:
-    return TaskNext(title=title, url=url, id=id, project=project)
+    return TaskBuilder(title=title, url=url, key=id, project=project).to_next()
 
 
 def a_task_later(title: str, url:str, id: str, project:Project = a_project(key="1", name="Project 1")) -> TaskLater:
@@ -49,14 +49,14 @@ class TaskBuilder:
         self.task_base = TaskBase(id=self.key, url=self.url, title=self.title,
                        project=self.project)
 
-    def as_new(self) -> TaskNew:
+    def to_new(self) -> TaskNew:
         return self.task_base.to_new()
 
-    def as_next(self) -> TaskNext:
+    def to_next(self) -> TaskNext:
         return self.task_base.to_next()
 
-    def as_later(self) -> TaskLater:
+    def to_later(self) -> TaskLater:
         return self.task_base.to_later()
 
-    def as_never(self) ->  TaskNever:
+    def to_never(self) ->  TaskNever:
         return self.task_base.to_never()

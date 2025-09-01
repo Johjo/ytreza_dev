@@ -21,24 +21,24 @@ def sut(task_repository: TaskRepositoryForTest) -> DoPartially:
 class TestSingleTaskIsAlwaysNext:
     def test_with_new(self, sut: DoPartially, task_repository: TaskRepositoryForTest):
         task_repository.feed(tasks=[
-            TASKS[0].as_new(),
+            TASKS[0].to_new(),
         ])
 
         sut.execute(url=TASKS[0].url)
 
         assert task_repository.all_tasks() == [
-            TASKS[0].as_next(),
+            TASKS[0].to_next(),
         ]
 
     def test_with_next(self, sut: DoPartially, task_repository: TaskRepositoryForTest):
         task_repository.feed(tasks=[
-            TASKS[0].as_next(),
+            TASKS[0].to_next(),
         ])
 
         sut.execute(url=TASKS[0].url)
 
         assert task_repository.all_tasks() == [
-            TASKS[0].as_next(),
+            TASKS[0].to_next(),
         ]
 
 
@@ -48,57 +48,57 @@ class TestWhenPartialIsFirstTask:
         [
             "A",
             [
-                TASKS[0].as_next(),
-                TASKS[1].as_new(),
+                TASKS[0].to_next(),
+                TASKS[1].to_new(),
             ],
             [
-                TASKS[0].as_next(),
-                TASKS[1].as_next(),
+                TASKS[0].to_next(),
+                TASKS[1].to_next(),
             ]
         ],
         [
             "B",
             [
-                TASKS[0].as_next(),
-                TASKS[1].as_new(),
-                TASKS[2].as_new(),
-                TASKS[3].as_new(),
+                TASKS[0].to_next(),
+                TASKS[1].to_new(),
+                TASKS[2].to_new(),
+                TASKS[3].to_new(),
             ],
             [
-                TASKS[0].as_next(),
-                TASKS[1].as_next(),
-                TASKS[2].as_new(),
-                TASKS[3].as_new(),
+                TASKS[0].to_next(),
+                TASKS[1].to_next(),
+                TASKS[2].to_new(),
+                TASKS[3].to_new(),
             ]
         ],
         [
             "C",
             [
-                TASKS[0].as_next(),
-                TASKS[1].as_later(),
-                TASKS[2].as_new(),
-                TASKS[3].as_new(),
+                TASKS[0].to_next(),
+                TASKS[1].to_later(),
+                TASKS[2].to_new(),
+                TASKS[3].to_new(),
             ],
             [
-                TASKS[0].as_next(),
-                TASKS[1].as_later(),
-                TASKS[2].as_next(),
-                TASKS[3].as_new(),
+                TASKS[0].to_next(),
+                TASKS[1].to_later(),
+                TASKS[2].to_next(),
+                TASKS[3].to_new(),
             ]
         ],
         [
             "E",
             [
-                TASKS[0].as_next(),
-                TASKS[1].as_later(),
-                TASKS[2].as_later(),
-                TASKS[3].as_new(),
+                TASKS[0].to_next(),
+                TASKS[1].to_later(),
+                TASKS[2].to_later(),
+                TASKS[3].to_new(),
             ],
             [
-                TASKS[0].as_next(),
-                TASKS[1].as_later(),
-                TASKS[2].as_later(),
-                TASKS[3].as_next(),
+                TASKS[0].to_next(),
+                TASKS[1].to_later(),
+                TASKS[2].to_later(),
+                TASKS[3].to_next(),
             ]
         ],
     ])
@@ -110,15 +110,15 @@ class TestWhenPartialIsFirstTask:
 
     def test_always_become_next(self, sut: DoPartially, task_repository: TaskRepositoryForTest):
         task_repository.feed(tasks=[
-            TASKS[0].as_new(),
-            TASKS[1].as_new(),
+            TASKS[0].to_new(),
+            TASKS[1].to_new(),
         ])
 
         sut.execute(url=TASKS[0].url)
 
         assert task_repository.all_tasks() == [
-            TASKS[0].as_next(),
-            TASKS[1].as_next(),
+            TASKS[0].to_next(),
+            TASKS[1].to_next(),
         ]
 
 
@@ -128,56 +128,56 @@ class TestWhenPartialIsAnotherTask:
         [
             "TestWhenPartialIsAnotherTask.test_partially_become_later.01",
             [
-                TASKS[0].as_next(),
-                TASKS[1].as_next(),
+                TASKS[0].to_next(),
+                TASKS[1].to_next(),
             ],
             TASKS[1].url,
             [
-                TASKS[0].as_next(),
-                TASKS[1].as_later(),
+                TASKS[0].to_next(),
+                TASKS[1].to_later(),
             ],
 
         ],
         [
             "TestWhenPartialIsAnotherTask.test_partially_become_later.02",
             [
-                TASKS[0].as_next(),
-                TASKS[1].as_next(),
-                TASKS[2].as_next(),
+                TASKS[0].to_next(),
+                TASKS[1].to_next(),
+                TASKS[2].to_next(),
             ],
             TASKS[2].url,
             [
-                TASKS[0].as_next(),
-                TASKS[1].as_next(),
-                TASKS[2].as_later(),
+                TASKS[0].to_next(),
+                TASKS[1].to_next(),
+                TASKS[2].to_later(),
             ],
         ],
         [
             "TestWhenPartialIsAnotherTask.test_partially_become_later.03",
             [
-                TASKS[0].as_new(),
-                TASKS[1].as_new(),
+                TASKS[0].to_new(),
+                TASKS[1].to_new(),
             ],
             TASKS[1].url,
             [
-                TASKS[0].as_next(),
-                TASKS[1].as_later(),
+                TASKS[0].to_next(),
+                TASKS[1].to_later(),
             ],
         ],
         [
             "TestWhenPartialIsAnotherTask.test_partially_become_later.04",
             [
-                TASKS[0].as_next(),
-                TASKS[1].as_later(),
-                TASKS[2].as_next(),
-                TASKS[3].as_next(),
+                TASKS[0].to_next(),
+                TASKS[1].to_later(),
+                TASKS[2].to_next(),
+                TASKS[3].to_next(),
             ],
             TASKS[3].url,
             [
-                TASKS[0].as_next(),
-                TASKS[1].as_later(),
-                TASKS[2].as_next(),
-                TASKS[3].as_later(),
+                TASKS[0].to_next(),
+                TASKS[1].to_later(),
+                TASKS[2].to_next(),
+                TASKS[3].to_later(),
             ],
         ],
 
@@ -194,32 +194,32 @@ class TestWhenPartialIsAnotherTask:
         [
             "TestWhenPartialIsAnotherTask.test_partially_become_later.01",
             [
-                TASKS[0].as_next(),
-                TASKS[1].as_next(),
-                TASKS[2].as_later(),
+                TASKS[0].to_next(),
+                TASKS[1].to_next(),
+                TASKS[2].to_later(),
             ],
             TASKS[1].url,
             [
-                TASKS[0].as_next(),
-                TASKS[1].as_later(),
-                TASKS[2].as_new(),
+                TASKS[0].to_next(),
+                TASKS[1].to_later(),
+                TASKS[2].to_new(),
             ],
 
         ],
         [
             "TestWhenPartialIsAnotherTask.test_partially_become_later.02",
             [
-                TASKS[0].as_next(),
-                TASKS[1].as_next(),
-                TASKS[2].as_later(),
-                TASKS[3].as_later(),
+                TASKS[0].to_next(),
+                TASKS[1].to_next(),
+                TASKS[2].to_later(),
+                TASKS[3].to_later(),
             ],
             TASKS[1].url,
             [
-                TASKS[0].as_next(),
-                TASKS[1].as_later(),
-                TASKS[2].as_new(),
-                TASKS[3].as_new(),
+                TASKS[0].to_next(),
+                TASKS[1].to_later(),
+                TASKS[2].to_new(),
+                TASKS[3].to_new(),
             ],
 
         ],
@@ -237,17 +237,17 @@ class TestWhenPartialIsAnotherTask:
         [
             "TestWhenPartialIsAnotherTask.test_partially_become_later.02",
             [
-                TASKS[0].as_next(),
-                TASKS[1].as_next(),
-                TASKS[2].as_never(),
-                TASKS[3].as_later(),
+                TASKS[0].to_next(),
+                TASKS[1].to_next(),
+                TASKS[2].to_never(),
+                TASKS[3].to_later(),
             ],
             TASKS[1].url,
             [
-                TASKS[0].as_next(),
-                TASKS[1].as_later(),
-                TASKS[2].as_never(),
-                TASKS[3].as_new(),
+                TASKS[0].to_next(),
+                TASKS[1].to_later(),
+                TASKS[2].to_never(),
+                TASKS[3].to_new(),
             ],
 
         ],
