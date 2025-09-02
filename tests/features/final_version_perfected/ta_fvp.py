@@ -2,19 +2,17 @@ from expression import Nothing
 from pyqure import pyqure, PyqureMemory  # type: ignore
 
 from ytreza_dev.features.final_version_perfected.adapter.for_demo import TASK_IN_MEMORY_KEY, \
-    TaskFvpReaderForDemo, TaskInMemory, TaskFvpRepositoryForDemo
+    TaskFvpReaderForDemo, TaskInMemory, TaskFvpRepositoryForDemo, ExternalTodolistForDemo, TaskInformationReaderForDemo
 from tests.features.final_version_perfected.fixtures import an_external_task, an_external_project, \
     a_fvp_task
 from tests.features.final_version_perfected.use_case.tu_start_fvp import TodolistReaderForTest
 from ytreza_dev.features.final_version_perfected.controller import FvpController
 from ytreza_dev.features.final_version_perfected.injection_keys import TASK_FVP_READER_KEY, TODOLIST_READER_KEY, \
     TASK_FVP_REPOSITORY_KEY, EXTERNAL_TODOLIST_KEY, TASK_INFORMATION_READER_KEY
-from ytreza_dev.features.final_version_perfected.port.external_todolist import ExternalTodolistPort
-from ytreza_dev.features.final_version_perfected.port.task_information_reader import TaskInformationReaderPort, \
-    TaskInformation
+from ytreza_dev.features.final_version_perfected.port.task_information_reader import TaskInformationReaderPort
 from ytreza_dev.features.final_version_perfected.port.todolist_reader import TodolistReaderPort
 from ytreza_dev.features.final_version_perfected.types import ChooseTaskBetween, TaskDetail, DoTheTask, \
-    NothingToDo, ExternalTask
+    NothingToDo
 
 
 def test_fvp_later() -> None:
@@ -326,23 +324,6 @@ def test_fvp_never() -> None:
 
     controller.close_task(key="5")
     assert controller.next_action() == NothingToDo()
-
-
-class ExternalTodolistForDemo(ExternalTodolistPort):
-    def close_task(self, url: str, task_id: str) -> None:
-        pass
-
-
-class TaskInformationReaderForDemo(TaskInformationReaderPort):
-    def __init__(self):
-        self._tasks: dict[str, TaskInformation] = {}
-
-    def by_key(self, key: str) -> TaskInformation:
-        return self._tasks[key]
-
-    def feed(self, tasks: list[ExternalTask]):
-        for task in tasks:
-            self._tasks[task.id] = TaskInformation(key=task.id, title=task.name, project=task.project, due_date=Nothing, url=task.url)
 
 
 def provide_dependencies(task_in_memory: TaskInMemory, todolist_reader: TodolistReaderPort,
