@@ -1,8 +1,8 @@
 from expression import Nothing
 from pyqure import pyqure, PyqureMemory  # type: ignore
 
-from tests.features.final_version_perfected.adapters import TaskInMemory, TaskFvpRepositoryForDemo, TASK_IN_MEMORY_KEY, \
-    TaskFvpReaderForDemo
+from ytreza_dev.features.final_version_perfected.adapter.for_demo import TASK_IN_MEMORY_KEY, \
+    TaskFvpReaderForDemo, TaskInMemory, TaskFvpRepositoryForDemo
 from tests.features.final_version_perfected.fixtures import an_external_task, an_external_project, \
     a_fvp_task
 from tests.features.final_version_perfected.use_case.tu_start_fvp import TodolistReaderForTest
