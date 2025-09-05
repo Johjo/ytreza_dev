@@ -4,7 +4,7 @@ from ytreza_dev.features.final_version_perfected.use_case.do_partially import Do
 from ytreza_dev.features.final_version_perfected.use_case.do_never import DoNever
 from ytreza_dev.features.final_version_perfected.use_case.do_next import DoNext
 from ytreza_dev.features.final_version_perfected.injection_keys import TODOLIST_READER_KEY, FVP_REPOSITORY_KEY, \
-    TASK_FVP_READER_KEY, EXTERNAL_TODOLIST_KEY, TASK_INFORMATION_READER_KEY, TASK_INFORMATION_REPOSITORY_KEY
+    TASK_FVP_READER_KEY, EXTERNAL_TODOLIST_KEY, TASK_INFORMATION_REPOSITORY_KEY
 from ytreza_dev.features.final_version_perfected.use_case.close_task_use_case import CloseTaskUseCase
 from ytreza_dev.features.final_version_perfected.use_case.do_later import DoLater
 from ytreza_dev.features.final_version_perfected.use_case.start_fvp_use_case import StartFvpUseCase
@@ -24,7 +24,7 @@ class FvpController:
         StartFvpUseCase(todolist_reader=todolist_reader, fvp_repository=fvp_repository,task_information_repository=task_information_repository ).execute()
 
     def next_action(self) -> NextAction :
-        return NextActionFvpQuery(task_fvp_reader=self._inject(TASK_FVP_READER_KEY), task_information_reader=self._inject(TASK_INFORMATION_READER_KEY)).next_action()
+        return NextActionFvpQuery(task_fvp_reader=self._inject(TASK_FVP_READER_KEY), task_information_repository=self._inject(TASK_INFORMATION_REPOSITORY_KEY)).next_action()
 
     def close_task(self, key: str) -> None:
         CloseTaskUseCase(task_repository=self._inject(FVP_REPOSITORY_KEY), external_todolist=self._inject(EXTERNAL_TODOLIST_KEY)).execute(key)

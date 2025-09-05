@@ -5,15 +5,16 @@ from pyqure import pyqure, PyqureMemory  # type: ignore
 
 from ytreza_dev.features.final_version_perfected.adapter.external_todolist_from_todoist import \
     ExternalTodolistFromTodoist
+from ytreza_dev.features.final_version_perfected.adapter.for_demo import TaskInformationRepositoryForDemo
 from ytreza_dev.features.final_version_perfected.adapter.task_fvp_reader_from_json import TaskFvpReaderFromJson
+from ytreza_dev.features.final_version_perfected.adapter.task_information_repository_from_json import \
+    TaskInformationRepositoryFromJson
 
-from ytreza_dev.features.final_version_perfected.adapter.task_information_reader_from_todoist import \
-    TaskInformationReaderFromTodoist
 from ytreza_dev.features.final_version_perfected.adapter.task_repository_from_json import FvpRepositoryFromJson
 from ytreza_dev.features.final_version_perfected.adapter.todolist_reader_from_todoist import TodolistReaderFromTodoist
 from ytreza_dev.features.final_version_perfected.controller import FvpController
 from ytreza_dev.features.final_version_perfected.injection_keys import TASK_FVP_READER_KEY, TODOLIST_READER_KEY, \
-    FVP_REPOSITORY_KEY, EXTERNAL_TODOLIST_KEY, TASK_INFORMATION_READER_KEY
+    FVP_REPOSITORY_KEY, EXTERNAL_TODOLIST_KEY, TASK_INFORMATION_REPOSITORY_KEY
 from ytreza_dev.features.final_version_perfected.types import ChooseTaskBetween, DoTheTask, NothingToDo
 from ytreza_dev.shared.env_reader import EnvReaderFromEnv
 
@@ -28,7 +29,7 @@ def provide_dependencies() -> PyqureMemory:
     provide(FVP_REPOSITORY_KEY, FvpRepositoryFromJson(file_path=Path(env_reader.read(key="FVP_JSON_PATH"))))
     provide(TASK_FVP_READER_KEY, TaskFvpReaderFromJson(json_path=Path(env_reader.read(key="FVP_JSON_PATH"))))
     provide(EXTERNAL_TODOLIST_KEY, ExternalTodolistFromTodoist(env_reader=env_reader))
-    provide(TASK_INFORMATION_READER_KEY, TaskInformationReaderFromTodoist(env_reader=env_reader))
+    provide(TASK_INFORMATION_REPOSITORY_KEY, TaskInformationRepositoryFromJson(json_path=Path(env_reader.read(key="TASK_REPOSITORY_JSON_PATH"))))
 
     return dependencies
 

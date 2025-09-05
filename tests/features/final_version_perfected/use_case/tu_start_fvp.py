@@ -1,25 +1,13 @@
 import pytest
 from expression import Nothing
 
-from tests.features.final_version_perfected.adapters import FvpRepositoryForTest
+from tests.features.final_version_perfected.adapters import FvpRepositoryForTest, TaskInformationRepositoryForTest
 from tests.features.final_version_perfected.fixtures import an_external_task, an_external_project, \
     a_fvp_task
-from ytreza_dev.features.final_version_perfected.port.task_information_reader import TaskInformation
+from ytreza_dev.features.final_version_perfected.port.task_information_repository import TaskInformation
 from ytreza_dev.features.final_version_perfected.port.todolist_reader import TodolistReaderPort
 from ytreza_dev.features.final_version_perfected.types import ExternalTask, Project
 from ytreza_dev.features.final_version_perfected.use_case.start_fvp_use_case import StartFvpUseCase
-
-
-class TaskRepositoryForTest:
-    def __init__(self):
-        self._tasks = {}
-
-    def all_tasks(self) -> dict[str, TaskInformation]:
-        return self._tasks
-
-    def save(self, task: TaskInformation) -> None:
-        self._tasks[task.key] = task
-
 
 
 class TodolistReaderForTest(TodolistReaderPort):
@@ -44,9 +32,13 @@ def todolist_reader() -> TodolistReaderForTest:
 
 
 @pytest.fixture
+def task_information_repository() -> TaskInformationRepositoryForTest:
+    return TaskInformationRepositoryForTest()
+
+@pytest.fixture
 def sut(todolist_reader: TodolistReaderForTest, fvp_repository: FvpRepositoryForTest,
-        task_repository: TaskRepositoryForTest) -> StartFvpUseCase:
-    return StartFvpUseCase(todolist_reader=todolist_reader, fvp_repository=fvp_repository, task_information_repository=task_repository)
+        task_information_repository: TaskInformationRepositoryForTest) -> StartFvpUseCase:
+    return StartFvpUseCase(todolist_reader=todolist_reader, fvp_repository=fvp_repository, task_information_repository=task_information_repository)
 
 
 def test_merge_no_task(fvp_repository: FvpRepositoryForTest, sut: StartFvpUseCase) -> None:
@@ -69,13 +61,8 @@ def test_synchronize_task_in_fvp_repository(todolist_reader: TodolistReaderForTe
         a_fvp_task("2").to_new()]
 
 
-@pytest.fixture
-def task_repository() -> TaskRepositoryForTest:
-    return TaskRepositoryForTest()
-
-
 def test_synchronize_task_in_task_repository(todolist_reader: TodolistReaderForTest,
-                                             task_repository: TaskRepositoryForTest,
+                                             task_information_repository: TaskInformationRepositoryForTest,
                                              sut: StartFvpUseCase) -> None:
     todolist_reader.feed([
         an_external_task(name="buy the milk", url="https://url_1.com", id="1",
@@ -85,7 +72,7 @@ def test_synchronize_task_in_task_repository(todolist_reader: TodolistReaderForT
 
     sut.execute()
 
-    assert task_repository.all_tasks() == {
+    assert task_information_repository.all_tasks() == {
         "1": TaskInformation(
             key="1",
             title="buy the milk",

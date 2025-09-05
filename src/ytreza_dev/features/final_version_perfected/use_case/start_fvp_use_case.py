@@ -1,7 +1,7 @@
 from expression import Nothing
 
-from ytreza_dev.features.final_version_perfected.port.task_information_reader import TaskInformation
-from ytreza_dev.features.final_version_perfected.port.task_information_repository import TaskInformationRepositoryPort
+from ytreza_dev.features.final_version_perfected.port.task_information_repository import TaskInformationRepositoryPort, \
+    TaskInformation
 from ytreza_dev.features.final_version_perfected.port.task_repository import FvpRepositoryPort
 from ytreza_dev.features.final_version_perfected.port.todolist_reader import TodolistReaderPort
 from ytreza_dev.features.final_version_perfected.types import TaskNew, ExternalTask, ExternalProject, Project
@@ -17,9 +17,7 @@ class StartFvpUseCase:
 
         all_external_tasks : list[ExternalTask] = self._todolist_reader.all_tasks()
         self._fvp_repository.save([self._to_task_new(task) for task in all_external_tasks])
-
-        for task in all_external_tasks:
-            self._task_information_repository.save(self._to_task_information(task))
+        self._task_information_repository.save([self._to_task_information(task) for task in all_external_tasks])
 
     @staticmethod
     def _to_task_information(external_task: ExternalTask) -> TaskInformation:

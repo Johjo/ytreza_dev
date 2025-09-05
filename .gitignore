@@ -251,3 +251,4 @@ fabric.properties
 .env.test
 /data_test/tasks.json
 /fvp.json
+/task_repository.json

@@ -2,9 +2,8 @@ from expression import Nothing
 from pyqure import Key
 
 from ytreza_dev.features.final_version_perfected.port.external_todolist import ExternalTodolistPort
-from ytreza_dev.features.final_version_perfected.port.task_information_reader import TaskInformationReaderPort, \
+from ytreza_dev.features.final_version_perfected.port.task_information_repository import TaskInformationRepositoryPort, \
     TaskInformation
-from ytreza_dev.features.final_version_perfected.port.task_information_repository import TaskInformationRepositoryPort
 from ytreza_dev.features.final_version_perfected.port.task_reader import TaskFvpReaderPort
 from ytreza_dev.features.final_version_perfected.port.task_repository import FvpRepositoryPort
 from ytreza_dev.features.final_version_perfected.types import TaskBase, ExternalTask
@@ -48,19 +47,13 @@ class ExternalTodolistForDemo(ExternalTodolistPort):
         pass
 
 
-class TaskInformationReaderForDemo(TaskInformationReaderPort):
+class TaskInformationRepositoryForDemo(TaskInformationRepositoryPort):
     def __init__(self):
         self._tasks: dict[str, TaskInformation] = {}
 
     def by_key(self, key: str) -> TaskInformation:
         return self._tasks[key]
 
-    def feed(self, tasks: list[ExternalTask]):
-        for task in tasks:
-            self._tasks[task.id] = TaskInformation(key=task.id, title=task.name, project=task.project, due_date=Nothing, url=task.url)
-
-
-class TaskInformationRepositoryForDemo(TaskInformationRepositoryPort):
-    def save(self, task: TaskInformation) -> None:
-        pass
-
+    def save(self, task: list[TaskInformation]) -> None:
+        for task in task:
+            self._tasks[task.key] = task

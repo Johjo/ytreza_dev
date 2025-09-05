@@ -1,4 +1,4 @@
-from ytreza_dev.features.final_version_perfected.port.task_information_reader import TaskInformationReaderPort
+from ytreza_dev.features.final_version_perfected.port.task_information_repository import TaskInformationRepositoryPort
 from ytreza_dev.features.final_version_perfected.port.task_reader import TaskFvpReaderPort
 from ytreza_dev.features.final_version_perfected.types import TaskDetail, NothingToDo, DoTheTask, ChooseTaskBetween, \
     NextAction, \
@@ -6,9 +6,9 @@ from ytreza_dev.features.final_version_perfected.types import TaskDetail, Nothin
 
 
 class NextActionFvpQuery:
-    def __init__(self, task_fvp_reader: TaskFvpReaderPort, task_information_reader: TaskInformationReaderPort):
+    def __init__(self, task_fvp_reader: TaskFvpReaderPort, task_information_repository: TaskInformationRepositoryPort):
         self._task_fvp_reader = task_fvp_reader
-        self._task_information_reader = task_information_reader
+        self._task_information_repository = task_information_repository
 
     def next_action(self) -> NextAction:
         tasks = self._task_fvp_reader.all_active_tasks()
@@ -36,7 +36,7 @@ class NextActionFvpQuery:
         ))
 
     def _to_task_detail(self, task):
-        task_information = self._task_information_reader.by_key(task.id)
+        task_information = self._task_information_repository.by_key(task.id)
         return TaskDetail(
             key=task.id,
             title=task_information.title,
