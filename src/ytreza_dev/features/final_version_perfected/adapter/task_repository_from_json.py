@@ -3,11 +3,11 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
-from ytreza_dev.features.final_version_perfected.port.task_repository import TaskFvpRepositoryPort
+from ytreza_dev.features.final_version_perfected.port.task_repository import FvpRepositoryPort
 from ytreza_dev.features.final_version_perfected.types import TaskBase, TaskNew, TaskNext, TaskLater, TaskNever
 
 
-class TaskFvpRepositoryFromJson(TaskFvpRepositoryPort):
+class FvpRepositoryFromJson(FvpRepositoryPort):
     def all_tasks(self) -> list[TaskBase]:
 
         tasks = json.loads(self._file_path.read_text())

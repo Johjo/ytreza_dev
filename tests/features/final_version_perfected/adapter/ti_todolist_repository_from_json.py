@@ -2,13 +2,13 @@ from approvaltests import verify # type: ignore
 from pathlib import Path
 
 from tests.features.final_version_perfected.fixtures import a_fvp_task
-from ytreza_dev.features.final_version_perfected.adapter.task_repository_from_json import TaskFvpRepositoryFromJson
+from ytreza_dev.features.final_version_perfected.adapter.task_repository_from_json import FvpRepositoryFromJson
 from ytreza_dev.features.final_version_perfected.types import TaskBase
 
 
 def test_write_in_json() -> None:
     json_path = Path("./data_test/tasks.json")
-    sut = TaskFvpRepositoryFromJson(json_path)
+    sut = FvpRepositoryFromJson(json_path)
 
     sut.save([
         a_fvp_task("1").to_new(),
@@ -19,7 +19,7 @@ def test_write_in_json() -> None:
 
 def test_read_from_json() -> None:
     json_path = Path("./data_test/tasks.json")
-    sut = TaskFvpRepositoryFromJson(json_path)
+    sut = FvpRepositoryFromJson(json_path)
 
     expected_task : list[TaskBase] = [
         a_fvp_task(key="1").to_next(),

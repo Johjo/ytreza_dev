@@ -1,9 +1,9 @@
-from ytreza_dev.features.final_version_perfected.port.task_repository import TaskFvpRepositoryPort
+from ytreza_dev.features.final_version_perfected.port.task_repository import FvpRepositoryPort
 from ytreza_dev.features.final_version_perfected.types import TaskBase
 
 
 class DoLater:
-    def __init__(self, task_repository: TaskFvpRepositoryPort) -> None:
+    def __init__(self, task_repository: FvpRepositoryPort) -> None:
         self._task_repository = task_repository
 
     def execute(self, updated_key: str) -> None:

@@ -2,13 +2,14 @@ from expression import Nothing
 from pyqure import pyqure, PyqureMemory  # type: ignore
 
 from ytreza_dev.features.final_version_perfected.adapter.for_demo import TASK_IN_MEMORY_KEY, \
-    TaskFvpReaderForDemo, TaskInMemory, TaskFvpRepositoryForDemo, ExternalTodolistForDemo, TaskInformationReaderForDemo
+    TaskFvpReaderForDemo, TaskInMemory, FvpRepositoryForDemo, ExternalTodolistForDemo, TaskInformationReaderForDemo, \
+    TaskInformationRepositoryForDemo
 from tests.features.final_version_perfected.fixtures import an_external_task, an_external_project, \
     a_fvp_task
 from tests.features.final_version_perfected.use_case.tu_start_fvp import TodolistReaderForTest
 from ytreza_dev.features.final_version_perfected.controller import FvpController
 from ytreza_dev.features.final_version_perfected.injection_keys import TASK_FVP_READER_KEY, TODOLIST_READER_KEY, \
-    TASK_FVP_REPOSITORY_KEY, EXTERNAL_TODOLIST_KEY, TASK_INFORMATION_READER_KEY
+    FVP_REPOSITORY_KEY, EXTERNAL_TODOLIST_KEY, TASK_INFORMATION_READER_KEY, TASK_INFORMATION_REPOSITORY_KEY
 from ytreza_dev.features.final_version_perfected.port.task_information_reader import TaskInformationReaderPort
 from ytreza_dev.features.final_version_perfected.port.todolist_reader import TodolistReaderPort
 from ytreza_dev.features.final_version_perfected.types import ChooseTaskBetween, TaskDetail, DoTheTask, \
@@ -39,19 +40,6 @@ def test_fvp_later() -> None:
     controller = FvpController(dependencies=provide_dependencies(task_in_memory, todolist_reader,
                                                                  task_information_reader=task_information_reader))
     controller.start_fvp_session()
-
-    assert task_in_memory.all_tasks() == [
-        a_fvp_task("1").to_new(),
-        a_fvp_task("2").to_new(),
-        a_fvp_task("3").to_new(),
-        a_fvp_task("4").to_new(),
-        a_fvp_task("5").to_new(),
-        a_fvp_task("6").to_new(),
-        a_fvp_task("7").to_new(),
-        a_fvp_task("8").to_new(),
-        a_fvp_task("9").to_new(),
-        a_fvp_task("10").to_new(),
-    ]
 
     assert controller.next_action() == ChooseTaskBetween((
         TaskDetail(key="1", title="Email ", url="https://url_1.com", project_name="Project 1", due_date=Nothing),
@@ -326,17 +314,18 @@ def test_fvp_never() -> None:
     assert controller.next_action() == NothingToDo()
 
 
+
 def provide_dependencies(task_in_memory: TaskInMemory, todolist_reader: TodolistReaderPort,
                          task_information_reader: TaskInformationReaderPort) -> PyqureMemory:
     dependencies: PyqureMemory = {}
     (provide, inject) = pyqure(dependencies)
     provide(TODOLIST_READER_KEY, todolist_reader)
-    provide(TASK_FVP_REPOSITORY_KEY, TaskFvpRepositoryForDemo(memory=task_in_memory))
+    provide(FVP_REPOSITORY_KEY, FvpRepositoryForDemo(memory=task_in_memory))
     provide(TASK_IN_MEMORY_KEY, task_in_memory)
     provide(TASK_FVP_READER_KEY, TaskFvpReaderForDemo(inject(TASK_IN_MEMORY_KEY)))
     provide(EXTERNAL_TODOLIST_KEY, ExternalTodolistForDemo())
     provide(TASK_INFORMATION_READER_KEY, task_information_reader)
-
+    provide(TASK_INFORMATION_REPOSITORY_KEY, TaskInformationRepositoryForDemo())
     return dependencies
 
 

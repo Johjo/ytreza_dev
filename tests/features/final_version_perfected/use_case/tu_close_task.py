@@ -2,7 +2,7 @@ from typing import Any
 
 import pytest
 
-from tests.features.final_version_perfected.adapters import TaskFvpRepositoryForTest
+from tests.features.final_version_perfected.adapters import FvpRepositoryForTest
 from tests.features.final_version_perfected.fixtures import a_fvp_task
 from tests.features.final_version_perfected.use_case.conftest import task_repository
 from ytreza_dev.features.final_version_perfected.port.external_todolist import ExternalTodolistPort
@@ -27,7 +27,7 @@ def external_todolist() -> ExternalTodolistForTest:
 
 
 @pytest.fixture
-def sut(task_repository: TaskFvpRepositoryForTest, external_todolist: ExternalTodolistForTest) -> CloseTaskUseCase:
+def sut(task_repository: FvpRepositoryForTest, external_todolist: ExternalTodolistForTest) -> CloseTaskUseCase:
     return CloseTaskUseCase(task_repository=task_repository, external_todolist=external_todolist)
 
 
@@ -45,7 +45,7 @@ def sut(task_repository: TaskFvpRepositoryForTest, external_todolist: ExternalTo
     ],
 ])
 def test_remove_task_when_closed(before: list[TaskBase], key, after: list[TaskBase],
-                                 task_repository: TaskFvpRepositoryForTest, sut: CloseTaskUseCase) -> None:
+                                 task_repository: FvpRepositoryForTest, sut: CloseTaskUseCase) -> None:
     task_repository.feed(tasks=before)
     sut.execute(key=key)
     assert task_repository.all_tasks() == after
@@ -53,7 +53,7 @@ def test_remove_task_when_closed(before: list[TaskBase], key, after: list[TaskBa
 
 
 
-def test_close_task_on_external_system(task_repository: TaskFvpRepositoryForTest, sut: CloseTaskUseCase,
+def test_close_task_on_external_system(task_repository: FvpRepositoryForTest, sut: CloseTaskUseCase,
                                        external_todolist: ExternalTodolistForTest) -> None:
     task_repository.feed(tasks=[
         a_fvp_task(key="1").to_next(),
@@ -93,7 +93,7 @@ def test_close_task_on_external_system(task_repository: TaskFvpRepositoryForTest
         ]
     ],
 ])
-def test_set_following_task_to_new(before: list[TaskBase], key, after: list[TaskBase], task_repository: TaskFvpRepositoryForTest, sut: CloseTaskUseCase) -> None:
+def test_set_following_task_to_new(before: list[TaskBase], key, after: list[TaskBase], task_repository: FvpRepositoryForTest, sut: CloseTaskUseCase) -> None:
     task_repository.feed(tasks=before)
     sut.execute(key=key)
     assert task_repository.all_tasks() == after
@@ -115,14 +115,14 @@ def test_set_following_task_to_new(before: list[TaskBase], key, after: list[Task
         ]
     ],
 ])
-def test_never_task_stay_never(before: list[TaskBase], url: str, after: list[TaskBase], task_repository: TaskFvpRepositoryForTest, sut: CloseTaskUseCase) -> None:
+def test_never_task_stay_never(before: list[TaskBase], url: str, after: list[TaskBase], task_repository: FvpRepositoryForTest, sut: CloseTaskUseCase) -> None:
     task_repository.feed(tasks=before)
     sut.execute(key=url)
     assert task_repository.all_tasks() == after
 
 
 
-def test_when_only_never_all_go_new(task_repository: TaskFvpRepositoryForTest, sut: CloseTaskUseCase) -> None:
+def test_when_only_never_all_go_new(task_repository: FvpRepositoryForTest, sut: CloseTaskUseCase) -> None:
     task_repository.feed(tasks=[a_fvp_task(key="1").to_next(),
                                 a_fvp_task(key="2").to_never(),
                                 a_fvp_task(key="3").to_never(),

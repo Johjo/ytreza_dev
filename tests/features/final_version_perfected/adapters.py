@@ -2,11 +2,11 @@ from pyqure import Key # type: ignore
 
 from ytreza_dev.features.final_version_perfected.port.task_information_reader import TaskInformationReaderPort, \
     TaskInformation
-from ytreza_dev.features.final_version_perfected.port.task_repository import TaskFvpRepositoryPort
+from ytreza_dev.features.final_version_perfected.port.task_repository import FvpRepositoryPort
 from ytreza_dev.features.final_version_perfected.types import TaskBase
 
 
-class TaskFvpRepositoryForTest(TaskFvpRepositoryPort):
+class FvpRepositoryForTest(FvpRepositoryPort):
     def __init__(self) -> None:
         self._tasks : list[TaskBase] = []
 

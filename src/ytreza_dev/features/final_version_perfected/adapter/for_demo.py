@@ -4,8 +4,9 @@ from pyqure import Key
 from ytreza_dev.features.final_version_perfected.port.external_todolist import ExternalTodolistPort
 from ytreza_dev.features.final_version_perfected.port.task_information_reader import TaskInformationReaderPort, \
     TaskInformation
+from ytreza_dev.features.final_version_perfected.port.task_information_repository import TaskInformationRepositoryPort
 from ytreza_dev.features.final_version_perfected.port.task_reader import TaskFvpReaderPort
-from ytreza_dev.features.final_version_perfected.port.task_repository import TaskFvpRepositoryPort
+from ytreza_dev.features.final_version_perfected.port.task_repository import FvpRepositoryPort
 from ytreza_dev.features.final_version_perfected.types import TaskBase, ExternalTask
 
 
@@ -28,7 +29,7 @@ class TaskFvpReaderForDemo(TaskFvpReaderPort):
         return self._memory.all_tasks()
 
 
-class TaskFvpRepositoryForDemo(TaskFvpRepositoryPort):
+class FvpRepositoryForDemo(FvpRepositoryPort):
     def all_tasks(self) -> list[TaskBase]:
         return self._memory.all_tasks()
 
@@ -57,3 +58,9 @@ class TaskInformationReaderForDemo(TaskInformationReaderPort):
     def feed(self, tasks: list[ExternalTask]):
         for task in tasks:
             self._tasks[task.id] = TaskInformation(key=task.id, title=task.name, project=task.project, due_date=Nothing, url=task.url)
+
+
+class TaskInformationRepositoryForDemo(TaskInformationRepositoryPort):
+    def save(self, task: TaskInformation) -> None:
+        pass
+

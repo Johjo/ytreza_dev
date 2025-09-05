@@ -1,6 +1,6 @@
 import pytest
 
-from tests.features.final_version_perfected.adapters import TaskFvpRepositoryForTest
+from tests.features.final_version_perfected.adapters import FvpRepositoryForTest
 from tests.features.final_version_perfected.fixtures import TaskBuilder
 from ytreza_dev.features.final_version_perfected.types import TaskBase
 from ytreza_dev.features.final_version_perfected.use_case.do_partially import DoPartially
@@ -14,12 +14,12 @@ TASKS = [a_task(key=str(i)) for i in range(5)]
 
 
 @pytest.fixture
-def sut(task_repository: TaskFvpRepositoryForTest) -> DoPartially:
+def sut(task_repository: FvpRepositoryForTest) -> DoPartially:
     return DoPartially(task_repository)
 
 
 class TestSingleTaskIsAlwaysNext:
-    def test_with_new(self, sut: DoPartially, task_repository: TaskFvpRepositoryForTest):
+    def test_with_new(self, sut: DoPartially, task_repository: FvpRepositoryForTest):
         task_repository.feed(tasks=[
             TASKS[0].to_new(),
         ])
@@ -30,7 +30,7 @@ class TestSingleTaskIsAlwaysNext:
             TASKS[0].to_next(),
         ]
 
-    def test_with_next(self, sut: DoPartially, task_repository: TaskFvpRepositoryForTest):
+    def test_with_next(self, sut: DoPartially, task_repository: FvpRepositoryForTest):
         task_repository.feed(tasks=[
             TASKS[0].to_next(),
         ])
@@ -103,12 +103,12 @@ class TestWhenPartialIsFirstTask:
         ],
     ])
     def test_following_new_task_become_next(self, test_id, initial, expected, sut: DoPartially,
-                                            task_repository: TaskFvpRepositoryForTest):
+                                            task_repository: FvpRepositoryForTest):
         task_repository.feed(tasks=initial)
         sut.execute(updated_key=TASKS[0].key)
         assert task_repository.all_tasks() == expected
 
-    def test_always_become_next(self, sut: DoPartially, task_repository: TaskFvpRepositoryForTest):
+    def test_always_become_next(self, sut: DoPartially, task_repository: FvpRepositoryForTest):
         task_repository.feed(tasks=[
             TASKS[0].to_new(),
             TASKS[1].to_new(),
@@ -182,7 +182,7 @@ class TestWhenPartialIsAnotherTask:
         ],
 
     ])
-    def test_partially_become_later(self, sut: DoPartially, task_repository: TaskFvpRepositoryForTest, test_id: str,
+    def test_partially_become_later(self, sut: DoPartially, task_repository: FvpRepositoryForTest, test_id: str,
                                     initial: list[TaskBase], key, expected: list[TaskBase]):
         task_repository.feed(tasks=initial)
 
@@ -225,7 +225,7 @@ class TestWhenPartialIsAnotherTask:
         ],
 
     ])
-    def test_task_later_following_partially_become_new(self, sut: DoPartially, task_repository: TaskFvpRepositoryForTest, test_id: str,
+    def test_task_later_following_partially_become_new(self, sut: DoPartially, task_repository: FvpRepositoryForTest, test_id: str,
                                                        initial: list[TaskBase], url: str, expected: list[TaskBase]):
         task_repository.feed(tasks=initial)
 
@@ -252,7 +252,7 @@ class TestWhenPartialIsAnotherTask:
 
         ],
     ])
-    def test_task_never_following_partially_become_never(self, sut: DoPartially, task_repository: TaskFvpRepositoryForTest, test_id: str,
+    def test_task_never_following_partially_become_never(self, sut: DoPartially, task_repository: FvpRepositoryForTest, test_id: str,
                                                          initial: list[TaskBase], key, expected: list[TaskBase]):
         task_repository.feed(tasks=initial)
 
