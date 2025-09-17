@@ -1,11 +1,13 @@
 import os
 
+import pytest
 from dotenv import load_dotenv
 from approvaltests import verify # type: ignore
 
 from ytreza_dev.shared.todoist.todoist_api import TodoistAPI
 
 
+@pytest.mark.integration
 def test_all_tasks() -> None:
     load_dotenv(dotenv_path=".env.test")
     api_token = os.getenv("TODOIST_API_TOKEN")

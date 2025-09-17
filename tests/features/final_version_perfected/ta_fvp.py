@@ -1,3 +1,4 @@
+import pytest
 from expression import Nothing
 from pyqure import pyqure, PyqureMemory  # type: ignore
 
@@ -14,6 +15,7 @@ from ytreza_dev.features.final_version_perfected.types import ChooseTaskBetween,
     NothingToDo
 
 
+@pytest.mark.acceptance
 def test_fvp_later() -> None:
     external_project = an_external_project(key="1", name="Project 1")
     todolist_reader = TodolistReaderForTest()
@@ -207,6 +209,7 @@ def test_fvp_later() -> None:
     assert controller.next_action() == NothingToDo()
 
 
+@pytest.mark.acceptance
 def test_fvp_never() -> None:
     external_project = an_external_project(key="1", name="Project 1")
     todolist_reader = TodolistReaderForTest()
@@ -319,6 +322,7 @@ def provide_dependencies(task_in_memory: TaskInMemory, todolist_reader: Todolist
     return dependencies
 
 
+@pytest.mark.acceptance
 def test_do_partial() -> None:
     external_project = an_external_project(key="1", name="Project 1")
     todolist_reader = TodolistReaderForTest()

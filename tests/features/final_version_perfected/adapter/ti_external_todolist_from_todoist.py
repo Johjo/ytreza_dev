@@ -1,3 +1,4 @@
+import pytest
 from approvaltests import verify  # type: ignore
 
 from ytreza_dev.features.final_version_perfected.adapter.external_todolist_from_todoist import \
@@ -5,7 +6,7 @@ from ytreza_dev.features.final_version_perfected.adapter.external_todolist_from_
 from ytreza_dev.shared.env_reader import EnvReaderFromEnv
 from ytreza_dev.shared.todoist.todoist_api import TodoistAPI
 
-
+@pytest.mark.integration
 def test_close_task() -> None:
     env_reader = EnvReaderFromEnv(env_path=".env.test")
     todoist = TodoistAPI(env_reader.read("TODOIST_API_TOKEN"))

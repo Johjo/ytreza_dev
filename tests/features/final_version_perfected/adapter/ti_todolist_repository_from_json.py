@@ -1,3 +1,4 @@
+import pytest
 from approvaltests import verify # type: ignore
 from pathlib import Path
 
@@ -6,6 +7,7 @@ from ytreza_dev.features.final_version_perfected.adapter.task_repository_from_js
 from ytreza_dev.features.final_version_perfected.types import TaskBase
 
 
+@pytest.mark.integration
 def test_write_in_json() -> None:
     json_path = Path("./data_test/tasks.json")
     sut = FvpRepositoryFromJson(json_path)
@@ -17,6 +19,7 @@ def test_write_in_json() -> None:
     verify(json_path.read_text(encoding="utf-8"))
 
 
+@pytest.mark.integration
 def test_read_from_json() -> None:
     json_path = Path("./data_test/tasks.json")
     sut = FvpRepositoryFromJson(json_path)

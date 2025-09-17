@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import pytest
 from approvaltests import verify
 from expression import Nothing
 
@@ -9,6 +10,7 @@ from ytreza_dev.features.final_version_perfected.port.task_information_repositor
 from ytreza_dev.features.final_version_perfected.types import Project
 
 
+@pytest.mark.integration
 def test_write_in_json() -> None:
     json_path = Path("./data_test/task_repository.json")
     sut = TaskInformationRepositoryFromJson(json_path)
@@ -21,6 +23,7 @@ def test_write_in_json() -> None:
     verify(json_path.read_text(encoding="utf-8"))
 
 
+@pytest.mark.integration
 def test_read_from_json() -> None:
     json_path = Path("./data_test/task_repository.json")
     sut = TaskInformationRepositoryFromJson(json_path)
