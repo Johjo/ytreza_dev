@@ -63,7 +63,7 @@ def todolist_page() -> None:
         
         # Bottom task
         st.title(f"{tasks[1].project_name} / {tasks[1].title}")
-        st.write(tasks[1].due_date.default_value(""))
+        st.write(tasks[1].due_date.default_value("no date"))
         col1, col2, col3, col4, col5 = st.columns(5)
         with col1:
             st.link_button(f"Open URL", url=tasks[1].url)

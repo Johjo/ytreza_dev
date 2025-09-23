@@ -1,3 +1,5 @@
+import datetime
+
 import pytest
 
 from tests.features.final_version_perfected.adapters import FvpRepositoryForTest
@@ -6,8 +8,8 @@ from ytreza_dev.features.final_version_perfected.types import TaskBase
 from ytreza_dev.features.final_version_perfected.use_case.do_partially import DoPartially
 
 
-def a_task(key: str) -> TaskBuilder:
-    return TaskBuilder(key=key, url=f"https://url_{key}.com")
+def a_task(key: str, due_date: datetime.date | None = None) -> TaskBuilder:
+    return TaskBuilder(key=key, due_date=due_date)
 
 
 TASKS = [a_task(key=str(i)) for i in range(5)]

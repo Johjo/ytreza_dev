@@ -16,7 +16,8 @@ class TodolistReaderFromTodoist(TodolistReaderPort):
         return [self._to_external_task(task) for task in tasks]
 
     def _to_external_task(self, task: TodoistTask):
-        return ExternalTask(name=task.name, url=task.url, id=task.id, project=self._to_external_project(task.project))
+        return ExternalTask(name=task.name, url=task.url, id=task.id, project=self._to_external_project(task.project), due_date=task.due_date)
 
-    def _to_external_project(self, project: TodoistProject) -> ExternalProject:
+    @staticmethod
+    def _to_external_project(project: TodoistProject) -> ExternalProject:
         return ExternalProject(name=project.name, key=project.id)

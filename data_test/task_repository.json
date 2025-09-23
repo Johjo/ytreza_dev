@@ -1,28 +1,21 @@
 [
     {
         "key": "1",
-        "url": "https://url_1.com",
-        "title": "buy the milk",
+        "title": "Do task 1",
         "project": {
             "key": "1",
             "name": "Project 1"
         },
-        "due_date": {
-            "tag": "none",
-            "none": null
-        }
+        "url": "https://url_1.com"
     },
     {
         "key": "2",
-        "url": "https://url_2.com",
-        "title": "buy the water",
+        "title": "Do task 2",
         "project": {
             "key": "2",
             "name": "Project 2"
         },
-        "due_date": {
-            "tag": "none",
-            "none": null
-        }
+        "url": "https://url_2.com",
+        "due_date": "2017-10-27"
     }
 ]

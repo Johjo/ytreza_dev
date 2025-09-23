@@ -1,9 +1,11 @@
+import datetime
 from pathlib import Path
 
 import pytest
 from approvaltests import verify
 from expression import Nothing
 
+from features.final_version_perfected.use_case.tu_do_partial import a_task
 from ytreza_dev.features.final_version_perfected.adapter.task_information_repository_from_json import \
     TaskInformationRepositoryFromJson
 from ytreza_dev.features.final_version_perfected.port.task_information_repository import TaskInformation
@@ -16,8 +18,8 @@ def test_write_in_json() -> None:
     sut = TaskInformationRepositoryFromJson(json_path)
 
     sut.save([
-        TaskInformation(key="1", title="buy the milk", project=Project(key="1", name="Project 1"), due_date=Nothing, url="https://url_1.com"),
-        TaskInformation(key="2", title="buy the water", project=Project(key="2", name="Project 2"), due_date=Nothing, url="https://url_2.com"),
+        a_task(key="1").to_information(),
+        a_task(key="2", due_date=datetime.date(2017, 10, 27)).to_information(),
     ])
 
     verify(json_path.read_text(encoding="utf-8"))
@@ -29,8 +31,8 @@ def test_read_from_json() -> None:
     sut = TaskInformationRepositoryFromJson(json_path)
 
     expected_task : list[TaskInformation] = [
-        TaskInformation(key="1", title="buy the milk", project=Project(key="1", name="Project 1"), due_date=Nothing, url="https://url_1.com"),
-        TaskInformation(key="2", title="buy the water", project=Project(key="2", name="Project 2"), due_date=Nothing, url="https://url_2.com"),
+        a_task(key="1").to_information(),
+        a_task(key="2", due_date=datetime.date(2017, 10, 27)).to_information(),
     ]
     sut.save(expected_task)
 

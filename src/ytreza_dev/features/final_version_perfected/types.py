@@ -84,3 +84,4 @@ class ExternalTask:
     url: str
     id: str
     project: ExternalProject
+    due_date: Option[datetime.date]

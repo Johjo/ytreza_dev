@@ -26,7 +26,7 @@ class StartFvpUseCase:
             title=external_task.name,
             project=Project(key=external_task.project.key, name=external_task.project.name),
             url=external_task.url,
-            due_date=Nothing
+            due_date=external_task.due_date
         )
 
     @staticmethod

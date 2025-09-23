@@ -1,9 +1,10 @@
+import datetime
 import json
 from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
-from expression import Nothing
+from expression import Nothing, Some
 
 from ytreza_dev.features.final_version_perfected.port.task_information_repository import TaskInformationRepositoryPort, \
     TaskInformation
@@ -21,7 +22,18 @@ class TaskInformationRepositoryFromJson(TaskInformationRepositoryPort):
 
     @staticmethod
     def _to_dict(task: TaskInformation) -> dict[str, Any]:
-        d = asdict(task)
+        d = {
+            "key": task.key,
+            "title": task.title,
+            "project": asdict(task.project),
+            "url": task.url,
+        }
+
+        due_date = task.due_date.default_value(None)
+
+        if due_date:
+            d.update({"due_date": due_date.isoformat()})
+
         return d
 
     def by_key(self, key: str) -> TaskInformation:
@@ -35,5 +47,5 @@ class TaskInformationRepositoryFromJson(TaskInformationRepositoryPort):
             title=task["title"],
             project=Project(key=task["project"]["key"], name=task["project"]["name"]),
             url=task["url"],
-            due_date=Nothing
+            due_date= Some(datetime.date.fromisoformat(task["due_date"])) if "due_date" in task else Nothing
         )
