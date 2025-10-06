@@ -91,3 +91,11 @@ class TaskBuilder:
 
     def to_external(self) -> ExternalTask:
         return ExternalTask(id=self.key, name=self.title, project=self.project, url=self.url, due_date=self.due_date)
+
+
+class ProjectBuilder:
+    def __init__(self, key: str):
+        self._key = key
+
+    def to_project(self) -> Project:
+        return Project(key=self._key, name=f"Project {self._key}")
