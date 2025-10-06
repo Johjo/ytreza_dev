@@ -16,7 +16,7 @@ class DoPartially:
         self._task_repository.save(after)
 
     def _another_task_done_partially(self, before: list[TaskBase], updated_key: str):
-        after = []
+        after: list[TaskBase] = []
         index = 0
         after.append(before[index].to_next())
         index += 1
@@ -36,7 +36,7 @@ class DoPartially:
 
 
     def _first_task_done_partially(self, before: list[TaskBase]) -> list[TaskBase]:
-        after = []
+        after: list[TaskBase] = []
         index = 0
         after.append(before[index].to_next())
         index += 1

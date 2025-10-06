@@ -48,12 +48,12 @@ class ExternalTodolistForDemo(ExternalTodolistPort):
 
 
 class TaskInformationRepositoryForDemo(TaskInformationRepositoryPort):
-    def __init__(self):
+    def __init__(self) -> None:
         self._tasks: dict[str, TaskInformation] = {}
 
     def by_key(self, key: str) -> TaskInformation:
         return self._tasks[key]
 
-    def save(self, task: list[TaskInformation]) -> None:
-        for task in task:
+    def save(self, tasks: list[TaskInformation]) -> None:
+        for task in tasks:
             self._tasks[task.key] = task

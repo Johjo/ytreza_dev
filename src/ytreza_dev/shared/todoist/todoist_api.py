@@ -51,7 +51,7 @@ class TodoistAPI:
         return json_content
 
     @staticmethod
-    def _to_todoist_task(task, projects: [dict[str, Any]]):
+    def _to_todoist_task(task, projects: dict[str, Any]):
         return TodoistTask(
             name=task["content"],
             url=task["url"],

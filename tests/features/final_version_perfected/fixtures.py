@@ -47,12 +47,11 @@ def an_external_task(name: str, url: str, id: str,
 
 
 class TaskBuilder:
-    def __init__(self, key: str, url: str = None, title: str | None = None, project: Project | None = None, due_date: datetime.date | None = None) -> None:
+    def __init__(self, key: str, url: str | None = None, title: str | None = None, project: Project | None = None, due_date: datetime.date | None = None) -> None:
         self.key = key
-        self._project = project
         self._url = Some(url) if url else Nothing
         self._title = Some(title) if title else Nothing
-        self._project = Some(project) if project else Nothing
+        self._project : Option[Project] = Some(project) if project else Nothing
         self._due_date = Some(due_date) if due_date else Nothing
 
     @property

@@ -5,7 +5,7 @@ from expression import Nothing, Some
 
 from features.final_version_perfected.fixtures import TaskBuilder
 from ytreza_dev.features.final_version_perfected.port.task_information_repository import TaskInformation
-from ytreza_dev.features.final_version_perfected.types import Project, ExternalTask
+from ytreza_dev.features.final_version_perfected.types import Project, ExternalTask, ExternalProject
 
 
 @pytest.mark.parametrize("key, expected", [
@@ -39,7 +39,7 @@ def test_task_information_with_value():
     ["2", ExternalTask(id="2", url="https://url_2.com", name="Do task 2", due_date=Nothing,
                        project=Project(key="2", name="Project 2"))],
 ])
-def test_default_task_information(key: str, expected: TaskInformation) -> None:
+def test_task_to_external(key: str, expected: ExternalTask) -> None:
     builder = TaskBuilder(key=key)
 
     assert builder.to_external() == expected

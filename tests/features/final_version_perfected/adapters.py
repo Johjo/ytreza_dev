@@ -25,7 +25,7 @@ class TaskInformationRepositoryForTest(TaskInformationRepositoryPort):
         for task in tasks:
             self._tasks[task.key] = task
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._tasks: dict[str, TaskInformation] = {}
 
     def feed(self, tasks: list[TaskInformation]):
