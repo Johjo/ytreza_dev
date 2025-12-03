@@ -3,13 +3,11 @@ from pathlib import Path
 
 import pytest
 from approvaltests import verify
-from expression import Nothing
 
-from features.final_version_perfected.use_case.tu_do_partial import a_task
-from ytreza_dev.features.final_version_perfected.adapter.task_information_repository_from_json import \
+from tests.features.final_version_perfected.use_case.tu_do_partial import a_task
+from src.ytreza_dev.features.final_version_perfected.adapter.task_information_repository_from_json import \
     TaskInformationRepositoryFromJson
 from ytreza_dev.features.final_version_perfected.port.task_information_repository import TaskInformation
-from ytreza_dev.features.final_version_perfected.types import Project
 
 
 @pytest.mark.integration

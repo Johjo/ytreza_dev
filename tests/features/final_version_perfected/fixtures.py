@@ -1,5 +1,6 @@
 import datetime
 from dataclasses import dataclass
+from typing import Self
 
 from expression import Nothing, Some, Option
 
@@ -46,8 +47,24 @@ def an_external_task(name: str, url: str, id: str,
     return ExternalTask(name=name, url=url, id=id, project=project, due_date=Nothing)
 
 
+@dataclass()
+class ProjectBuilder:
+    key: str
+    name: str | None = None
+
+    def to_project(self) -> Project:
+        name = f"Project {self.key}" if not self.name else self.name
+        return Project(key=self.key, name=name)
+
+    def to_external(self) -> ExternalProject:
+        name = f"Project {self.key}" if not self.name else self.name
+        return ExternalProject(key=self.key, name=name)
+
+
+
 class TaskBuilder:
-    def __init__(self, key: str, url: str | None = None, title: str | None = None, project: Project | None = None, due_date: datetime.date | None = None) -> None:
+    def __init__(self, key: str, url: str | None = None, title: str | None = None,
+                 project: ProjectBuilder | None = None, due_date: datetime.date | None = None) -> None:
         self.key = key
         self._url = Some(url) if url else Nothing
         self._title = Some(title) if title else Nothing
@@ -63,8 +80,8 @@ class TaskBuilder:
         return self._url.default_value(f"https://url_{self.key}.com")
 
     @property
-    def project(self) -> Project:
-        return self._project.default_value(Project(key=self.key, name=f"Project {self.key}"))
+    def project(self) -> ProjectBuilder:
+        return self._project.default_value(ProjectBuilder(key=self.key))
 
     @property
     def due_date(self) -> Option[datetime.date]:
@@ -83,18 +100,12 @@ class TaskBuilder:
         return self._task_base().to_never()
 
     def to_information(self) -> TaskInformation:
-        return TaskInformation(key=self.key, title=self.title, project=self.project, due_date=self.due_date, url=self.url)
+        return TaskInformation(key=self.key, title=self.title, project=self.project.to_project(),
+                               due_date=self.due_date, url=self.url)
 
     def _task_base(self) -> TaskBase:
         return TaskBase(id=self.key)
 
     def to_external(self) -> ExternalTask:
-        return ExternalTask(id=self.key, name=self.title, project=self.project, url=self.url, due_date=self.due_date)
-
-
-class ProjectBuilder:
-    def __init__(self, key: str):
-        self._key = key
-
-    def to_project(self) -> Project:
-        return Project(key=self._key, name=f"Project {self._key}")
+        return ExternalTask(id=self.key, name=self.title, project=self.project.to_external(), url=self.url,
+                            due_date=self.due_date)

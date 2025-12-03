@@ -41,3 +41,7 @@ python_files = [
     "ti_*.py",
     "ta_*.py",
 ]
+markers=[
+    "integration",
+    "acceptance"
+]

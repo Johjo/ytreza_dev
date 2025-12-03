@@ -2,7 +2,7 @@ import datetime
 
 import pytest
 
-from features.final_version_perfected.use_case.tu_do_partial import a_task
+from tests.features.final_version_perfected.use_case.tu_do_partial import a_task
 from tests.features.final_version_perfected.adapters import FvpRepositoryForTest, TaskInformationRepositoryForTest
 from tests.features.final_version_perfected.fixtures import an_external_task, an_external_project, \
     a_fvp_task
