@@ -22,7 +22,6 @@ dependencies = [
 [tool.poetry]
 packages = [{include = "ytreza_dev", from = "src"}]
 
-
 [tool.poetry.dependencies]
 python = ">=3.13,<4"
 
@@ -45,3 +44,4 @@ markers=[
     "integration",
     "acceptance"
 ]
+
