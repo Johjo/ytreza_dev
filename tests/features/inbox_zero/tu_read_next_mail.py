@@ -1,12 +1,14 @@
 from dataclasses import dataclass
-from typing import Any, NewType
+from typing import NewType
 
 from expression import Nothing, Option, Some
 
 
 def test_read_nothing_when_no_mail() -> None:
-    truc = Truc()
-    mail = read_next_mail(truc)
+    email_reader = EmailReader()
+
+    inbox_reader = InboxReader(email_reader)
+    mail = inbox_reader.next_item()
     assert mail == Nothing
 
 
@@ -28,7 +30,7 @@ class MailBuilder:
         return Mail(self.title, self.body)
 
 
-class Truc:
+class EmailReader:
     def __init__(self) -> None:
         self.mail = Nothing
 
@@ -47,12 +49,19 @@ def a_mail() -> MailBuilder:
 
 
 def test_read_mail() -> None:
-    truc = Truc()
+    email_reader = EmailReader()
     expected = a_mail()
-    truc.feed(expected)
-    mail = read_next_mail(truc)
+    email_reader.feed(expected)
+    inbox_reader = InboxReader(email_reader)
+    mail = inbox_reader.next_item()
     assert mail == Some(expected.build())
 
 
-def read_next_mail(truc: Truc) -> Option[Mail]:
-    return truc.read_next_mail()
+class InboxReader:
+    def __init__(self, email_reader: EmailReader) -> None:
+        self._email_reader = email_reader
+
+    def next_item(self) -> Option[Mail]:
+        return self._email_reader.read_next_mail()
+
+
